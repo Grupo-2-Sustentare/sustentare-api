@@ -4,6 +4,7 @@ import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.dtos.unidade_medida.UnidadeMedidaDTO;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
 import com.example.sustentaree.repositories.UnidadeMedidaRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/unidades-medida")
 public class UnidadeMedidaController {
-    /*
+
     private final UnidadeMedidaRepository unidadeMedidaRepository;
 
     public UnidadeMedidaController(UnidadeMedidaRepository unidadeMedidaRepository) {
@@ -23,6 +24,7 @@ public class UnidadeMedidaController {
 
     @PostMapping
     public ResponseEntity<UnidadeMedidaDTO> criarUnidadeMedida(@RequestBody UnidadeMedidaDTO dto) {
+        System.out.println(dto.getConversaoPadrao());
         UnidadeMedida unidadeMedida = UnidadeMedidaMapper.INSTANCE.toUnidadeMedida(dto);
         UnidadeMedida unidadeMedidaSalvo = unidadeMedidaRepository.save(unidadeMedida);
         UnidadeMedidaDTO unidadeMedidaDTO = UnidadeMedidaMapper.INSTANCE.toUnidadeMedidaDTO(unidadeMedidaSalvo);
@@ -49,17 +51,35 @@ public class UnidadeMedidaController {
         return ResponseEntity.notFound().build();
     }
 
-    /*
-    @PutMapping
-    public ResponseEntity<UnidadeMedidaDTO>
 
-     */
+    @PutMapping("/{id}")
+    public ResponseEntity<UnidadeMedidaDTO> atualizarUnidadeMedida(@PathVariable Integer id, @RequestBody UnidadeMedidaDTO dto) {
+        Optional<UnidadeMedida> unidadeMedidaOptional = unidadeMedidaRepository.findById(id);
+        if (unidadeMedidaOptional.isPresent()) {
+            UnidadeMedida unidadeMedida = UnidadeMedidaMapper.INSTANCE.toUnidadeMedida(dto);
+            unidadeMedida.setId(unidadeMedidaOptional.get().getId());
+            unidadeMedidaRepository.save(unidadeMedida);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
-    /*
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<UnidadeMedidaDTO> removerUnidadeMedida(@PathVariable Integer id) {}
+    public ResponseEntity<UnidadeMedidaDTO> removerUnidadeMedida(@PathVariable Integer id) {
+        Optional<UnidadeMedida> unidadeMedida = unidadeMedidaRepository.findById(id);
+        if (unidadeMedida.isPresent()) {
+            unidadeMedidaRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 
-     */
 
 
 }
+
+
+
+
+

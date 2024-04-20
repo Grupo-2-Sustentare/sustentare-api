@@ -11,6 +11,8 @@ public class UsuarioDTO {
     private Integer acesso;
 
 
+
+
     public String getNome() {
         return nome;
     }

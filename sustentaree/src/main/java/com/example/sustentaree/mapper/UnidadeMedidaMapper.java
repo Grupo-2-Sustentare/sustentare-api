@@ -11,8 +11,6 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 @Mapper
-@Getter
-@Setter
 public abstract class UnidadeMedidaMapper {
 
     public static final UnidadeMedidaMapper INSTANCE =  Mappers.getMapper(UnidadeMedidaMapper.class);
