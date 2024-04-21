@@ -1,10 +1,8 @@
 package com.example.sustentaree.domain.item;
 
-import com.example.sustentaree.domain.categoria.Categoria;
+import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity
@@ -22,7 +20,7 @@ public class Item {
 
     @ManyToOne
     @JoinColumn(name = "fkCategoria")
-    private Categoria categoria;
+    private CategoriaItem categoriaItem;
 
 
     public Integer getId() {
@@ -65,11 +63,11 @@ public class Item {
         this.unidadeMedida = unidadeMedida;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public CategoriaItem getCategoria() {
+        return categoriaItem;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setCategoria(CategoriaItem categoriaItem) {
+        this.categoriaItem = categoriaItem;
     }
 }

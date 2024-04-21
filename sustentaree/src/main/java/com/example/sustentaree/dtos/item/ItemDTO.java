@@ -1,11 +1,7 @@
 package com.example.sustentaree.dtos.item;
 
-import com.example.sustentaree.domain.categoria.Categoria;
+import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
 
 
 public class ItemDTO {
@@ -14,7 +10,7 @@ public class ItemDTO {
     private Boolean perecivel;
     private Integer diaVenciemento;
     private UnidadeMedida unidadeMedida;
-    private Categoria categoria;
+    private CategoriaItem categoriaItem;
 
 
 
@@ -53,11 +49,11 @@ public class ItemDTO {
         this.unidadeMedida = unidadeMedida;
     }
 
-    public Categoria getCategoria() {
-        return categoria;
+    public CategoriaItem getCategoria() {
+        return categoriaItem;
     }
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public void setCategoria(CategoriaItem categoriaItem) {
+        this.categoriaItem = categoriaItem;
     }
 }
