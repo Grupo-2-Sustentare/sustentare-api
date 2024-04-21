@@ -61,12 +61,12 @@ public class CategoriaController {
    }
 
    @DeleteMapping("/{id}")
-    public ResponseEntity<CategoriaItemDTO> remover(@PathVariable Integer id) {
+    public ResponseEntity<Void> remover(@PathVariable Integer id) {
         Optional<CategoriaItem> optionalCategoria = categoriaRepository.findById(id);
         if (optionalCategoria.isPresent()) {
             CategoriaItem toCategoriaItem = optionalCategoria.get();
             categoriaRepository.delete(toCategoriaItem);
-            return ResponseEntity.ok(ItemCategoriaMapper.INSTANCE.toCategoriaItemDTO(toCategoriaItem));
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
    }

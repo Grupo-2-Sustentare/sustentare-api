@@ -84,13 +84,13 @@ public class UsuarioController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> excluir(@PathVariable Integer id) {
+    public ResponseEntity<Void> excluir(@PathVariable Integer id) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if (usuario.isPresent()) {
             usuarioRepository.deleteById(id);
-            return ResponseEntity.status(204).build();
+            return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.status(404).build();
+        return ResponseEntity.notFound().build();
     }
 
 }

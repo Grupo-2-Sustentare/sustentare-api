@@ -6,23 +6,19 @@ import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 
 public class ItemDTO {
 
-    private String nomeNota;
+    private String nome;
     private Boolean perecivel;
-    private Integer diaVenciemento;
-    private UnidadeMedida unidadeMedida;
-    private CategoriaItem categoriaItem;
+    private Integer dia_vencimento;
+    private UnidadeMedida unidade_medida;
+    private CategoriaItem categoria;
 
 
-
-
-
-
-    public String getNomeNota() {
-        return nomeNota;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomeNota(String nomeNota) {
-        this.nomeNota = nomeNota;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public Boolean getPerecivel() {
@@ -33,27 +29,29 @@ public class ItemDTO {
         this.perecivel = perecivel;
     }
 
-    public Integer getDiaVenciemento() {
-        return diaVenciemento;
+    public Integer getDia_vencimento() {
+        return dia_vencimento;
     }
 
-    public void setDiaVenciemento(Integer diaVenciemento) {
-        this.diaVenciemento = diaVenciemento;
+    public void setDia_vencimento(Integer dia_vencimento) {
+        this.dia_vencimento = dia_vencimento;
     }
 
-    public UnidadeMedida getUnidadeMedida() {
-        return unidadeMedida;
+    public UnidadeMedida getUnidade_medida() {
+        return unidade_medida;
     }
 
-    public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
-        this.unidadeMedida = unidadeMedida;
+    public void setUnidade_medida(UnidadeMedida unidade_medida) {
+        this.unidade_medida = unidade_medida;
     }
 
     public CategoriaItem getCategoria() {
-        return categoriaItem;
+        return categoria;
     }
 
-    public void setCategoria(CategoriaItem categoriaItem) {
-        this.categoriaItem = categoriaItem;
+    public void setCategoria(CategoriaItem categoria) {
+        this.categoria = categoria;
     }
+
+
 }
