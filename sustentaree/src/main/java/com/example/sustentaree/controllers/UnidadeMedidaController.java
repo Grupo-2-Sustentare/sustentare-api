@@ -66,7 +66,7 @@ public class UnidadeMedidaController {
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UnidadeMedidaDTO> removerUnidadeMedida(@PathVariable Integer id) {
+    public ResponseEntity<Void> removerUnidadeMedida(@PathVariable Integer id) {
         Optional<UnidadeMedida> unidadeMedida = unidadeMedidaRepository.findById(id);
         if (unidadeMedida.isPresent()) {
             unidadeMedidaRepository.deleteById(id);

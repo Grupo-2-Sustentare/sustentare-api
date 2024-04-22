@@ -1,36 +1,17 @@
-package com.example.sustentaree.domain.item;
+package com.example.sustentaree.dtos.item;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
-import jakarta.persistence.*;
 
-
-@Entity
-public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class AlterarItemDTO {
     private String nome;
     private Boolean perecivel;
     private Integer dia_vencimento;
-
-
-    @ManyToOne
-    @JoinColumn(name = "fk_unidade_medida")
     private UnidadeMedida unidade_medida;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_categoria_item")
     private CategoriaItem categoria;
+    private Integer id_unidade_medida;
+    private Integer id_categoria;
 
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getNome() {
         return nome;
@@ -70,5 +51,21 @@ public class Item {
 
     public void setCategoria(CategoriaItem categoria) {
         this.categoria = categoria;
+    }
+
+    public Integer getId_unidade_medida() {
+        return id_unidade_medida;
+    }
+
+    public void setId_unidade_medida(Integer id_unidade_medida) {
+        this.id_unidade_medida = id_unidade_medida;
+    }
+
+    public Integer getId_categoria() {
+        return id_categoria;
+    }
+
+    public void setId_categoria(Integer id_categoria) {
+        this.id_categoria = id_categoria;
     }
 }
