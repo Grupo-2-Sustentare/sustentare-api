@@ -9,6 +9,11 @@ import com.example.sustentaree.mapper.ItemMapper;
 import com.example.sustentaree.repositories.CategoriaRepository;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.repositories.UnidadeMedidaRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +32,22 @@ public class ItemController {
         this.unidadeMedidaRepository = unidadeMedidaRepository;
         this.categoriaRepository = categoriaRepository;
     }
-
-    @PostMapping("/{id1}/{id2}")
+@Operation(summary = "Criar um item", description = "Cria um item com base nas informações fornecidas")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Item criado com sucesso", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        ))
+})
+@PostMapping("/{id1}/{id2}")
     public ResponseEntity<ItemDTO> criar(@PathVariable Integer id1, @PathVariable Integer id2,@RequestBody ItemDTO itemDTO) {
         Optional<UnidadeMedida> unidadeMedidaOptional = unidadeMedidaRepository.findById(id1);
         Optional<CategoriaItem> categoriaItemOptional = categoriaRepository.findById(id2);
@@ -41,7 +60,21 @@ public class ItemController {
         }
         return ResponseEntity.badRequest().build();
     }
-
+@Operation(summary = "Listar itens", description = "Lista todos os itens cadastrados")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Lista de itens retornada com sucesso", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "404", description = "Nenhum item cadastrado", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        ))
+})
     @GetMapping
     public ResponseEntity<List<ItemDTO>> listar() {
         List<Item> items = itemRepository.findAll();
@@ -51,6 +84,21 @@ public class ItemController {
         return ResponseEntity.ok(ItemMapper.INSTANCE.toItemList(items));
     }
 
+@Operation(summary = "Buscar item por ID", description = "Retorna um item com base no ID fornecido")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Item retornado com sucesso", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "404", description = "Item não encontrado", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        ))
+})
     @GetMapping("/{id}")
     public ResponseEntity<ItemDTO> buscarPorId(@PathVariable Integer id) {
         Optional<Item> itemOptional = itemRepository.findById(id);
@@ -59,6 +107,21 @@ public class ItemController {
         }
         return ResponseEntity.notFound().build();
     }
+    @Operation(summary = "Atualizar um item", description = "Atualiza um item com base nas informações fornecidas")
+@ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Item atualizado com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ItemDTO.class)
+            )),
+            @ApiResponse(responseCode = "404", description = "Item não encontrado", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ItemDTO.class)
+            )),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ItemDTO.class)
+            ))
+    })
 
     @PutMapping("{id}")
     public ResponseEntity<ItemDTO> atualizar(@PathVariable Integer id, @RequestBody AlterarItemDTO alterarItemDTO) {
@@ -75,7 +138,21 @@ public class ItemController {
         }
         return ResponseEntity.notFound().build();
     }
-
+@Operation(summary = "Remover um item", description = "Remove um item com base no ID fornecido")
+@ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Item removido com sucesso", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "404", description = "Item não encontrado", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        )),
+        @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = ItemDTO.class)
+        ))
+})
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Integer id) {
         Optional<Item> itemOptional = itemRepository.findById(id);

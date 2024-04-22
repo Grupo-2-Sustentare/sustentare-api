@@ -2,14 +2,22 @@ package com.example.sustentaree.dtos.item;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public class AlterarItemDTO {
+    @Schema(description = "Nome do item", example = "Feijão")
     private String nome;
+    @Schema(description = "Se o item é perecível", example = "false")
     private Boolean perecivel;
+    @Schema(description = "Quantos dias até o vencimento do item", example = "0")
     private Integer dia_vencimento;
+    @Schema(description = "Unidade de medida do item", example = "Kg")
     private UnidadeMedida unidade_medida;
+    @Schema(description = "Categoria do item", example = "Alimentos")
     private CategoriaItem categoria;
+    @Schema(description = "Id da unidade de medida do item", example = "1")
     private Integer id_unidade_medida;
+    @Schema(description = "Id da categoria do item", example = "1")
     private Integer id_categoria;
 
 

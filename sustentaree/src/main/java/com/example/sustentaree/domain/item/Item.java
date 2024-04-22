@@ -2,6 +2,7 @@ package com.example.sustentaree.domain.item;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 
 
@@ -10,8 +11,11 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Schema(description = "Nome do item", example = "Arroz")
     private String nome;
+    @Schema(description = "Se o item é perecível", example = "true")
     private Boolean perecivel;
+    @Schema(description = "Quantos dias até o vencimento do item", example = "30")
     private Integer dia_vencimento;
 
 

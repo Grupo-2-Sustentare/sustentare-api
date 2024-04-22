@@ -1,8 +1,10 @@
 package com.example.sustentaree.dtos.categoria;
 
 
-public class CategoriaItemDTO {
+import io.swagger.v3.oas.annotations.media.Schema;
 
+public class CategoriaItemDTO {
+@Schema(description = "Nome da categoria", example = "Alimentos")
     private String nome;
 
 
