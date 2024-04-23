@@ -18,7 +18,7 @@ public abstract class UsuarioMapper {
     public abstract UsuarioDTO toUsuarioDTO(Usuario usuario);
     public abstract List<UsuarioDTO> toUsuarioListDTO(List<Usuario> usuarios);
 
-    
+
 
 
 
