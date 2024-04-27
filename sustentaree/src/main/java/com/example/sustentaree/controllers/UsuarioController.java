@@ -3,6 +3,7 @@ package com.example.sustentaree.controllers;
 import com.example.sustentaree.configuration.security.jwt.GerenciadorTokenJwt;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
+import com.example.sustentaree.controllers.service.UsuarioService;
 import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.UsuarioMapper;
@@ -26,49 +27,32 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
-    private final PasswordEncoder passwordEncoder;
-    private final GerenciadorTokenJwt gerenciadorTokenJwt;
-    private final AuthenticationManager authenticationManager;
     private final UsuarioRepository usuarioRepository;
 
-    public UsuarioController(PasswordEncoder passwordEncoder, GerenciadorTokenJwt gerenciadorTokenJwt, AuthenticationManager authenticationManager, UsuarioRepository usuarioRepository) {
-        this.passwordEncoder = passwordEncoder;
-        this.gerenciadorTokenJwt = gerenciadorTokenJwt;
-        this.authenticationManager = authenticationManager;
+    private final UsuarioService usuarioService;
+
+    public UsuarioController(UsuarioRepository usuarioRepository, UsuarioService usuarioService) {
         this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping
     public ResponseEntity<UsuarioDTO> criar(@RequestBody UsuarioDTO dto) {
         Usuario toUsuario = UsuarioMapper.INSTANCE.toUsuario(dto);
 
-        String senhaCriptografada = passwordEncoder.encode(toUsuario.getSenha());
-        toUsuario.setSenha(senhaCriptografada);
+//        String senhaCriptografada = passwordEncoder.encode(toUsuario.getSenha());
+//        toUsuario.setSenha(senhaCriptografada);
 
         Usuario usuarioSalvo = usuarioRepository.save(toUsuario);
         UsuarioDTO toDTO =  UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioSalvo);
         return ResponseEntity.created(null).body(toDTO);
     }
 
-    public UsuarioTokenDto autenticar(UsuarioLoginDto usuarioLoginDto){
-        final UsernamePasswordAuthenticationToken credetials = new UsernamePasswordAuthenticationToken(
-                usuarioLoginDto.getNome(), usuarioLoginDto.getSenha());
-        final Authentication authentication = this.authenticationManager.authenticate(credetials);
 
-        Usuario usuarioAutenticado =
-                usuarioRepository.findByNome(usuarioLoginDto.getNome())
-                        .orElseThrow(
-                                () -> new ResponseStatusException(404, "Nome do usuário não cadastrado", null)
-                        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = gerenciadorTokenJwt.generateToken(authentication);
-
-        return UsuarioMapper.of(usuarioAutenticado, token);
-    }
 
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto){
-        UsuarioTokenDto usuarioToken = this.autenticar(usuarioLoginDto);
+        UsuarioTokenDto usuarioToken = this.usuarioService.autenticar(usuarioLoginDto);
         return ResponseEntity.status(200).body(usuarioToken);
     }
 
