@@ -56,6 +56,9 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/usuarios/*"),
             new AntPathRequestMatcher("/usuarios"),
             new AntPathRequestMatcher("/usuarios/login/**"),
+            new AntPathRequestMatcher("/unidades-medida/**"),
+            new AntPathRequestMatcher("/categorias/**"),
+            new AntPathRequestMatcher("/itens/**"),
             new AntPathRequestMatcher("/h2-console/**"),
             new AntPathRequestMatcher("/error/**")
             //pode precisar ter o mySQL
