@@ -4,6 +4,7 @@ import com.example.sustentaree.configuration.security.jwt.GerenciadorTokenJwt;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.domain.usuario.Usuario;
+import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.UsuarioMapper;
 import com.example.sustentaree.repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ public class UsuarioService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private UsuarioRepository usuarioRepository;
-//    public void criar(UsuarioCriacaoDto usuarioCriacaoDto){
+//    public void criar(UsuarioDTO usuarioCriacaoDto){
 //         final Usuario novoUsuario = UsuarioMapper.of(usuarioCriacaoDto);
-//           String senhaCriptografada = passwordEncoder.encode(toUsuario.getSenha());
-//           toUsuario.setSenha(senhaCriptografada);
-
+//           String senhaCriptografada = passwordEncoder.encode(novoUsuario.getSenha());
+//           novoUsuario.setSenha(senhaCriptografada);
+//
 //         this.usuarioRepository.save(novoUsuario);
 //    }
 
