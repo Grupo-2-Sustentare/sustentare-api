@@ -9,6 +9,7 @@ import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.UsuarioMapper;
 import com.example.sustentaree.repositories.UsuarioRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +28,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
 
     private final UsuarioService usuarioService;
@@ -40,8 +43,8 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> criar(@RequestBody UsuarioDTO dto) {
         Usuario toUsuario = UsuarioMapper.INSTANCE.toUsuario(dto);
 
-//        String senhaCriptografada = passwordEncoder.encode(toUsuario.getSenha());
-//        toUsuario.setSenha(senhaCriptografada);
+        String senhaCriptografada = passwordEncoder.encode(toUsuario.getSenha());
+       toUsuario.setSenha(senhaCriptografada);
 
         Usuario usuarioSalvo = usuarioRepository.save(toUsuario);
         UsuarioDTO toDTO =  UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioSalvo);

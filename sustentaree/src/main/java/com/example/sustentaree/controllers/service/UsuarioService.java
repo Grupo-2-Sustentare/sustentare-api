@@ -17,8 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class UsuarioService {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+
     @Autowired
     private GerenciadorTokenJwt gerenciadorTokenJwt;
     @Autowired

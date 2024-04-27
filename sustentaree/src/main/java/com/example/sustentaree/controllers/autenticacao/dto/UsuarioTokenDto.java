@@ -6,6 +6,7 @@ public class UsuarioTokenDto {
     private String senha;
     private String token;
 
+
     public Integer getId() {
         return id;
     }
