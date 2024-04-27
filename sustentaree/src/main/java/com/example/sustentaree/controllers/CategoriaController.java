@@ -5,6 +5,7 @@ import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.dtos.categoria.CategoriaItemDTO;
 import com.example.sustentaree.mapper.ItemCategoriaMapper;
 import com.example.sustentaree.repositories.CategoriaRepository;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaItemDTO> criar(@RequestBody CategoriaItemDTO categoriaItemDTO) {
+    public ResponseEntity<CategoriaItemDTO> criar(@RequestBody @Valid CategoriaItemDTO categoriaItemDTO) {
         System.out.println(categoriaItemDTO.getNome());
         CategoriaItem categoriaItem = ItemCategoriaMapper.INSTANCE.toCategoriaItem(categoriaItemDTO);
         categoriaRepository.save(categoriaItem);

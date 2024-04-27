@@ -5,6 +5,7 @@ import com.example.sustentaree.dtos.unidade_medida.UnidadeMedidaDTO;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
 import com.example.sustentaree.repositories.UnidadeMedidaRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class UnidadeMedidaController {
     }
 
     @PostMapping
-    public ResponseEntity<UnidadeMedidaDTO> criarUnidadeMedida(@RequestBody UnidadeMedidaDTO dto) {
+    public ResponseEntity<UnidadeMedidaDTO> criarUnidadeMedida(@RequestBody @Valid UnidadeMedidaDTO dto) {
         System.out.println(dto.getConversaoPadrao());
         UnidadeMedida unidadeMedida = UnidadeMedidaMapper.INSTANCE.toUnidadeMedida(dto);
         UnidadeMedida unidadeMedidaSalvo = unidadeMedidaRepository.save(unidadeMedida);

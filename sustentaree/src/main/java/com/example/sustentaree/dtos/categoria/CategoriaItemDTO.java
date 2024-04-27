@@ -1,8 +1,11 @@
 package com.example.sustentaree.dtos.categoria;
 
 
+import jakarta.validation.constraints.NotBlank;
+
 public class CategoriaItemDTO {
 
+    @NotBlank
     private String nome;
 
 
