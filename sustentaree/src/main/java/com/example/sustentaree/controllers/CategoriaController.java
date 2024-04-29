@@ -50,7 +50,7 @@ public class CategoriaController {
    }
 
    @PutMapping("/{id}")
-    public ResponseEntity<CategoriaItemDTO> atualizar(@PathVariable Integer id, @RequestBody CategoriaItemDTO categoriaItemDTO) {
+    public ResponseEntity<CategoriaItemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid CategoriaItemDTO categoriaItemDTO) {
         Optional<CategoriaItem> optionalCategoria = categoriaRepository.findById(id);
         if (optionalCategoria.isPresent()) {
             CategoriaItem toCategoriaItem = ItemCategoriaMapper.INSTANCE.toCategoriaItem(categoriaItemDTO);

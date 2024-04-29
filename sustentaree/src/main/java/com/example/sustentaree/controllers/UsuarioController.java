@@ -5,6 +5,7 @@ import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.controllers.service.UsuarioService;
 import com.example.sustentaree.domain.usuario.Usuario;
+import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.UsuarioMapper;
 import com.example.sustentaree.repositories.UsuarioRepository;
@@ -82,7 +83,7 @@ public class UsuarioController {
 
     @PutMapping("/atualizar/{id}")
     @Transactional
-    public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid UsuarioDTO dto) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if (usuario.isPresent()) {
             Usuario usuarioAtualizado = UsuarioMapper.INSTANCE.toUsuario(dto);
@@ -96,7 +97,7 @@ public class UsuarioController {
 
     @PatchMapping("/{id}")
     @Transactional
-    public ResponseEntity<UsuarioDTO> alterar(@PathVariable Integer id, @RequestBody UsuarioDTO dto) {
+    public ResponseEntity<UsuarioDTO> alterar(@PathVariable Integer id, @RequestBody @Valid AlterarUsuarioDTO dto) {
         Optional<Usuario> usuario = usuarioRepository.findById(id);
         if (usuario.isPresent()) {
             if (usuario.get().getAcesso() == 1) {

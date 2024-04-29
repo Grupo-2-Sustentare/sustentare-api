@@ -2,6 +2,7 @@ package com.example.sustentaree.mapper;
 
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.domain.usuario.Usuario;
+import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -18,6 +19,7 @@ public abstract class UsuarioMapper {
     public abstract Usuario toUsuario(UsuarioDTO usuarioDTO);
     public abstract UsuarioDTO toUsuarioDTO(Usuario usuario);
     public abstract List<UsuarioDTO> toUsuarioListDTO(List<Usuario> usuarios);
+    public abstract Usuario toUsuario(AlterarUsuarioDTO alterarUsuarioDTO);
 
     public static UsuarioTokenDto of(Usuario usuario, String token){
         UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto();

@@ -1,14 +1,26 @@
 package com.example.sustentaree.dtos.usuario;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 
 public class AlterarUsuarioDTO {
-    private String senha;
-    private Integer acesso;
 
+    @NotBlank
+    private String nome;
+    @NotBlank
+    private String senha;
+
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 
     public String getSenha() {
         return senha;
@@ -18,11 +30,5 @@ public class AlterarUsuarioDTO {
         this.senha = senha;
     }
 
-    public Integer getAcesso() {
-        return acesso;
-    }
 
-    public void setAcesso(Integer acesso) {
-        this.acesso = acesso;
-    }
 }

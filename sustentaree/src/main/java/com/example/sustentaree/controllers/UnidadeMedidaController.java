@@ -54,7 +54,7 @@ public class UnidadeMedidaController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<UnidadeMedidaDTO> atualizarUnidadeMedida(@PathVariable Integer id, @RequestBody UnidadeMedidaDTO dto) {
+    public ResponseEntity<UnidadeMedidaDTO> atualizarUnidadeMedida(@PathVariable Integer id, @RequestBody @Valid UnidadeMedidaDTO dto) {
         Optional<UnidadeMedida> unidadeMedidaOptional = unidadeMedidaRepository.findById(id);
         if (unidadeMedidaOptional.isPresent()) {
             UnidadeMedida unidadeMedida = UnidadeMedidaMapper.INSTANCE.toUnidadeMedida(dto);
