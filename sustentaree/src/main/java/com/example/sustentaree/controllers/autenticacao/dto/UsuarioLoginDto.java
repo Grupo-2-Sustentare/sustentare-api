@@ -1,18 +1,8 @@
-package com.example.sustentaree.dtos.usuario;
+package com.example.sustentaree.controllers.autenticacao.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
-
-public class AlterarUsuarioDTO {
-
-    @NotBlank
+public class UsuarioLoginDto {
     private String nome;
-    @NotBlank
     private String senha;
-
 
     public String getNome() {
         return nome;
@@ -29,6 +19,4 @@ public class AlterarUsuarioDTO {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-
-
 }

@@ -1,17 +1,19 @@
 package com.example.sustentaree.dtos.usuario;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 
 public class UsuarioDTO {
-    @Schema(description = "Nome do usuário", example = "João")
+
+    @NotBlank
     private String nome;
-    @Schema(description = "Senha do usuário", example = "123456")
+    @NotBlank
     private String senha;
-    @Schema(description = "Nível de acesso do usuário", example = "1")
+    @NotNull
     private Integer acesso;
 
 

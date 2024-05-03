@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,7 @@ public class UnidadeMedidaController {
             ))
     })
     @PostMapping
-    public ResponseEntity<UnidadeMedidaDTO> criarUnidadeMedida(@RequestBody UnidadeMedidaDTO dto) {
+    public ResponseEntity<UnidadeMedidaDTO> criarUnidadeMedida(@RequestBody @Valid UnidadeMedidaDTO dto) {
         System.out.println(dto.getConversaoPadrao());
         UnidadeMedida unidadeMedida = UnidadeMedidaMapper.INSTANCE.toUnidadeMedida(dto);
         UnidadeMedida unidadeMedidaSalvo = unidadeMedidaRepository.save(unidadeMedida);
@@ -113,7 +114,7 @@ public class UnidadeMedidaController {
             ))
     })
     @PutMapping("/{id}")
-    public ResponseEntity<UnidadeMedidaDTO> atualizarUnidadeMedida(@PathVariable Integer id, @RequestBody UnidadeMedidaDTO dto) {
+    public ResponseEntity<UnidadeMedidaDTO> atualizarUnidadeMedida(@PathVariable Integer id, @RequestBody @Valid UnidadeMedidaDTO dto) {
         Optional<UnidadeMedida> unidadeMedidaOptional = unidadeMedidaRepository.findById(id);
         if (unidadeMedidaOptional.isPresent()) {
             UnidadeMedida unidadeMedida = UnidadeMedidaMapper.INSTANCE.toUnidadeMedida(dto);

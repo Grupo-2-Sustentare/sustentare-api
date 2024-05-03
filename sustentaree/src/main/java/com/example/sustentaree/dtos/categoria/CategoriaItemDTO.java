@@ -1,10 +1,11 @@
 package com.example.sustentaree.dtos.categoria;
 
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 
 public class CategoriaItemDTO {
-@Schema(description = "Nome da categoria", example = "Alimentos")
+
+    @NotBlank
     private String nome;
 
 

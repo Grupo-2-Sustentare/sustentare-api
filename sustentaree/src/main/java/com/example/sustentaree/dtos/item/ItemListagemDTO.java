@@ -2,21 +2,17 @@ package com.example.sustentaree.dtos.item;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
+public class ItemListagemDTO {
 
-public class ItemDTO {
-@Schema(description = "Nome do item", example = "Feijão")
     private String nome;
-    @Schema(description = "Se o item é perecível", example = "false")
-    private Boolean perecivel;
-    @Schema(description = "Quantos dias até o vencimento do item", example = "0")
-    private Integer dia_vencimento;
-    @Schema(description = "Unidade de medida do item", example = "Kg")
-    private UnidadeMedida unidade_medida;
-    @Schema(description = "Categoria do item", example = "Alimentos")
-    private CategoriaItem categoria;
 
+    private Boolean perecivel;
+    private Integer dia_vencimento;
+    private UnidadeMedida unidade_medida;
+    private CategoriaItem categoria;
 
     public String getNome() {
         return nome;
@@ -57,6 +53,4 @@ public class ItemDTO {
     public void setCategoria(CategoriaItem categoria) {
         this.categoria = categoria;
     }
-
-
 }

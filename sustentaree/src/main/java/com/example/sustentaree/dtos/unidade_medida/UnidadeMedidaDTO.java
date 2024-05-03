@@ -1,15 +1,17 @@
 package com.example.sustentaree.dtos.unidade_medida;
 
-import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 
 public class UnidadeMedidaDTO {
-    @Schema(description = "Nome da unidade de medida", example = "Quilograma")
+
+    @NotBlank
     private String categoria;
-    @Schema(description = "Conversão padrão da unidade de medida", example = "1.0")
+    @NotNull
     private Double conversaoPadrao;
 
 
