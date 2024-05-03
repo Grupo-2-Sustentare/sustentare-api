@@ -1,5 +1,6 @@
 package com.example.sustentaree.domain.unidade_medida;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,9 @@ public class UnidadeMedida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Schema(description = "Nome da unidade de medida", example = "Quilograma")
     private String categoria;
+    @Schema(description = "Conversão padrão da unidade de medida", example = "1.0")
     private Double conversaoPadrao;
 
 
