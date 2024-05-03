@@ -5,19 +5,14 @@ import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public class AlterarItemDTO {
-    @NotBlank
+public class ItemListagemDTO {
+
     private String nome;
-    @NotNull
+
     private Boolean perecivel;
     private Integer dia_vencimento;
     private UnidadeMedida unidade_medida;
     private CategoriaItem categoria;
-    @NotNull
-    private Integer id_unidade_medida;
-    @NotNull
-    private Integer id_categoria;
-
 
     public String getNome() {
         return nome;
@@ -57,21 +52,5 @@ public class AlterarItemDTO {
 
     public void setCategoria(CategoriaItem categoria) {
         this.categoria = categoria;
-    }
-
-    public Integer getId_unidade_medida() {
-        return id_unidade_medida;
-    }
-
-    public void setId_unidade_medida(Integer id_unidade_medida) {
-        this.id_unidade_medida = id_unidade_medida;
-    }
-
-    public Integer getId_categoria() {
-        return id_categoria;
-    }
-
-    public void setId_categoria(Integer id_categoria) {
-        this.id_categoria = id_categoria;
     }
 }

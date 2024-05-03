@@ -27,9 +27,9 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "dev",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/gques/Documents/sustentare-api/susutentarecrud",
+    "last_opened_file_path": "C:/Users/gques/Documents/sustentare-api/sustentaree",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -55,6 +55,7 @@
       <option name="presentableId" value="Default" />
       <updated>1712273063421</updated>
       <workItem from="1713550069950" duration="592000" />
+      <workItem from="1714180335802" duration="7000" />
     </task>
     <servers />
   </component>
