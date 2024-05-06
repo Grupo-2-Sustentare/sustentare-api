@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Entity
+@Schema(description = "Usuário")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

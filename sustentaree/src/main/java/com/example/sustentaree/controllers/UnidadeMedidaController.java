@@ -126,18 +126,9 @@ public class UnidadeMedidaController {
     }
     @Operation(summary = "Remover uma unidade de medida", description = "Remove uma unidade de medida com base no ID fornecido")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "204", description = "Unidade de medida removida com sucesso", content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UnidadeMedidaDTO.class)
-            )),
-            @ApiResponse(responseCode = "404", description = "Unidade de medida não encontrada", content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UnidadeMedidaDTO.class)
-            )),
-            @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UnidadeMedidaDTO.class)
-            ))
+            @ApiResponse(responseCode = "204", description = "Unidade de medida removida com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Unidade de medida não encontrada"),
+            @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removerUnidadeMedida(@PathVariable Integer id) {
