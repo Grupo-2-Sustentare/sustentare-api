@@ -1,5 +1,6 @@
 package com.example.sustentaree.domain.usuario;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -7,12 +8,16 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Entity
+@Schema(description = "Usuário")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Schema(description = "Nome do usuário", example = "João")
     private String nome;
+    @Schema(description = "Senha do usuário", example = "123456")
     private String senha;
+    @Schema(description = "Nível de acesso do usuário", example = "1")
     private Integer acesso;
 
 
