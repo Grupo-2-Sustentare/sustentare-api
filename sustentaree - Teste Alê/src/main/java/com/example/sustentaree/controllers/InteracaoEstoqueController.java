@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/interacao-estoque")
+@RequestMapping("/interacoes-estoque")
 @RequiredArgsConstructor
 public class InteracaoEstoqueController {
     @PostMapping
