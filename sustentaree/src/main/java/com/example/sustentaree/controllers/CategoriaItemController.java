@@ -1,15 +1,15 @@
 package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
-import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.dtos.categoria.CategoriaItemDTO;
-import io.swagger.v3.oas.annotations.links.Link;
+import com.example.sustentaree.services.CategoriaItemService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.example.sustentaree.mapper.ItemCategoriaMapper;
-import com.example.sustentaree.repositories.CategoriaRepository;
+import com.example.sustentaree.mapper.CategoriaItemMapper;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.*;
@@ -20,12 +20,10 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/categorias")
-public class CategoriaController {
-    private CategoriaRepository categoriaRepository;
+@RequiredArgsConstructor
+public class CategoriaItemController {
+    private final CategoriaItemService service;
 
-    public CategoriaController(CategoriaRepository categoriaRepository) {
-        this.categoriaRepository = categoriaRepository;
-    }
     @Operation(summary = "Criar uma categoria", description = "Cria uma categoria com base nas informações fornecidas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categoria criada com sucesso", content = @Content(
@@ -44,9 +42,10 @@ public class CategoriaController {
                     schema = @Schema(implementation = CategoriaItemDTO.class)
             ))
     })
+
     @PostMapping
     public ResponseEntity<CategoriaItemDTO> criar(
-            @RequestBody @Parameter(
+            @Parameter(
                     description = "Informações da categoria a ser criada",
                     content = @Content(
                             mediaType = "application/json",
@@ -55,12 +54,16 @@ public class CategoriaController {
                     examples = @ExampleObject(
                             value = "{\n  \"nome\": \"Categoria Exemplo\",\n  \"descricao\": \"Descrição Exemplo\"\n}"
                     )
-            ) CategoriaItemDTO categoriaItemDTO) {
-        System.out.println(categoriaItemDTO.getNome());
-        CategoriaItem categoriaItem = ItemCategoriaMapper.INSTANCE.toCategoriaItem(categoriaItemDTO);
-        categoriaRepository.save(categoriaItem);
-        return ResponseEntity.ok(ItemCategoriaMapper.INSTANCE.toCategoriaItemDTO(categoriaItem));
+            ) @RequestBody CategoriaItemDTO dto) {
+        CategoriaItemMapper mapper = CategoriaItemMapper.INSTANCE;
+        CategoriaItem entity = mapper.toCategoriaItem(dto);
+        CategoriaItem novo = this.service.criar(entity);
+
+        CategoriaItemDTO response = mapper.toCategoriaItemDTO(novo);
+
+        return ResponseEntity.ok(response);
     }
+
     @Operation(summary = "Obter todas as categorias", description = "Retorna uma lista com todas as categorias cadastradas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de categorias retornada com sucesso", content = @Content(
@@ -76,16 +79,18 @@ public class CategoriaController {
                     schema = @Schema(implementation = CategoriaItemDTO.class)
             ))
     })
+
     @GetMapping
     public ResponseEntity<List<CategoriaItemDTO>> findAll() {
-        List<CategoriaItem> categoriaItems = categoriaRepository.findAll();
-        if (categoriaItems.isEmpty()) {
+        List<CategoriaItem> categorias = this.service.listar();
+        if (categorias.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<CategoriaItemDTO> categoriasDTO = ItemCategoriaMapper.INSTANCE.toCategoriaItemListDTO(categoriaItems);
-        return ResponseEntity.ok(categoriasDTO);
 
+        CategoriaItemMapper mapper = CategoriaItemMapper.INSTANCE;
+        return ResponseEntity.ok(mapper.toCategoriaItemListDTO(categorias));
    }
+
     @Operation(summary = "Obter uma categoria por ID", description = "Retorna uma categoria com base no ID fornecido")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categoria retornada com sucesso", content = @Content(
@@ -101,14 +106,15 @@ public class CategoriaController {
                     schema = @Schema(implementation = CategoriaItemDTO.class)
             ))
     })
+
    @GetMapping("/{id}")
     public ResponseEntity<CategoriaItemDTO> buscarPorID(@PathVariable Integer id) {
-        Optional<CategoriaItem> categoria = categoriaRepository.findById(id);
-        if (categoria.isPresent()) {
-            return ResponseEntity.ok(ItemCategoriaMapper.INSTANCE.toCategoriaItemDTO(categoria.get()));
-        }
-        return ResponseEntity.notFound().build();
+        CategoriaItem categoriaItem = this.service.porId(id);
+
+        CategoriaItemMapper mapper = CategoriaItemMapper.INSTANCE;
+        return ResponseEntity.ok(mapper.toCategoriaItemDTO(categoriaItem));
    }
+
     @Operation(summary = "Atualizar uma categoria", description = "Atualiza uma categoria com base nas informações fornecidas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Categoria atualizada com sucesso", content = @Content(
@@ -124,17 +130,17 @@ public class CategoriaController {
                     schema = @Schema(implementation = CategoriaItemDTO.class)
             ))
     })
+
    @PutMapping("/{id}")
-    public ResponseEntity<CategoriaItemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid CategoriaItemDTO categoriaItemDTO) {
-        Optional<CategoriaItem> optionalCategoria = categoriaRepository.findById(id);
-        if (optionalCategoria.isPresent()) {
-            CategoriaItem toCategoriaItem = ItemCategoriaMapper.INSTANCE.toCategoriaItem(categoriaItemDTO);
-            toCategoriaItem.setId(optionalCategoria.get().getId());
-            CategoriaItem categoriaItem = categoriaRepository.save(toCategoriaItem);
-            return ResponseEntity.ok(ItemCategoriaMapper.INSTANCE.toCategoriaItemDTO(categoriaItem));
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<CategoriaItemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid CategoriaItemDTO dto) {
+        CategoriaItemMapper mapper = CategoriaItemMapper.INSTANCE;
+        CategoriaItem entity = mapper.toCategoriaItem(dto);
+
+        CategoriaItem categoriaItem = this.service.atualizar(entity, id);
+
+        return ResponseEntity.ok(mapper.toCategoriaItemDTO(categoriaItem));
    }
+
     @Operation(summary = "Remover uma categoria", description = "Remove uma categoria com base no ID fornecido")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Categoria removida com sucesso", content = @Content(
@@ -150,17 +156,11 @@ public class CategoriaController {
                     schema = @Schema(implementation = CategoriaItemDTO.class)
             ))
     })
+
    @DeleteMapping("/{id}")
     public ResponseEntity<Void> remover(@PathVariable Integer id) {
-        Optional<CategoriaItem> optionalCategoria = categoriaRepository.findById(id);
-        if (optionalCategoria.isPresent()) {
-            CategoriaItem toCategoriaItem = optionalCategoria.get();
-            categoriaRepository.delete(toCategoriaItem);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        this.service.deletar(id);
+
+        return ResponseEntity.noContent().build();
    }
-
-
-
 }

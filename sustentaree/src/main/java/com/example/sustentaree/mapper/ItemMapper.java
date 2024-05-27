@@ -20,17 +20,4 @@ public abstract class ItemMapper {
     public abstract List<ItemListagemDTO> toItemList (List<Item> itemList);
     public abstract Item toItem(AlterarItemDTO alterarItemDTO);
 
-    public static Item toItem(ItemCriacaoDTO itemCriacaoDTO, CategoriaItem categoriaItem, UnidadeMedida unidadeMedida){
-        Item item = new Item();
-        item.setNome(itemCriacaoDTO.getNome());
-        item.setDia_vencimento(itemCriacaoDTO.getDia_vencimento());
-        item.setPerecivel(itemCriacaoDTO.getPerecivel());
-        item.setUnidade_medida(unidadeMedida);
-        item.setCategoria(categoriaItem);
-
-
-        return item;
-    }
-
-
 }

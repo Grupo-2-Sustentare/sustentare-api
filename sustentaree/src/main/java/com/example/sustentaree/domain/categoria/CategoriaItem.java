@@ -2,8 +2,12 @@ package com.example.sustentaree.domain.categoria;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class CategoriaItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
