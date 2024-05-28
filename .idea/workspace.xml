@@ -5,26 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="59e2d7d8-05e7-4a2b-b02c-b512f2cf078e" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sustentare-api.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/.mvn/wrapper/maven-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/CategoriaItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/CategoriaItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/ItemController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/ItemController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/UnidadeMedidaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/UnidadeMedidaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/UsuarioController.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/controllers/UsuarioController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/CategoriaItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/CategoriaItemService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/ItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/ItemService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/UnidadeMedidaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/UnidadeMedidaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/UsuarioService.java" beforeDir="false" afterPath="$PROJECT_DIR$/sustentaree/src/main/java/com/example/sustentaree/services/UsuarioService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,6 +20,19 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="Card#164" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
@@ -50,33 +44,31 @@
   <component name="ProjectId" id="2eeljzAT1D5EUau7N0Mi5Fkmsak" />
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
-    <option name="showMembers" value="true" />
-    <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;Spring Boot.SustentareeApplication.executor&quot;: &quot;Run&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Card#191&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gques/Documents/sustentare-api/sustentaree&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "Spring Boot.SustentareeApplication.executor": "Run",
+    "git-widget-placeholder": "dev",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/gques/Documents/sustentare-api/sustentaree",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.keymap",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="SustentareeApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.sustentaree.SustentareeApplication" />
@@ -112,6 +104,7 @@
       <workItem from="1716851506538" duration="64000" />
       <workItem from="1716851599767" duration="52000" />
       <workItem from="1716851784858" duration="228000" />
+      <workItem from="1716929452447" duration="2132000" />
     </task>
     <servers />
   </component>
