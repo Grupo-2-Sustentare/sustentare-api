@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 
 public class UsuarioDetalhesDto implements UserDetails {
-    @Getter
     private String nome;
 
     private String senha;
@@ -16,10 +15,6 @@ public class UsuarioDetalhesDto implements UserDetails {
     public UsuarioDetalhesDto(Usuario usuario) {
         this.nome = usuario.getNome();
         this.senha = usuario.getSenha();
-    }
-
-    public String getNome() {
-        return nome;
     }
 
     @Override

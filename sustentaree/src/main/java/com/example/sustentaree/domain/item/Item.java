@@ -4,9 +4,12 @@ import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +29,6 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "fk_categoria_item")
     private CategoriaItem categoria;
-
 
     public Integer getId() {
         return id;

@@ -12,7 +12,6 @@ import java.util.List;
 
 @Mapper
 public abstract class UnidadeMedidaMapper {
-
     public static final UnidadeMedidaMapper INSTANCE =  Mappers.getMapper(UnidadeMedidaMapper.class);
 
     public abstract UnidadeMedida toUnidadeMedida(UnidadeMedidaDTO unidadeMedidaDTO);

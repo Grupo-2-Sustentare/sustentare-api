@@ -1,9 +1,9 @@
 package com.example.sustentaree.controllers;
 
-import com.example.sustentaree.configuration.security.jwt.GerenciadorTokenJwt;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
-import com.example.sustentaree.controllers.service.UsuarioService;
+import com.example.sustentaree.mapper.UnidadeMedidaMapper;
+import com.example.sustentaree.services.UsuarioService;
 import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
@@ -17,35 +17,28 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 
-import java.lang.module.ResolutionException;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
 public class UsuarioController {
+
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioService service;
 
-    private final UsuarioService usuarioService;
-
-    public UsuarioController(UsuarioRepository usuarioRepository, UsuarioService usuarioService) {
-        this.usuarioRepository = usuarioRepository;
-        this.usuarioService = usuarioService;
+    public UsuarioController(UsuarioService service) {
+        this.service = service;
     }
+
     @Operation(summary = "Criar um usuário", description = "Cria um usuário com base nas informações fornecidas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso", content = @Content(
@@ -61,17 +54,18 @@ public class UsuarioController {
                     schema = @Schema(implementation = UsuarioDTO.class)
             ))
     })
+
     @PostMapping
     public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto) {
-        Usuario toUsuario = UsuarioMapper.INSTANCE.toUsuario(dto);
+        UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 
-        String senhaCriptografada = passwordEncoder.encode(toUsuario.getSenha());
-       toUsuario.setSenha(senhaCriptografada);
+        Usuario entity = mapper.toUsuario(dto);
+        Usuario usuarioSalvo = this.service.criar(entity);
 
-        Usuario usuarioSalvo = usuarioRepository.save(toUsuario);
-        UsuarioDTO toDTO =  UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioSalvo);
-        return ResponseEntity.created(null).body(toDTO);
+        UsuarioDTO response =  mapper.toUsuarioDTO(usuarioSalvo);
+        return ResponseEntity.created(null).body(response);
     }
+
     @Operation(summary = "Login de usuário", description = "Realiza o login de um usuário com base nas informações fornecidas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário logado com sucesso", content = @Content(
@@ -87,11 +81,14 @@ public class UsuarioController {
                     schema = @Schema(implementation = UsuarioTokenDto.class)
             ))
     })
+
     @PostMapping("/login")
     public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto){
-        UsuarioTokenDto usuarioToken = this.usuarioService.autenticar(usuarioLoginDto);
+        UsuarioTokenDto usuarioToken = this.service.autenticar(usuarioLoginDto);
+
         return ResponseEntity.status(200).body(usuarioToken);
     }
+
     @Operation(summary = "Listar usuários", description = "Lista todos os usuários cadastrados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso", content = @Content(
@@ -107,15 +104,18 @@ public class UsuarioController {
                     schema = @Schema(implementation = UsuarioDTO.class)
             ))
     })
+
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listar() {
-        List<Usuario> usuarios = usuarioRepository.findAll();
+        List<Usuario> usuarios = this.service.listar();
         if (usuarios.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        List<UsuarioDTO> toDTO = UsuarioMapper.INSTANCE.toUsuarioListDTO(usuarios);
-        return ResponseEntity.ok(toDTO);
+        UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+        List<UsuarioDTO> response = mapper.toUsuarioListDTO(usuarios);
+        return ResponseEntity.ok(response);
     }
+
     @Operation(summary = "Buscar um usuário por ID", description = "Retorna um usuário com base no ID fornecido")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário retornado com sucesso", content = @Content(
@@ -134,13 +134,15 @@ public class UsuarioController {
                     schema = @Schema(implementation = UsuarioDTO.class)
             ))
     })
+
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if (usuario.isPresent()) {
-            return ResponseEntity.ok(UsuarioMapper.INSTANCE.toUsuarioDTO(usuario.get()));
-        }
-        return ResponseEntity.notFound().build();
+        Usuario usuario = this.service.porId(id);
+
+        UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+        UsuarioDTO response = mapper.toUsuarioDTO(usuario);
+
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Atualizar um usuário", description = "Atualiza um usuário com base nas informações fornecidas")
@@ -158,17 +160,17 @@ public class UsuarioController {
                     schema = @Schema(implementation = UsuarioDTO.class)
             ))
     })
-    @PutMapping("/atualizar/{id}")
+
+    @PatchMapping("/{id}")
     @Transactional
-    public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid UsuarioDTO dto) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if (usuario.isPresent()) {
-            Usuario usuarioAtualizado = UsuarioMapper.INSTANCE.toUsuario(dto);
-            usuarioAtualizado.setId(usuario.get().getId());
-            Usuario usuarioSalvo = usuarioRepository.save(usuarioAtualizado);
-            return ResponseEntity.ok(UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioSalvo));
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarUsuarioDTO dto) {
+        UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+
+        Usuario entity = mapper.toUsuario(dto);
+        Usuario usuarioAtualizado = this.service.atualizar(entity, id);
+
+        UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Alterar um usuário", description = "Altera um usuário com base nas informações fornecidas")
@@ -186,22 +188,20 @@ public class UsuarioController {
                     schema = @Schema(implementation = UsuarioDTO.class)
             ))
     })
-    @PatchMapping("/{id}")
+
+//    TODO - Implementar validação de que o idSolicitante é igual ao id do usuário logado no front
+//    TODO - Pensar em uma maneira de não precisar da validação front-end para garantir a segurança do método.
+
+    @PutMapping("/{id}")
     @Transactional
-    public ResponseEntity<UsuarioDTO> alterar(@PathVariable Integer id, @RequestBody @Valid AlterarUsuarioDTO dto) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if (usuario.isPresent()) {
-            if (usuario.get().getAcesso() == 1) {
-                Usuario usuarioAtualizado = UsuarioMapper.INSTANCE.toUsuario(dto);
-                usuarioAtualizado.setId(usuario.get().getId());
-                usuarioAtualizado.setAcesso(usuario.get().getAcesso());
-                Usuario usuarioSalvo = usuarioRepository.save(usuarioAtualizado);
-                return ResponseEntity.ok(UsuarioMapper.INSTANCE.toUsuarioDTO(usuarioSalvo));
-            }else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<UsuarioDTO> atualizarOutros(@RequestParam int idSolicitante, @PathVariable Integer id, @RequestBody @Valid UsuarioDTO dto) {
+        UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+
+        Usuario entity = mapper.toUsuario(dto);
+        Usuario usuarioAtualizado = this.service.atualizarOutros(idSolicitante, entity, id);
+
+        UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Remover um usuário", description = "Remove um usuário com base no ID fornecido")
@@ -219,14 +219,12 @@ public class UsuarioController {
                     schema = @Schema(implementation = UsuarioDTO.class)
             ))
     })
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable Integer id) {
-        Optional<Usuario> usuario = usuarioRepository.findById(id);
-        if (usuario.isPresent()) {
-            usuarioRepository.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        this.service.deletar(id);
+
+        return ResponseEntity.noContent().build();
     }
 
 }

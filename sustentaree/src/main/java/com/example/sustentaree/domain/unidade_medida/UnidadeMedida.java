@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
 public class UnidadeMedida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,7 +16,6 @@ public class UnidadeMedida {
     private String categoria;
     @Schema(description = "Conversão padrão da unidade de medida", example = "1.0")
     private Double conversaoPadrao;
-
 
     public Integer getId() {
         return id;

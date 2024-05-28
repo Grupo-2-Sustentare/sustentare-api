@@ -8,18 +8,18 @@ import jakarta.persistence.Id;
 import lombok.*;
 
 @Entity
-@Schema(description = "Usuário")
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Schema(description = "Nome do usuário", example = "João")
     private String nome;
+    @Schema(description = "Email do usuário", example = "joao@email.com")
+    private String email;
     @Schema(description = "Senha do usuário", example = "123456")
     private String senha;
     @Schema(description = "Nível de acesso do usuário", example = "1")
     private Integer acesso;
-
 
     public Integer getId() {
         return id;
@@ -35,6 +35,14 @@ public class Usuario {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getSenha() {
