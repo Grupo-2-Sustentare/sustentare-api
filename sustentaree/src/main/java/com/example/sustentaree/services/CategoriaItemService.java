@@ -4,15 +4,19 @@ import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.mapper.CategoriaItemMapper;
 import com.example.sustentaree.repositories.CategoriaItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CategoriaItemService {
-
+    @Autowired
     private final CategoriaItemRepository repository;
+
+    public CategoriaItemService(CategoriaItemRepository repository) {
+        this.repository = repository;
+    }
 
     public List<CategoriaItem> listar() {
         return this.repository.findAll();

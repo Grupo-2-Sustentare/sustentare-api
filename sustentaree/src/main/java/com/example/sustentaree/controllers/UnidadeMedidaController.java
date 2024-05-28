@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,10 +20,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/unidades-medida")
-@RequiredArgsConstructor
 public class UnidadeMedidaController {
-
+    @Autowired
     private final UnidadeMedidaService service;
+
+    public UnidadeMedidaController(UnidadeMedidaService service) {
+        this.service = service;
+    }
+
     @Operation(summary = "Criar uma unidade de medida", description = "Cria uma unidade de medida com base nas informações fornecidas")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Unidade de medida criada com sucesso", content = @Content(

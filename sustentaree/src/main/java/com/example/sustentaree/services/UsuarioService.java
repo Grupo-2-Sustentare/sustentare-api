@@ -8,6 +8,7 @@ import com.example.sustentaree.mapper.UsuarioMapper;
 import com.example.sustentaree.repositories.UsuarioRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,13 +20,19 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UsuarioService {
-
+    @Autowired
     private final UsuarioRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final GerenciadorTokenJwt gerenciadorTokenJwt;
     private final AuthenticationManager authenticationManager;
+
+    public UsuarioService(UsuarioRepository repository, PasswordEncoder passwordEncoder, GerenciadorTokenJwt gerenciadorTokenJwt, AuthenticationManager authenticationManager) {
+        this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
+        this.gerenciadorTokenJwt = gerenciadorTokenJwt;
+        this.authenticationManager = authenticationManager;
+    }
 
     public Usuario criar(Usuario usuario){
         if(this.repository.findByNome(usuario.getEmail()).isPresent()){

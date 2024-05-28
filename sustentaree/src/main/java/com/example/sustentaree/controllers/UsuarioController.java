@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,10 +30,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuarios")
-@RequiredArgsConstructor
 public class UsuarioController {
 
+    @Autowired
     private final UsuarioService service;
+
+    public UsuarioController(UsuarioService service) {
+        this.service = service;
+    }
 
     @Operation(summary = "Criar um usuário", description = "Cria um usuário com base nas informações fornecidas")
     @ApiResponses(value = {

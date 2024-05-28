@@ -5,15 +5,19 @@ import com.example.sustentaree.dtos.unidade_medida.UnidadeMedidaDTO;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
 import com.example.sustentaree.repositories.UnidadeMedidaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class UnidadeMedidaService {
-
+    @Autowired
     private final UnidadeMedidaRepository repository;
+
+    public UnidadeMedidaService(UnidadeMedidaRepository repository) {
+        this.repository = repository;
+    }
 
     public List<UnidadeMedida> listar() {
         return this.repository.findAll();
