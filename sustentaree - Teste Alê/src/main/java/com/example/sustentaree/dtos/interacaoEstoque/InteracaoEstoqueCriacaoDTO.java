@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-@Data
+
 public class InteracaoEstoqueCriacaoDTO {
 
     @NotNull
@@ -20,4 +20,36 @@ public class InteracaoEstoqueCriacaoDTO {
 
     @NotBlank
     private String categoriaInteracao;
+
+    public Integer getFkProduto() {
+        return fkProduto;
+    }
+
+    public void setFkProduto(Integer fkProduto) {
+        this.fkProduto = fkProduto;
+    }
+
+    public LocalDateTime getDataHora() {
+        return dataHora;
+    }
+
+    public void setDataHora(LocalDateTime dataHora) {
+        this.dataHora = dataHora;
+    }
+
+    public Integer getFkFechamentoEstoque() {
+        return fkFechamentoEstoque;
+    }
+
+    public void setFkFechamentoEstoque(Integer fkFechamentoEstoque) {
+        this.fkFechamentoEstoque = fkFechamentoEstoque;
+    }
+
+    public String getCategoriaInteracao() {
+        return categoriaInteracao;
+    }
+
+    public void setCategoriaInteracao(String categoriaInteracao) {
+        this.categoriaInteracao = categoriaInteracao;
+    }
 }

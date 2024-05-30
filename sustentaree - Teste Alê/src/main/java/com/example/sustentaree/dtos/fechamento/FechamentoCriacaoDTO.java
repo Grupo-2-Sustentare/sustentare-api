@@ -7,7 +7,6 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Data
 public class FechamentoCriacaoDTO {
 
     @NotNull
@@ -24,4 +23,37 @@ public class FechamentoCriacaoDTO {
 
 //    @OneToMany
 //    private InteracaoEstoque interacaoEstoque;
+
+
+    public LocalDateTime getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(LocalDateTime dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public LocalDateTime getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDateTime dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public LocalDateTime getDataFechamento() {
+        return dataFechamento;
+    }
+
+    public void setDataFechamento(LocalDateTime dataFechamento) {
+        this.dataFechamento = dataFechamento;
+    }
+
+    public int getIsManual() {
+        return isManual;
+    }
+
+    public void setIsManual(int isManual) {
+        this.isManual = isManual;
+    }
 }
