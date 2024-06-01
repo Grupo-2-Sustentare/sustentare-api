@@ -11,7 +11,7 @@ public class ItemCriacaoDTO {
     private String nome;
     @NotNull
     private Boolean perecivel;
-    private Integer dia_vencimento;
+    private Integer diasVencimento;
 
     public String getNome() {
         return nome;
@@ -29,11 +29,11 @@ public class ItemCriacaoDTO {
         this.perecivel = perecivel;
     }
 
-    public Integer getDia_vencimento() {
-        return dia_vencimento;
+    public Integer getDiasVencimento() {
+        return diasVencimento;
     }
 
-    public void setDia_vencimento(Integer dia_vencimento) {
-        this.dia_vencimento = dia_vencimento;
+    public void setDiasVencimento(Integer diasVencimento) {
+        this.diasVencimento = diasVencimento;
     }
 }

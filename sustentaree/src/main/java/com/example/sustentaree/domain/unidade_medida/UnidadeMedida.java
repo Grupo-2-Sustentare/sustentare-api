@@ -9,10 +9,12 @@ import lombok.Setter;
 public class UnidadeMedida {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_unidade_medida")
     private Integer id;
     @Schema(description = "Nome da unidade de medida", example = "Quilograma")
     private String categoria;
     @Schema(description = "Conversão padrão da unidade de medida", example = "1.0")
+    @Column(name = "conversao_padrao")
     private Double conversaoPadrao;
 
     public Integer getId() {

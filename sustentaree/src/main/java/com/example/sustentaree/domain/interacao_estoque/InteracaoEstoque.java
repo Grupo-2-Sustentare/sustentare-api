@@ -13,16 +13,20 @@ public class InteracaoEstoque {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_interacao_estoque")
     private Integer id;
 
 //    @ManyToOne -> trazer o id do Produto correspondente até interação
+    @Column(name = "fk_produto")
     private Integer fkProduto;
-
+    @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
 //    0 ou 1 fechamento estoque para cada interação do estoque
+    @Column(name = "fk_fechamento_estoque")
     private Integer fkFechamentoEstoque;
 
+    @Column(name = "categoria_interacao")
     private String categoriaInteracao;
 
     public Integer getId() {

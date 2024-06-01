@@ -1,9 +1,9 @@
 package com.example.sustentaree.dtos.fechamento;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
@@ -11,12 +11,15 @@ public class FechamentoCriacaoDTO {
 
     @NotNull
     @Future
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataFim;
     @NotNull
     @PastOrPresent
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataInicio;
 
     @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataFechamento;
     @NotNull
     private int isManual;

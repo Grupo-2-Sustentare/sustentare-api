@@ -9,6 +9,7 @@ import lombok.Setter;
 public class CategoriaItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_categoria_item")
     private Integer id;
     @Schema(description = "Nome da categoria", example = "Alimentos")
     private String nome;

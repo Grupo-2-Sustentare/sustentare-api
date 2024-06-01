@@ -13,15 +13,21 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "fechamento_estoque")
 public class Fechamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_estoque")
     private Integer id;
 
+    @Column(name = "data_fim")
     private LocalDateTime dataFim;
+    @Column(name = "data_inicio")
     private LocalDateTime dataInicio;
+    @Column(name = "data_fechamento")
     private LocalDateTime dataFechamento;
+    @Column(name = "is_manual")
     private int isManual;
 
     public Integer getId() {
