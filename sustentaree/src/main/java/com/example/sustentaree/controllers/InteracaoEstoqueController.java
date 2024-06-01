@@ -1,14 +1,9 @@
 package com.example.sustentaree.controllers;
 
-import com.example.sustentaree.domain.fechamento.Fechamento;
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
-import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueCriacaoDTO;
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueListagemDTO;
-import com.example.sustentaree.dtos.item.ItemListagemDTO;
-import com.example.sustentaree.mapper.FechamentoMapper;
 import com.example.sustentaree.mapper.InteracaoEstoqueMapper;
-import com.example.sustentaree.mapper.ItemMapper;
 import com.example.sustentaree.services.InteracaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
