@@ -1,0 +1,73 @@
+package com.example.sustentaree.controllers;
+
+import com.example.sustentaree.domain.produto.Produto;
+import com.example.sustentaree.dtos.produto.AlterarProdutoDTO;
+import com.example.sustentaree.dtos.produto.ProdutoCriacaoDTO;
+import com.example.sustentaree.dtos.produto.ProdutoListagemDTO;
+import com.example.sustentaree.mapper.ProdutoMapper;
+import com.example.sustentaree.services.ProdutoService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
+import java.util.List;
+
+@RestController
+@RequestMapping("/produtos")
+public class ProdutoController {
+
+    @Autowired
+    private final ProdutoService service;
+
+    public ProdutoController(ProdutoService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public ResponseEntity<ProdutoListagemDTO> criar(@RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO){
+        Produto produtoCriada = ProdutoMapper.toProduto(produtoCriacaoDTO);
+        assert produtoCriada != null;
+        Produto produto = service.criar(produtoCriada, produtoCriacaoDTO.getFkItem());
+
+        URI uri = URI.create("/produtos/" + produtoCriada.getId());
+        return ResponseEntity.created(uri).body(ProdutoMapper.INSTANCE.toProdutoListagemDTO(produto));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProdutoListagemDTO>> listar(){
+        List<Produto> produtos = this.service.listar();
+
+        ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+        List<ProdutoListagemDTO> response = mapper.toProdutoList(produtos);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProdutoListagemDTO> buscarPoId(@PathVariable Integer id){
+        Produto produto = this.service.porId(id);
+
+        ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+        ProdutoListagemDTO response = mapper.toProdutoListagemDTO(produto);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProdutoListagemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarProdutoDTO alterarProdutoDTO){
+        ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+
+        Produto produto = mapper.toProduto(alterarProdutoDTO);
+        Produto produtoAtualizado = this.service.Atualizar(produto, id, alterarProdutoDTO.getFkItem());
+
+        ProdutoListagemDTO response = mapper.toProdutoListagemDTO(produtoAtualizado);
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> remover(@PathVariable Integer id) {
+        this.service.deletar(id);
+        return ResponseEntity.notFound().build();
+    }
+}

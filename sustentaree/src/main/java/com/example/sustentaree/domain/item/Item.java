@@ -11,21 +11,23 @@ import lombok.Setter;
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_item")
     private Integer id;
     @Schema(description = "Nome do item", example = "Arroz")
     private String nome;
     @Schema(description = "Se o item é perecível", example = "true")
     private Boolean perecivel;
     @Schema(description = "Quantos dias até o vencimento do item", example = "30")
-    private Integer dia_vencimento;
+    @Column(name = "dias_venciamento")
+    private Integer diasVencimento;
 
 
     @ManyToOne
-    @JoinColumn(name = "fk_unidade_medida")
+//    @JoinColumn(name = "fk_unidade_medida")
     private UnidadeMedida unidade_medida;
 
     @ManyToOne
-    @JoinColumn(name = "fk_categoria_item")
+//    @JoinColumn(name = "fk_categoria_item")
     private CategoriaItem categoria;
 
     public Integer getId() {
@@ -52,12 +54,12 @@ public class Item {
         this.perecivel = perecivel;
     }
 
-    public Integer getDia_vencimento() {
-        return dia_vencimento;
+    public Integer getDiasVencimento() {
+        return diasVencimento;
     }
 
-    public void setDia_vencimento(Integer dia_vencimento) {
-        this.dia_vencimento = dia_vencimento;
+    public void setDiasVencimento(Integer diasVencimento) {
+        this.diasVencimento = diasVencimento;
     }
 
     public UnidadeMedida getUnidade_medida() {
