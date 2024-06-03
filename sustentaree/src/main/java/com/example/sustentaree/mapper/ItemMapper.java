@@ -13,11 +13,11 @@ import java.util.List;
 
 @Mapper
 public abstract class ItemMapper {
-    public static ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
+  public static ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
-    public abstract Item toItem (ItemCriacaoDTO itemCriacaoDTO);
-    public abstract ItemListagemDTO toItemListagemDTO (Item item);
-    public abstract List<ItemListagemDTO> toItemList (List<Item> itemList);
-    public abstract Item toItem(AlterarItemDTO alterarItemDTO);
+  public abstract Item toItem (ItemCriacaoDTO itemCriacaoDTO);
+  public abstract ItemListagemDTO toItemListagemDTO (Item item);
+  public abstract List<ItemListagemDTO> toItemListDto (List<Item> itemList);
+  public abstract Item toItemUpdate(AlterarItemDTO alterarItemDTO);
 
 }

@@ -11,12 +11,12 @@ import java.util.List;
 @Mapper
 public abstract class InteracaoEstoqueMapper {
 
-    public static final InteracaoEstoqueMapper INSTANCE = Mappers.getMapper(InteracaoEstoqueMapper.class);
+  public static final InteracaoEstoqueMapper INSTANCE = Mappers.getMapper(InteracaoEstoqueMapper.class);
 
-    public abstract InteracaoEstoque toInteracaoEstoque(InteracaoEstoqueCriacaoDTO interacaoEstoqueCriacaoDTO);
+  public abstract InteracaoEstoque toInteracaoEstoque(InteracaoEstoqueCriacaoDTO interacaoEstoqueCriacaoDTO);
 
-    public abstract InteracaoEstoqueListagemDTO toInteracaoEstoqueListagemDTO(InteracaoEstoque interacaoEstoque);
+  public abstract InteracaoEstoqueListagemDTO toInteracaoEstoqueListagemDTO(InteracaoEstoque interacaoEstoque);
 
-    public abstract List<InteracaoEstoqueListagemDTO> toInteracaoEstoqueList(List<InteracaoEstoque> interacaoEstoqueList);
+  public abstract List<InteracaoEstoqueListagemDTO> toInteracaoEstoqueList(List<InteracaoEstoque> interacaoEstoqueList);
 
 }

@@ -9,72 +9,68 @@ import lombok.Setter;
 
 @Entity
 public class Item {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_item")
-    private Integer id;
-    @Schema(description = "Nome do item", example = "Arroz")
-    private String nome;
-    @Schema(description = "Se o item é perecível", example = "true")
-    private Boolean perecivel;
-    @Schema(description = "Quantos dias até o vencimento do item", example = "30")
-    @Column(name = "dias_venciamento")
-    private Integer diasVencimento;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_item")
+  private Integer id;
+  @Schema(description = "Nome do item", example = "Arroz")
+  private String nome;
+  @Schema(description = "Se o item é perecível", example = "true")
+  private Boolean perecivel;
+  @Schema(description = "Quantos dias até o vencimento do item", example = "30")
+  private Integer dias_vencimento;
+  @ManyToOne
+  @JoinColumn(name = "fk_unidade_medida")
+  private UnidadeMedida unidade_medida;
+  @ManyToOne
+  @JoinColumn(name = "fk_categoria_item")
+  private CategoriaItem categoria;
 
+  public Integer getId() {
+    return id;
+  }
 
-    @ManyToOne
-//    @JoinColumn(name = "fk_unidade_medida")
-    private UnidadeMedida unidade_medida;
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    @ManyToOne
-//    @JoinColumn(name = "fk_categoria_item")
-    private CategoriaItem categoria;
+  public String getNome() {
+    return nome;
+  }
 
-    public Integer getId() {
-        return id;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public Boolean getPerecivel() {
+    return perecivel;
+  }
 
-    public String getNome() {
-        return nome;
-    }
+  public void setPerecivel(Boolean perecivel) {
+    this.perecivel = perecivel;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public Integer getDias_vencimento() {
+    return dias_vencimento;
+  }
 
-    public Boolean getPerecivel() {
-        return perecivel;
-    }
+  public void setDias_vencimento(Integer dias_vencimento) {
+    this.dias_vencimento = dias_vencimento;
+  }
 
-    public void setPerecivel(Boolean perecivel) {
-        this.perecivel = perecivel;
-    }
+  public UnidadeMedida getUnidade_medida() {
+    return unidade_medida;
+  }
 
-    public Integer getDiasVencimento() {
-        return diasVencimento;
-    }
+  public void setUnidade_medida(UnidadeMedida unidade_medida) {
+    this.unidade_medida = unidade_medida;
+  }
 
-    public void setDiasVencimento(Integer diasVencimento) {
-        this.diasVencimento = diasVencimento;
-    }
+  public CategoriaItem getCategoria() {
+    return categoria;
+  }
 
-    public UnidadeMedida getUnidade_medida() {
-        return unidade_medida;
-    }
-
-    public void setUnidade_medida(UnidadeMedida unidade_medida) {
-        this.unidade_medida = unidade_medida;
-    }
-
-    public CategoriaItem getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(CategoriaItem categoria) {
-        this.categoria = categoria;
-    }
+  public void setCategoria(CategoriaItem categoria) {
+    this.categoria = categoria;
+  }
 }

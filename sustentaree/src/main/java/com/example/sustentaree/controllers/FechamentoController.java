@@ -17,53 +17,53 @@ import java.util.List;
 @RequestMapping("/fechamentos")
 public class FechamentoController {
 
-    @Autowired
-    private final FechamentoService service;
+  @Autowired
+  private final FechamentoService service;
 
-    public FechamentoController(FechamentoService service) {
-        this.service = service;
-    }
+  public FechamentoController(FechamentoService service) {
+    this.service = service;
+  }
 
-    @PostMapping
-    public ResponseEntity<FechamentoListagemDTO> criar(@RequestBody @Valid FechamentoCriacaoDTO fechamentoCriacaoDTO){
-        FechamentoMapper mapper = FechamentoMapper.INSTANCE;
-        Fechamento entity = mapper.toFechamento(fechamentoCriacaoDTO);
-        Fechamento novo = this.service.criar(entity);
+  @PostMapping
+  public ResponseEntity<FechamentoListagemDTO> criar(@RequestBody @Valid FechamentoCriacaoDTO fechamentoCriacaoDTO, @RequestParam int idResponsavel){
+    FechamentoMapper mapper = FechamentoMapper.INSTANCE;
+    Fechamento entity = mapper.toFechamento(fechamentoCriacaoDTO);
+    Fechamento novo = this.service.criar(entity, idResponsavel);
 
-        FechamentoListagemDTO response = mapper.toFechamentoListagemDTO(novo);
+    FechamentoListagemDTO response = mapper.toFechamentoListagemDTO(novo);
 
-        return ResponseEntity.ok(response);
-    }
+    return ResponseEntity.ok(response);
+  }
 
-    @GetMapping
-    public ResponseEntity<List<FechamentoListagemDTO>> listar(){
-        List<Fechamento> fechamentos = this.service.listar();
+  @GetMapping
+  public ResponseEntity<List<FechamentoListagemDTO>> listar(){
+    List<Fechamento> fechamentos = this.service.listar();
 
-        FechamentoMapper mapper = FechamentoMapper.INSTANCE;
-        return ResponseEntity.ok(mapper.toFechamentoList(fechamentos));
-    }
+    FechamentoMapper mapper = FechamentoMapper.INSTANCE;
+    return ResponseEntity.ok(mapper.toFechamentoList(fechamentos));
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FechamentoListagemDTO> buscarPoId(@PathVariable Integer id){
-        Fechamento fechamento = this.service.porId(id);
+  @GetMapping("/{id}")
+  public ResponseEntity<FechamentoListagemDTO> buscarPoId(@PathVariable Integer id){
+    Fechamento fechamento = this.service.porId(id);
 
-        FechamentoMapper mapper = FechamentoMapper.INSTANCE;
-        return ResponseEntity.ok(mapper.toFechamentoListagemDTO(fechamento));
-    }
+    FechamentoMapper mapper = FechamentoMapper.INSTANCE;
+    return ResponseEntity.ok(mapper.toFechamentoListagemDTO(fechamento));
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<FechamentoListagemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarFechamentoDTO alterarFechamentoDTO){
-        FechamentoMapper mapper = FechamentoMapper.INSTANCE;
-        Fechamento entity = mapper.toFechamento(alterarFechamentoDTO);
+  @PutMapping("/{id}")
+  public ResponseEntity<FechamentoListagemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarFechamentoDTO alterarFechamentoDTO, @RequestParam int idResponsavel){
+    FechamentoMapper mapper = FechamentoMapper.INSTANCE;
+    Fechamento entity = mapper.toFechamento(alterarFechamentoDTO);
 
-        Fechamento fechamento = this.service.atualizar(entity, id);
+    Fechamento fechamento = this.service.atualizar(entity, id, idResponsavel);
 
-        return ResponseEntity.ok(mapper.toFechamentoListagemDTO(fechamento));
-    }
+    return ResponseEntity.ok(mapper.toFechamentoListagemDTO(fechamento));
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Integer id) {
-        this.service.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
+    this.service.deletar(id, idResponsavel);
+    return ResponseEntity.noContent().build();
+  }
 }

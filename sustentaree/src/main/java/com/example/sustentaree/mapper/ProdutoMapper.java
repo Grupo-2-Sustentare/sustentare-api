@@ -12,34 +12,14 @@ import java.util.List;
 
 @Mapper
 public abstract class ProdutoMapper {
-    public static ProdutoMapper INSTANCE = Mappers.getMapper(ProdutoMapper.class);
+  public static ProdutoMapper INSTANCE = Mappers.getMapper(ProdutoMapper.class);
 
-    public static Produto toProduto(ProdutoCriacaoDTO produtoCriacaoDTO) {
-        return null;
-    }
+  public abstract Produto toProduto(ProdutoCriacaoDTO produtoCriacaoDTO);
 
-    public abstract ProdutoListagemDTO toProdutoListagemDTO(Produto produto);
+  public abstract ProdutoListagemDTO toProdutoListagemDTO(Produto produto);
 
-    public abstract List<ProdutoListagemDTO> toProdutoList(List<Produto> produtoList);
+  public abstract List<ProdutoListagemDTO> toProdutoListDTO(List<Produto> produtoList);
 
-    public abstract Produto toProduto(AlterarProdutoDTO alterarProdutoDTO);
+  public abstract Produto toProdutoUpdate(AlterarProdutoDTO alterarProdutoDTO);
 
-    public static Produto toProduto(ProdutoCriacaoDTO produtoCriacaoDTO, Item item){
-
-        Produto produto = new Produto();
-        produto.setNome(produtoCriacaoDTO.getNome());
-        produto.setPreco(produtoCriacaoDTO.getPreco());
-        produto.setQtdProduto(produtoCriacaoDTO.getQtdProduto());
-        produto.setQtdMedida(produtoCriacaoDTO.getQtdMedida());
-        produto.setItem(item);
-
-//        Item item = new Item();
-//        item.setNome(itemCriacaoDTO.getNome());
-//        item.setDia_vencimento(itemCriacaoDTO.getDia_vencimento());
-//        item.setPerecivel(itemCriacaoDTO.getPerecivel());
-//        item.setUnidade_medida(unidadeMedida);
-//        item.setCategoria(categoriaItem);
-
-        return produto;
-    }
 }

@@ -12,11 +12,11 @@ import java.util.List;
 
 @Mapper
 public abstract class UnidadeMedidaMapper {
-    public static final UnidadeMedidaMapper INSTANCE =  Mappers.getMapper(UnidadeMedidaMapper.class);
+  public static final UnidadeMedidaMapper INSTANCE =  Mappers.getMapper(UnidadeMedidaMapper.class);
 
-    public abstract UnidadeMedida toUnidadeMedida(UnidadeMedidaDTO unidadeMedidaDTO);
-    public abstract UnidadeMedidaDTO toUnidadeMedidaDTO(UnidadeMedida unidadeMedida);
-    public abstract List<UnidadeMedidaDTO> toUnidadeMedidaListDTO(List<UnidadeMedida> unidadeMedidas);
+  public abstract UnidadeMedida toUnidadeMedida(UnidadeMedidaDTO unidadeMedidaDTO);
+  public abstract UnidadeMedidaDTO toUnidadeMedidaDTO(UnidadeMedida unidadeMedida);
+  public abstract List<UnidadeMedidaDTO> toUnidadeMedidaListDTO(List<UnidadeMedida> unidadeMedidas);
 
 
 }

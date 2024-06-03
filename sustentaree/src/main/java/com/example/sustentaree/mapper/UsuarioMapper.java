@@ -13,24 +13,24 @@ import java.util.List;
 public abstract class UsuarioMapper {
 
 
-    public static final UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
+  public static final UsuarioMapper INSTANCE = Mappers.getMapper(UsuarioMapper.class);
 
 
-    public abstract Usuario toUsuario(UsuarioDTO usuarioDTO);
-    public abstract UsuarioDTO toUsuarioDTO(Usuario usuario);
-    public abstract List<UsuarioDTO> toUsuarioListDTO(List<Usuario> usuarios);
-    public abstract Usuario toUsuario(AlterarUsuarioDTO alterarUsuarioDTO);
+  public abstract Usuario toUsuario(UsuarioDTO usuarioDTO);
+  public abstract UsuarioDTO toUsuarioDTO(Usuario usuario);
+  public abstract List<UsuarioDTO> toUsuarioListDTO(List<Usuario> usuarios);
+  public abstract Usuario toUsuario(AlterarUsuarioDTO alterarUsuarioDTO);
 
-    public static UsuarioTokenDto of(Usuario usuario, String token){
-        UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto();
+  public static UsuarioTokenDto of(Usuario usuario, String token){
+    UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto();
 
-        usuarioTokenDto.setId(usuario.getId());
-        usuarioTokenDto.setNome(usuario.getNome());
-        usuarioTokenDto.setSenha(usuario.getSenha());
-        usuarioTokenDto.setToken(token);
+    usuarioTokenDto.setId(usuario.getId());
+    usuarioTokenDto.setNome(usuario.getNome());
+    usuarioTokenDto.setSenha(usuario.getSenha());
+    usuarioTokenDto.setToken(token);
 
-        return usuarioTokenDto;
-    }
+    return usuarioTokenDto;
+  }
 
 
 

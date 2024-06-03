@@ -7,14 +7,14 @@ import lombok.Setter;
 
 public class CategoriaItemDTO {
 
-    @NotBlank
-    private String nome;
+  @NotBlank
+  private String nome;
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 }

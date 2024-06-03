@@ -7,58 +7,47 @@ import lombok.Data;
 
 public class ProdutoCriacaoDTO {
 
-    // @ManyToOne -> trazer o id do Item correspondente ao produto
-    private Integer fkItem;
+  // @ManyToOne -> trazer o id do Item correspondente ao produto
+  @NotBlank
+  private String nome;
+  @NotNull
+  @Positive
+  private Double preco;
+  @NotNull
+  @Positive
+  private Integer qtdProduto;
+  @NotNull
+  @Positive
+  private Double qtdMedida;
+  public String getNome() {
+    return nome;
+  }
 
-    @NotBlank
-    private String nome;
-    @NotNull
-    @Positive
-    private Double preco;
-    @NotNull
-    @Positive
-    private Integer qtdProduto;
-    @NotNull
-    @Positive
-    private Double qtdMedida;
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public Integer getFkItem() {
-        return fkItem;
-    }
+  public Double getPreco() {
+    return preco;
+  }
 
-    public void setFkItem(Integer fkItem) {
-        this.fkItem = fkItem;
-    }
+  public void setPreco(Double preco) {
+    this.preco = preco;
+  }
 
-    public String getNome() {
-        return nome;
-    }
+  public Integer getQtdProduto() {
+    return qtdProduto;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setQtdProduto(Integer qtdProduto) {
+    this.qtdProduto = qtdProduto;
+  }
 
-    public Double getPreco() {
-        return preco;
-    }
+  public Double getQtdMedida() {
+    return qtdMedida;
+  }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
-
-    public Integer getQtdProduto() {
-        return qtdProduto;
-    }
-
-    public void setQtdProduto(Integer qtdProduto) {
-        this.qtdProduto = qtdProduto;
-    }
-
-    public Double getQtdMedida() {
-        return qtdMedida;
-    }
-
-    public void setQtdMedida(Double qtdMedida) {
-        this.qtdMedida = qtdMedida;
-    }
+  public void setQtdMedida(Double qtdMedida) {
+    this.qtdMedida = qtdMedida;
+  }
 }

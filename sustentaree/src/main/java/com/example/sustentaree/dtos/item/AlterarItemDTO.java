@@ -9,33 +9,33 @@ import lombok.Setter;
 
 
 public class AlterarItemDTO {
-    @NotBlank
-    private String nome;
-    @NotNull
-    private Boolean perecivel;
-    private Integer dia_vencimento;
+  @NotBlank
+  private String nome;
+  @NotNull
+  private Boolean perecivel;
+  private Integer dias_vencimento;
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public Boolean getPerecivel() {
-        return perecivel;
-    }
+  public Boolean getPerecivel() {
+    return perecivel;
+  }
 
-    public void setPerecivel(Boolean perecivel) {
-        this.perecivel = perecivel;
-    }
+  public void setPerecivel(Boolean perecivel) {
+    this.perecivel = perecivel;
+  }
 
-    public Integer getDia_vencimento() {
-        return dia_vencimento;
-    }
+  public Integer getDias_vencimento() {
+    return dias_vencimento;
+  }
 
-    public void setDia_vencimento(Integer dia_vencimento) {
-        this.dia_vencimento = dia_vencimento;
-    }
+  public void setDias_vencimento(Integer dias_vencimento) {
+    this.dias_vencimento = dias_vencimento;
+  }
 }

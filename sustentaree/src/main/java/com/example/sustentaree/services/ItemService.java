@@ -9,60 +9,73 @@ import com.example.sustentaree.repositories.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 public class ItemService {
-    @Autowired
-    private final ItemRepository repository;
-    @Autowired
-    private final UnidadeMedidaService unidadeMedidaService;
-    @Autowired
-    private final CategoriaItemService categoriaItemService;
+  @Autowired
+  private final ItemRepository repository;
+  @Autowired
+  private final UnidadeMedidaService unidadeMedidaService;
+  @Autowired
+  private final CategoriaItemService categoriaItemService;
+  @Autowired
+  private SessaoUsuarioService sessaoUsuarioService;
 
-    public ItemService(ItemRepository repository, UnidadeMedidaService unidadeMedidaService, CategoriaItemService categoriaItemService) {
-        this.repository = repository;
-        this.unidadeMedidaService = unidadeMedidaService;
-        this.categoriaItemService = categoriaItemService;
-    }
+  public ItemService(ItemRepository repository, UnidadeMedidaService unidadeMedidaService, CategoriaItemService categoriaItemService) {
+    this.repository = repository;
+    this.unidadeMedidaService = unidadeMedidaService;
+    this.categoriaItemService = categoriaItemService;
+  }
 
-    public List<Item> listar() {
-        return this.repository.findAll();
-    }
-    public Item porId(Integer id) {
-        return this.repository.findById(id).orElseThrow(
-              () -> new RuntimeException("Item")
-        );
-    }
+  public List<Item> listar() {
+    return this.repository.findAll();
+  }
+  public Item porId(int id) {
+    return this.repository.findById(id).orElseThrow(
+        () -> new RuntimeException("Item não encontrado")
+    );
+  }
 
-    public Item criar(
-          Item novoItem,
-          int unidadeMedidaId,
-          int categoriaItemId
-    ) {
-        UnidadeMedida unidadeMedida = this.unidadeMedidaService.porId(unidadeMedidaId);
-        CategoriaItem categoriaItem = this.categoriaItemService.porId(categoriaItemId);
-        novoItem.setUnidade_medida(unidadeMedida);
-        novoItem.setCategoria(categoriaItem);
+  @Transactional
+  public Item criar(
+      Item novoItem,
+      int unidadeMedidaId,
+      int categoriaItemId,
+      int idResponsavel
+  ) {
+    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
 
-        return this.repository.save(novoItem);
-    }
+    UnidadeMedida unidadeMedida = this.unidadeMedidaService.porId(unidadeMedidaId);
+    CategoriaItem categoriaItem = this.categoriaItemService.porId(categoriaItemId);
 
-    public Item Atualizar(
-          Item item,
-          int id,
-          int unidadeMedidaId,
-          int categoriaItemId
-    ) {
-        Item itemAtual = this.porId(id);
-        item.setId(itemAtual.getId());
+    novoItem.setUnidade_medida(unidadeMedida);
+    novoItem.setCategoria(categoriaItem);
 
-        return this.criar(item, unidadeMedidaId, categoriaItemId);
-    }
+    return this.repository.save(novoItem);
+  }
 
-    public void deletar(Integer id) {
-        Item item = this.porId(id);
-        this.repository.delete(item);
-    }
+  @Transactional
+  public Item Atualizar(
+      Item item,
+      int id,
+      int unidadeMedidaId,
+      int categoriaItemId,
+      int idResponsavel
+  ) {
+    Item itemAtual = this.porId(id);
+    item.setId(itemAtual.getId());
+
+    return this.criar(item, unidadeMedidaId, categoriaItemId, idResponsavel);
+  }
+
+  @Transactional
+  public void deletar(int id, int idResponsavel) {
+    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+
+    Item item = this.porId(id);
+    this.repository.delete(item);
+  }
 }

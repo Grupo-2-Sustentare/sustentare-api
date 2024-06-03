@@ -12,66 +12,66 @@ import lombok.Setter;
 @Entity
 public class Produto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_produto")
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id_produto")
+  private Integer id;
 
-    @ManyToOne
-//    @Column(name = "fk_item")
-    private Item item;
-    private String nome;
-    private Double preco;
-    @Column(name = "qtd_produto")
-    private Integer qtdProduto;
-    @Column(name = "qtd_medida")
-    private Double qtdMedida;
+  @ManyToOne
+  @JoinColumn(name = "fk_item")
+  private Item item;
+  private String nome;
+  private Double preco;
+  @Column(name = "qtd_produto")
+  private Integer qtdProduto;
+  @Column(name = "qtd_medida")
+  private Double qtdMedida;
 
-    public Integer getId() {
-        return id;
-    }
+  public Integer getId() {
+    return id;
+  }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
-    public Item getItem() {
-        return item;
-    }
+  public Item getItem() {
+    return item;
+  }
 
-    public void setItem(Item item) {
-        this.item = item;
-    }
+  public void setItem(Item item) {
+    this.item = item;
+  }
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public Double getPreco() {
-        return preco;
-    }
+  public Double getPreco() {
+    return preco;
+  }
 
-    public void setPreco(Double preco) {
-        this.preco = preco;
-    }
+  public void setPreco(Double preco) {
+    this.preco = preco;
+  }
 
-    public Integer getQtdProduto() {
-        return qtdProduto;
-    }
+  public Integer getQtdProduto() {
+    return qtdProduto;
+  }
 
-    public void setQtdProduto(Integer qtdProduto) {
-        this.qtdProduto = qtdProduto;
-    }
+  public void setQtdProduto(Integer qtdProduto) {
+    this.qtdProduto = qtdProduto;
+  }
 
-    public Double getQtdMedida() {
-        return qtdMedida;
-    }
+  public Double getQtdMedida() {
+    return qtdMedida;
+  }
 
-    public void setQtdMedida(Double qtdMedida) {
-        this.qtdMedida = qtdMedida;
-    }
+  public void setQtdMedida(Double qtdMedida) {
+    this.qtdMedida = qtdMedida;
+  }
 }

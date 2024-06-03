@@ -13,17 +13,17 @@ import java.util.Optional;
 
 @Service
 public class AutenticacaoService implements UserDetailsService {
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByNome(username);
+  @Autowired
+  private UsuarioRepository usuarioRepository;
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    Optional<Usuario> usuarioOpt = usuarioRepository.findByNome(username);
 
-        if (usuarioOpt.isEmpty()){
+    if (usuarioOpt.isEmpty()){
 
-            throw new UsernameNotFoundException(String.format("usuario: %s nao encontrado", username));
-        }
-
-        return new UsuarioDetalhesDto(usuarioOpt.get());
+      throw new UsernameNotFoundException(String.format("usuario: %s nao encontrado", username));
     }
+
+    return new UsuarioDetalhesDto(usuarioOpt.get());
+  }
 }

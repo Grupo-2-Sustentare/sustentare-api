@@ -11,15 +11,15 @@ import java.util.List;
 
 @Mapper
 public abstract class FechamentoMapper {
-    public static final FechamentoMapper INSTANCE = Mappers.getMapper(FechamentoMapper.class);
+  public static final FechamentoMapper INSTANCE = Mappers.getMapper(FechamentoMapper.class);
 
-    public abstract Fechamento toFechamento(FechamentoCriacaoDTO fechamentoCriacaoDTO);
+  public abstract Fechamento toFechamento(FechamentoCriacaoDTO fechamentoCriacaoDTO);
 
-    public abstract FechamentoListagemDTO toFechamentoListagemDTO(Fechamento fechamento);
+  public abstract FechamentoListagemDTO toFechamentoListagemDTO(Fechamento fechamento);
 
-    public abstract List<FechamentoListagemDTO> toFechamentoList(List<Fechamento> fechamentoList);
+  public abstract List<FechamentoListagemDTO> toFechamentoList(List<Fechamento> fechamentoList);
 
-    public abstract Fechamento toFechamento(AlterarFechamentoDTO alterarFechamentoDTO);
+  public abstract Fechamento toFechamento(AlterarFechamentoDTO alterarFechamentoDTO);
 
 //    public static Fechamento toFechamento(FechamentoCriacaoDTO fechamentoCriacaoDTO) {
 //

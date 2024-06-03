@@ -7,33 +7,33 @@ import lombok.Setter;
 
 
 public class ItemCriacaoDTO {
-    @NotBlank
-    private String nome;
-    @NotNull
-    private Boolean perecivel;
-    private Integer diasVencimento;
+  @NotBlank
+  private String nome;
+  @NotNull
+  private Boolean perecivel;
+  private Integer dias_vencimento;
 
-    public String getNome() {
-        return nome;
-    }
+  public String getNome() {
+    return nome;
+  }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
+  public void setNome(String nome) {
+    this.nome = nome;
+  }
 
-    public Boolean getPerecivel() {
-        return perecivel;
-    }
+  public Boolean getPerecivel() {
+    return perecivel;
+  }
 
-    public void setPerecivel(Boolean perecivel) {
-        this.perecivel = perecivel;
-    }
+  public void setPerecivel(Boolean perecivel) {
+    this.perecivel = perecivel;
+  }
 
-    public Integer getDiasVencimento() {
-        return diasVencimento;
-    }
+  public Integer getDias_vencimento() {
+    return dias_vencimento;
+  }
 
-    public void setDiasVencimento(Integer diasVencimento) {
-        this.diasVencimento = diasVencimento;
-    }
+  public void setDias_vencimento(Integer dias_vencimento) {
+    this.dias_vencimento = dias_vencimento;
+  }
 }

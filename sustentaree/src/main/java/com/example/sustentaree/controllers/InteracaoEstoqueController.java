@@ -16,44 +16,47 @@ import java.util.List;
 @RequestMapping("/interacoes-estoque")
 public class InteracaoEstoqueController {
 
-    @Autowired
-    private final InteracaoService service;
+  @Autowired
+  private final InteracaoService service;
 
-    public InteracaoEstoqueController(InteracaoService service) {
-        this.service = service;
-    }
+  public InteracaoEstoqueController(InteracaoService service) {
+    this.service = service;
+  }
 
-    @PostMapping
-    public ResponseEntity<InteracaoEstoqueListagemDTO> criar(@RequestBody @Valid InteracaoEstoqueCriacaoDTO interacaoEstoqueCriacaoDTO,
-                                                             @RequestParam Integer idProduto,
-                                                             @RequestParam Integer fkFechamento){
-        InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
-        InteracaoEstoque interacaoEstoque = mapper.toInteracaoEstoque(interacaoEstoqueCriacaoDTO);
-        InteracaoEstoque interacaoEstoqueNovo = this.service.criar(interacaoEstoque, idProduto, fkFechamento);
-        InteracaoEstoqueListagemDTO response = mapper.toInteracaoEstoqueListagemDTO(interacaoEstoqueNovo);
+  @PostMapping
+  public ResponseEntity<InteracaoEstoqueListagemDTO> criar(
+      @RequestBody @Valid InteracaoEstoqueCriacaoDTO interacaoEstoqueCriacaoDTO,
+      @RequestParam int idProduto,
+      @RequestParam int fkFechamento,
+      @RequestParam int idResponsavel
+  ){
+    InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
+    InteracaoEstoque interacaoEstoque = mapper.toInteracaoEstoque(interacaoEstoqueCriacaoDTO);
+    InteracaoEstoque interacaoEstoqueNovo = this.service.criar(interacaoEstoque, idProduto, fkFechamento, idResponsavel);
+    InteracaoEstoqueListagemDTO response = mapper.toInteracaoEstoqueListagemDTO(interacaoEstoqueNovo);
 
-        return ResponseEntity.ok(response);
-    }
+    return ResponseEntity.ok(response);
+  }
 
-    @GetMapping
-    public ResponseEntity<List<InteracaoEstoqueListagemDTO>> listar(){
-        List<InteracaoEstoque> interacaoEstoques = this.service.listar();
+  @GetMapping
+  public ResponseEntity<List<InteracaoEstoqueListagemDTO>> listar(){
+    List<InteracaoEstoque> interacaoEstoques = this.service.listar();
 
-        InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
-        return ResponseEntity.ok(mapper.toInteracaoEstoqueList(interacaoEstoques));
-    }
+    InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
+    return ResponseEntity.ok(mapper.toInteracaoEstoqueList(interacaoEstoques));
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<InteracaoEstoqueListagemDTO> buscarPoId(@PathVariable Integer id){
-        InteracaoEstoque interacaoEstoque = this.service.porId(id);
+  @GetMapping("/{id}")
+  public ResponseEntity<InteracaoEstoqueListagemDTO> buscarPoId(@PathVariable int id){
+    InteracaoEstoque interacaoEstoque = this.service.porId(id);
 
-        InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
-        return ResponseEntity.ok(mapper.toInteracaoEstoqueListagemDTO(interacaoEstoque));
-    }
+    InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
+    return ResponseEntity.ok(mapper.toInteracaoEstoqueListagemDTO(interacaoEstoque));
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Integer id) {
-        this.service.deletar(id);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> remover(@PathVariable int id, @RequestParam int idResponsavel) {
+    this.service.deletar(id, idResponsavel);
+    return ResponseEntity.noContent().build();
+  }
 }

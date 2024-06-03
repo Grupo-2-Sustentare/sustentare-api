@@ -6,6 +6,7 @@ import com.example.sustentaree.dtos.produto.ProdutoCriacaoDTO;
 import com.example.sustentaree.dtos.produto.ProdutoListagemDTO;
 import com.example.sustentaree.mapper.ProdutoMapper;
 import com.example.sustentaree.services.ProdutoService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,56 +19,56 @@ import java.util.List;
 @RequestMapping("/produtos")
 public class ProdutoController {
 
-    @Autowired
-    private final ProdutoService service;
+  @Autowired
+  private final ProdutoService service;
 
-    public ProdutoController(ProdutoService service) {
-        this.service = service;
-    }
+  public ProdutoController(ProdutoService service) {
+    this.service = service;
+  }
 
-    @PostMapping
-    public ResponseEntity<ProdutoListagemDTO> criar(@RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO){
-        Produto produtoCriada = ProdutoMapper.toProduto(produtoCriacaoDTO);
-        assert produtoCriada != null;
-        Produto produto = service.criar(produtoCriada, produtoCriacaoDTO.getFkItem());
+  @PostMapping
+  public ResponseEntity<ProdutoListagemDTO> criar(@RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO, @RequestParam int fkItem, @RequestParam int idResponsavel){
+    ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+    Produto produto = mapper.toProduto(produtoCriacaoDTO);
+    Produto produtoCriado = this.service.criar(produto, fkItem, idResponsavel);
 
-        URI uri = URI.create("/produtos/" + produtoCriada.getId());
-        return ResponseEntity.created(uri).body(ProdutoMapper.INSTANCE.toProdutoListagemDTO(produto));
-    }
+    URI uri = URI.create("/produtos/" + produtoCriado.getId());
+    return ResponseEntity.created(uri).body(ProdutoMapper.INSTANCE.toProdutoListagemDTO(produto));
+  }
 
-    @GetMapping
-    public ResponseEntity<List<ProdutoListagemDTO>> listar(){
-        List<Produto> produtos = this.service.listar();
+  @GetMapping
+  public ResponseEntity<List<ProdutoListagemDTO>> listar(){
+    List<Produto> produtos = this.service.listar();
 
-        ProdutoMapper mapper = ProdutoMapper.INSTANCE;
-        List<ProdutoListagemDTO> response = mapper.toProdutoList(produtos);
-        return ResponseEntity.ok(response);
-    }
+    ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+    List<ProdutoListagemDTO> response = mapper.toProdutoListDTO(produtos);
+    return ResponseEntity.ok(response);
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProdutoListagemDTO> buscarPoId(@PathVariable Integer id){
-        Produto produto = this.service.porId(id);
+  @GetMapping("/{id}")
+  public ResponseEntity<ProdutoListagemDTO> buscarPoId(@PathVariable Integer id){
+    Produto produto = this.service.porId(id);
 
-        ProdutoMapper mapper = ProdutoMapper.INSTANCE;
-        ProdutoListagemDTO response = mapper.toProdutoListagemDTO(produto);
+    ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+    ProdutoListagemDTO response = mapper.toProdutoListagemDTO(produto);
 
-        return ResponseEntity.ok(response);
-    }
+    return ResponseEntity.ok(response);
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProdutoListagemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarProdutoDTO alterarProdutoDTO){
-        ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+  @PutMapping("/{id}")
+  public ResponseEntity<ProdutoListagemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarProdutoDTO alterarProdutoDTO, @RequestParam int fkItem ,@RequestParam int idResponsavel){
+    ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+    Produto produto = mapper.toProdutoUpdate(alterarProdutoDTO);
 
-        Produto produto = mapper.toProduto(alterarProdutoDTO);
-        Produto produtoAtualizado = this.service.Atualizar(produto, id, alterarProdutoDTO.getFkItem());
+    Produto produtoAtualizado = this.service.Atualizar(produto,id, fkItem, idResponsavel);
 
-        ProdutoListagemDTO response = mapper.toProdutoListagemDTO(produtoAtualizado);
-        return ResponseEntity.ok(response);
-    }
+    ProdutoListagemDTO response = mapper.toProdutoListagemDTO(produtoAtualizado);
+    return ResponseEntity.ok(response);
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remover(@PathVariable Integer id) {
-        this.service.deletar(id);
-        return ResponseEntity.notFound().build();
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
+    this.service.deletar(id, idResponsavel);
+    return ResponseEntity.notFound().build();
+  }
 }
