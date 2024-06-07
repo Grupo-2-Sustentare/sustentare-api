@@ -1,5 +1,7 @@
 package com.example.sustentaree.dtos.interacaoEstoque;
 
+import com.example.sustentaree.domain.fechamento.Fechamento;
+import com.example.sustentaree.domain.produto.Produto;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -7,13 +9,13 @@ import java.time.LocalDateTime;
 public class InteracaoEstoqueListagemDTO {
   private Integer id;
 
-  //    @ManyToOne -> trazer o id do Produto correspondente até interação
-  private Integer fkProduto;
+  // Ajustar o fkProduto.
+  private Produto produto;
 
   private LocalDateTime dataHora;
 
   //    0 ou 1 fechamento estoque para cada interação do estoque
-  private Integer fkFechamentoEstoque;
+  private Fechamento fechamento;
 
   private String categoriaInteracao;
 
@@ -25,12 +27,12 @@ public class InteracaoEstoqueListagemDTO {
     this.id = id;
   }
 
-  public Integer getFkProduto() {
-    return fkProduto;
+  public Produto getProduto() {
+    return produto;
   }
 
-  public void setFkProduto(Integer fkProduto) {
-    this.fkProduto = fkProduto;
+  public void setProduto(Produto produto) {
+    this.produto = produto;
   }
 
   public LocalDateTime getDataHora() {
@@ -41,12 +43,12 @@ public class InteracaoEstoqueListagemDTO {
     this.dataHora = dataHora;
   }
 
-  public Integer getFkFechamentoEstoque() {
-    return fkFechamentoEstoque;
+  public Fechamento getFechamento() {
+    return fechamento;
   }
 
-  public void setFkFechamentoEstoque(Integer fkFechamentoEstoque) {
-    this.fkFechamentoEstoque = fkFechamentoEstoque;
+  public void setFechamento(Fechamento fechamento) {
+    this.fechamento = fechamento;
   }
 
   public String getCategoriaInteracao() {

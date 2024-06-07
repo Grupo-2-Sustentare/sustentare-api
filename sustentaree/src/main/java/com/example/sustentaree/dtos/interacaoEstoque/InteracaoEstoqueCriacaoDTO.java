@@ -1,5 +1,6 @@
 package com.example.sustentaree.dtos.interacaoEstoque;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -8,26 +9,13 @@ import java.time.LocalDateTime;
 
 public class InteracaoEstoqueCriacaoDTO {
 
-  @NotNull
-  //    @ManyToOne -> trazer o id do Produto correspondente até interação
-  private Integer fkProduto;
 
   @NotNull
+  @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime dataHora;
-
-  //    0 ou 1 fechamento estoque para cada interação do estoque
-  private Integer fkFechamentoEstoque;
 
   @NotBlank
   private String categoriaInteracao;
-
-  public Integer getFkProduto() {
-    return fkProduto;
-  }
-
-  public void setFkProduto(Integer fkProduto) {
-    this.fkProduto = fkProduto;
-  }
 
   public LocalDateTime getDataHora() {
     return dataHora;
@@ -35,14 +23,6 @@ public class InteracaoEstoqueCriacaoDTO {
 
   public void setDataHora(LocalDateTime dataHora) {
     this.dataHora = dataHora;
-  }
-
-  public Integer getFkFechamentoEstoque() {
-    return fkFechamentoEstoque;
-  }
-
-  public void setFkFechamentoEstoque(Integer fkFechamentoEstoque) {
-    this.fkFechamentoEstoque = fkFechamentoEstoque;
   }
 
   public String getCategoriaInteracao() {

@@ -1,5 +1,7 @@
 package com.example.sustentaree.domain.interacao_estoque;
 
+import com.example.sustentaree.domain.fechamento.Fechamento;
+import com.example.sustentaree.domain.produto.Produto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,15 +18,16 @@ public class InteracaoEstoque {
   @Column(name = "id_interacao_estoque")
   private Integer id;
 
-  //    @ManyToOne -> trazer o id do Produto correspondente até interação
-  @Column(name = "fk_produto")
-  private Integer fkProduto;
+  @ManyToOne
+  @JoinColumn(name = "fk_produto")
+  private Produto produto;
+
   @Column(name = "data_hora")
   private LocalDateTime dataHora;
 
-  //    0 ou 1 fechamento estoque para cada interação do estoque
-  @Column(name = "fk_fechamento_estoque")
-  private Integer fkFechamentoEstoque;
+  @ManyToOne
+  @JoinColumn(name = "fk_fechamento_estoque")
+  private Fechamento fechamentoEstoque;
 
   @Column(name = "categoria_interacao")
   private String categoriaInteracao;
@@ -37,14 +40,6 @@ public class InteracaoEstoque {
     this.id = id;
   }
 
-  public Integer getFkProduto() {
-    return fkProduto;
-  }
-
-  public void setFkProduto(Integer fkProduto) {
-    this.fkProduto = fkProduto;
-  }
-
   public LocalDateTime getDataHora() {
     return dataHora;
   }
@@ -53,12 +48,20 @@ public class InteracaoEstoque {
     this.dataHora = dataHora;
   }
 
-  public Integer getFkFechamentoEstoque() {
-    return fkFechamentoEstoque;
+  public Produto getProduto() {
+    return produto;
   }
 
-  public void setFkFechamentoEstoque(Integer fkFechamentoEstoque) {
-    this.fkFechamentoEstoque = fkFechamentoEstoque;
+  public void setProduto(Produto produto) {
+    this.produto = produto;
+  }
+
+  public Fechamento getFechamentoEstoque() {
+    return fechamentoEstoque;
+  }
+
+  public void setFechamentoEstoque(Fechamento fechamentoEstoque) {
+    this.fechamentoEstoque = fechamentoEstoque;
   }
 
   public String getCategoriaInteracao() {

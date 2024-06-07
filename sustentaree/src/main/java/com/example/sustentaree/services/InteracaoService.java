@@ -45,23 +45,27 @@ public class InteracaoService {
     if (interacaoEstoqueOpt.isEmpty()) {
       throw new EntidadeNaoEncontradaException("Interação de Estoque");
     }
-
     return interacaoEstoqueOpt.get();
   }
 
   @Transactional
   public InteracaoEstoque criar(
       InteracaoEstoque novaInteracao,
-      int fkProduto,
-      int fkFechamento,
-      int idResponsavel
+      Integer fkProduto,
+      Integer fkFechamento,
+      Integer idResponsavel
   ) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
 
-    Produto produto = this.produtoService.porId(fkProduto);
-    Fechamento fechamento = this.fechamentoService.porId(fkFechamento);
-    novaInteracao.setFkProduto(produto.getId());
-    novaInteracao.setFkFechamentoEstoque(fechamento.getId());
+   if (fkFechamento == 0){
+     Produto produto = this.produtoService.porId(fkProduto);
+     novaInteracao.setProduto(produto);
+   }else {
+     Produto produto = this.produtoService.porId(fkProduto);
+     novaInteracao.setProduto(produto);
+     Fechamento fechamento = this.fechamentoService.porId(fkFechamento);
+     novaInteracao.setFechamentoEstoque(fechamento);
+   }
 
     return this.repository.save(novaInteracao);
   }
