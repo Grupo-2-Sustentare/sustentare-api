@@ -54,9 +54,9 @@ public class InteracaoEstoqueController {
     return ResponseEntity.ok(mapper.toInteracaoEstoqueListagemDTO(interacaoEstoque));
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> remover(@PathVariable int id, @RequestParam int idResponsavel) {
-    this.service.deletar(id, idResponsavel);
-    return ResponseEntity.noContent().build();
-  }
+//  @DeleteMapping("/{id}")
+//  public ResponseEntity<Void> remover(@PathVariable int id, @RequestParam int idResponsavel) {
+//    this.service.deletar(id, idResponsavel);
+//    return ResponseEntity.noContent().build();
+//  }
 }

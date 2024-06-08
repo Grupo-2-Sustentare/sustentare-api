@@ -70,11 +70,11 @@ public class InteracaoService {
     return this.repository.save(novaInteracao);
   }
 
-  @Transactional
-  public void deletar(Integer id, int idResponsavel) {
-    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-
-    InteracaoEstoque interacaoEstoque = this.porId(id);
-    this.repository.delete(interacaoEstoque);
-  }
+//  @Transactional
+//  public void deletar(Integer id, int idResponsavel) {
+//    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+//
+//    InteracaoEstoque interacaoEstoque = this.porId(id);
+//    this.repository.delete(interacaoEstoque);
+//  }
 }
