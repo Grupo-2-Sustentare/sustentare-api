@@ -18,7 +18,7 @@ public class Kpi {
         this.itemService = itemService;
     }
 
-    @GetMapping
+    @GetMapping("/itemMaisAntigo")
     public ResponseEntity<Item> getKpi() {
         Item item = itemService.itemParado();
         if (item == null) {
