@@ -51,4 +51,13 @@ public class Kpi {
         return ResponseEntity.ok(interacaoEstoque);
     }
 
+    @GetMapping("/vencimento")
+    public ResponseEntity<List<Item>> getKpiVencimento() {
+        List<Item> interacaoEstoques = itemService.kpiVencimento();
+        if (interacaoEstoques.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(interacaoEstoques);
+    }
+
 }
