@@ -79,8 +79,11 @@ public class InteracaoService {
 //  }
 
   public InteracaoEstoque kpiUltimaAdicaoEstoque() {
-    InteracaoEstoque interacaoEstoque = repository.findByUltimaAdicao();
-    return interacaoEstoque;
+    return repository.findByUltimaAdicao();
+  }
+
+  public List<InteracaoEstoque> kpiMaiorRetirada(){
+    return repository.getMaiorRetirada();
   }
 
 

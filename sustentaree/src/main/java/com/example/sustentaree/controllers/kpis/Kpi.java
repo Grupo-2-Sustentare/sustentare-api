@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/kpis")
 public class Kpi {
@@ -23,7 +25,7 @@ public class Kpi {
     }
 
     @GetMapping("/itemMaisAntigo")
-    public ResponseEntity<Item> getKpi() {
+    public ResponseEntity<Item> getKpiItemMaisAntigo() {
         Item item = itemService.itemParado();
         if (item == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -31,9 +33,18 @@ public class Kpi {
         return ResponseEntity.ok(item);
     }
 
-    @GetMapping("ultimaAdicao")
-    public ResponseEntity<InteracaoEstoque> getKpiList() {
+    @GetMapping("/ultimaAdicao")
+    public ResponseEntity<InteracaoEstoque> getKpiUltimaAdicao() {
         InteracaoEstoque interacaoEstoque = interacaoService.kpiUltimaAdicaoEstoque();
+        if (interacaoEstoque == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        return ResponseEntity.ok(interacaoEstoque);
+    }
+
+    @GetMapping("/maiorRetirada")
+    public ResponseEntity<List<InteracaoEstoque>> getKpiMaiorRetirada() {
+        List<InteracaoEstoque> interacaoEstoque = interacaoService.kpiMaiorRetirada();
         if (interacaoEstoque == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
