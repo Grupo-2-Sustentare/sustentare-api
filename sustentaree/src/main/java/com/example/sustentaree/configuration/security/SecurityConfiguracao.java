@@ -64,7 +64,8 @@ public class SecurityConfiguracao {
       new AntPathRequestMatcher("/interacoes-estoque/**"),
       new AntPathRequestMatcher("/h2-console/**"),
       new AntPathRequestMatcher("/error/**"),
-          new AntPathRequestMatcher("/kpis/**")
+          new AntPathRequestMatcher("/kpis/**"),
+          new AntPathRequestMatcher("/graficos/**")
       //pode precisar ter o mySQL
   };
 
