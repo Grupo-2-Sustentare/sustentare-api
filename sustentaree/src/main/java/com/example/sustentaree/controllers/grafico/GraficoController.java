@@ -1,6 +1,7 @@
 package com.example.sustentaree.controllers.grafico;
 
 import com.example.sustentaree.domain.grafico.ViewEntradasSaidas;
+import com.example.sustentaree.domain.grafico.ViewVencerNaSemana;
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.services.GraficoService;
 import com.example.sustentaree.services.InteracaoService;
@@ -17,7 +18,7 @@ import java.util.List;
 @RequestMapping("/graficos")
 public class GraficoController {
 
-    private final GraficoService graficoService;  ;
+    private final GraficoService graficoService;
 
     public GraficoController(GraficoService graficoService) {
         this.graficoService = graficoService;
@@ -30,5 +31,14 @@ public class GraficoController {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(viewEntradasSaidas);
+    }
+
+    @GetMapping("/vencerNaSemana")
+    public ResponseEntity<List<ViewVencerNaSemana>> vencerNaSemana(){
+        List<ViewVencerNaSemana> viewVencerNaSemanas = graficoService.vencerNaSemana();
+        if(viewVencerNaSemanas == null){
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return ResponseEntity.ok(viewVencerNaSemanas);
     }
 }
