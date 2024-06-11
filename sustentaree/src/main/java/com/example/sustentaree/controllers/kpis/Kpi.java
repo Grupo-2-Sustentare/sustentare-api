@@ -1,9 +1,12 @@
 package com.example.sustentaree.controllers.kpis;
 
+import com.example.sustentaree.domain.grafico.ViewItemParado;
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.services.InteracaoService;
 import com.example.sustentaree.services.ItemService;
+import com.example.sustentaree.services.KpisService;
+import com.example.sustentaree.services.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,19 +21,21 @@ import java.util.List;
 public class Kpi {
     private final ItemService itemService;
     private final InteracaoService interacaoService;
+    private final KpisService kpisService;
 
-    public Kpi(ItemService itemService, InteracaoService interacaoService) {
+    public Kpi(ItemService itemService, InteracaoService interacaoService, KpisService kpisService) {
         this.itemService = itemService;
         this.interacaoService = interacaoService;
+        this.kpisService = kpisService;
     }
 
     @GetMapping("/itemMaisAntigo")
-    public ResponseEntity<Item> getKpiItemMaisAntigo() {
-        Item item = itemService.itemParado();
-        if (item == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    public ResponseEntity<List<ViewItemParado>> getKpiItemMaisAntigo() {
+        List<ViewItemParado> itens = kpisService.itemParado();
+        if (itens.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
-        return ResponseEntity.ok(item);
+        return ResponseEntity.ok(itens);
     }
 
     @GetMapping("/ultimaAdicao")
