@@ -89,4 +89,7 @@ public class ItemService {
   public List<Item> kpiVencimento(){
     return repository.getItemVencimento();
   }
+  public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
+    this.sessaoUsuarioService = sessaoUsuarioService;
+  }
 }

@@ -51,4 +51,7 @@ public class UnidadeMedidaService {
     UnidadeMedida unidadeMedida = this.porId(id);
     this.repository.delete(unidadeMedida);
   }
+  public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
+    this.sessaoUsuarioService = sessaoUsuarioService;
+  }
 }
