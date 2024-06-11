@@ -60,4 +60,7 @@ public class ProdutoService {
     this.produtoRepository.delete(produto);
   }
 
+  public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
+    this.sessaoUsuarioService = sessaoUsuarioService;
+  }
 }
