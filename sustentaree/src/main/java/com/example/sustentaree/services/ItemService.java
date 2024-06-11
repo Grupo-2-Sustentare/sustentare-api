@@ -1,6 +1,7 @@
 package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
+import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.mapper.ItemMapper;
@@ -8,8 +9,10 @@ import com.example.sustentaree.mapper.UnidadeMedidaMapper;
 import com.example.sustentaree.repositories.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -77,5 +80,17 @@ public class ItemService {
 
     Item item = this.porId(id);
     this.repository.delete(item);
+  }
+
+  public Item itemParado(){
+    return repository.findByItemParado();
+  }
+
+  public List<Item> kpiVencimento(){
+    return repository.getItemVencimento();
+  }
+
+  public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
+    this.sessaoUsuarioService = sessaoUsuarioService;
   }
 }

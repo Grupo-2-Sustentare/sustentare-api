@@ -106,5 +106,7 @@ public class UsuarioService {
     Usuario usuario = this.porId(id);
     this.repository.delete(usuario);
   }
-
+  public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
+    this.sessaoUsuarioService = sessaoUsuarioService;
+  }
 }

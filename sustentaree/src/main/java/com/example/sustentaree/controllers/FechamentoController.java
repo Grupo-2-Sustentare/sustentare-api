@@ -61,9 +61,9 @@ public class FechamentoController {
     return ResponseEntity.ok(mapper.toFechamentoListagemDTO(fechamento));
   }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
-    this.service.deletar(id, idResponsavel);
-    return ResponseEntity.noContent().build();
-  }
+//  @DeleteMapping("/{id}")
+//  public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
+//    this.service.deletar(id, idResponsavel);
+//    return ResponseEntity.noContent().build();
+//  }
 }

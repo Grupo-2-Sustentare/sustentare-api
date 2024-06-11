@@ -77,4 +77,14 @@ public class InteracaoService {
 //    InteracaoEstoque interacaoEstoque = this.porId(id);
 //    this.repository.delete(interacaoEstoque);
 //  }
+
+  public InteracaoEstoque kpiUltimaAdicaoEstoque() {
+    return repository.findByUltimaAdicao();
+  }
+
+  public List<InteracaoEstoque> kpiMaiorRetirada(){
+    return repository.getMaiorRetirada();
+  }
+
+
 }

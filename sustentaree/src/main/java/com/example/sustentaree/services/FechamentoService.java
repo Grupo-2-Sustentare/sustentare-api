@@ -54,11 +54,15 @@ public class FechamentoService {
 
     return this.criar(fechamento, idResponsavel);
   }
-  @Transactional
-  public void deletar(Integer id, int idResponsavel) {
-    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+//  @Transactional
+//  public void deletar(Integer id, int idResponsavel) {
+//    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+//
+//    Fechamento fechamento = this.porId(id);
+//    this.repository.delete(fechamento);
+//  }
 
-    Fechamento fechamento = this.porId(id);
-    this.repository.delete(fechamento);
+  public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
+    this.sessaoUsuarioService = sessaoUsuarioService;
   }
 }

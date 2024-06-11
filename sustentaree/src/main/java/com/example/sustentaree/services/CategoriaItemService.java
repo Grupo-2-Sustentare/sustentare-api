@@ -55,4 +55,8 @@ public class CategoriaItemService {
     CategoriaItem categoriaItem = this.porId(id);
     this.repository.delete(categoriaItem);
   }
+
+  public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
+    this.sessaoUsuarioService = sessaoUsuarioService;
+  }
 }
