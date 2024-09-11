@@ -71,4 +71,9 @@ public class ProdutoController {
     this.service.deletar(id, idResponsavel);
     return ResponseEntity.notFound().build();
   }
+
+  @GetMapping("/hash/{categoria}")
+  public ResponseEntity<List<Produto>> getByHash(@RequestParam String categoria){
+    return ResponseEntity.ok(this.service.getByHash(categoria));
+  }
 }

@@ -3,6 +3,7 @@ package com.example.sustentaree.services;
 import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.mapper.CategoriaItemMapper;
 import com.example.sustentaree.repositories.CategoriaItemRepository;
+import com.example.sustentaree.services.data_structure.HashTable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
