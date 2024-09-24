@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
@@ -19,8 +18,9 @@ import software.amazon.awssdk.services.s3.S3Client;
 import java.util.Base64;
 import java.util.Map;
 
-@Service
-public class LambdaService {
+@RestController
+@RequestMapping("/lambdaTest")
+public class LambdaServiceTest {
 
     private S3Client criarClienteS3() {
         Region region = Region.US_EAST_1;
@@ -28,9 +28,11 @@ public class LambdaService {
         return s3;
     }
 
-
-    public ResponseEntity enviarImagemS3(byte[] imagem, String nomeArquivo, String functionName) {
-
+    @PostMapping
+    public ResponseEntity criar(@RequestBody @Valid byte[] imagem, @RequestParam String nomeArquivo, @RequestParam String functionName) {
+        System.out.println(imagem);
+        System.out.println(nomeArquivo);
+        System.out.println(functionName);
         String funcao = "envioDeImagem";
         Region region = Region.US_EAST_1;
 
@@ -73,7 +75,7 @@ public class LambdaService {
             byte[] respostaImagem =
                     objectMapper.readValue(value, byte[].class);
 
-            System.out.println(respostaImagem);
+			System.out.println(respostaImagem);
 
             System.out.println();
             if (respostaImagem != null) {

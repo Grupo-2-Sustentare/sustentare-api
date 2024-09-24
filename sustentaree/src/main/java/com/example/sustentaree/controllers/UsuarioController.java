@@ -3,6 +3,7 @@ package com.example.sustentaree.controllers;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
+import com.example.sustentaree.services.LambdaService;
 import com.example.sustentaree.services.UsuarioService;
 import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
@@ -25,8 +26,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -34,6 +37,8 @@ public class UsuarioController {
 
   @Autowired
   private final UsuarioService service;
+  @Autowired
+  private LambdaService lambdaService;
 
   public UsuarioController(UsuarioService service) {
     this.service = service;
@@ -58,6 +63,19 @@ public class UsuarioController {
   @PostMapping
   public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) {
     UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+
+    if (dto.getImagem() != null){
+        CompletableFuture.runAsync(() ->
+                {
+                    byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
+                    Integer totalUsuarios = service.getTotalUsuarios() + 1;
+                    //Converter totalUsuarios para String
+                    String nomeArquivo = totalUsuarios.toString();
+                    lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                }
+                );
+    }
+
 
     Usuario entity = mapper.toUsuario(dto);
     Usuario usuarioSalvo = this.service.criar(entity, idResponsavel);

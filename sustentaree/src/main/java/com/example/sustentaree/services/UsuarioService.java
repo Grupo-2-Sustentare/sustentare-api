@@ -109,4 +109,8 @@ public class UsuarioService {
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
   }
+
+  public Integer getTotalUsuarios(){
+    return this.repository.findAll().size();
+  }
 }
