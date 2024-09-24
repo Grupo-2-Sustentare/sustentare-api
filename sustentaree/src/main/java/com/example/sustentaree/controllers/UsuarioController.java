@@ -70,7 +70,7 @@ public class UsuarioController {
                     byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
                     Integer totalUsuarios = service.getTotalUsuarios() + 1;
                     //Converter totalUsuarios para String
-                    String nomeArquivo = totalUsuarios.toString();
+                    String nomeArquivo = "/usuarios/imagens/"+totalUsuarios.toString();
                     lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
                 }
                 );

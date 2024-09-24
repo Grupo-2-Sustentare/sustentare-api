@@ -5,6 +5,7 @@ import com.example.sustentaree.dtos.produto.AlterarProdutoDTO;
 import com.example.sustentaree.dtos.produto.ProdutoCriacaoDTO;
 import com.example.sustentaree.dtos.produto.ProdutoListagemDTO;
 import com.example.sustentaree.mapper.ProdutoMapper;
+import com.example.sustentaree.services.LambdaService;
 import com.example.sustentaree.services.ProdutoService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
@@ -13,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/produtos")
@@ -21,6 +24,8 @@ public class ProdutoController {
 
   @Autowired
   private final ProdutoService service;
+  @Autowired
+  private LambdaService lambdaService;
 
   public ProdutoController(ProdutoService service) {
     this.service = service;
@@ -28,6 +33,19 @@ public class ProdutoController {
 
   @PostMapping
   public ResponseEntity<ProdutoListagemDTO> criar(@RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO, @RequestParam int fkItem, @RequestParam int idResponsavel){
+
+    if (produtoCriacaoDTO.getImagem() != null){
+      CompletableFuture.runAsync(() ->
+              {
+                byte[] imagemBytes = Base64.getDecoder().decode(produtoCriacaoDTO.getImagem());
+                Integer totalUsuarios = service.getTotalProdutos() + 1;
+                //Converter totalUsuarios para String
+                String nomeArquivo = "/produtos/imagens/"+totalUsuarios.toString();
+                lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+              }
+      );
+    }
+
     ProdutoMapper mapper = ProdutoMapper.INSTANCE;
     Produto produto = mapper.toProduto(produtoCriacaoDTO);
     Produto produtoCriado = this.service.criar(produto, fkItem, idResponsavel);
