@@ -9,8 +9,6 @@ public class AlterarProdutoDTO {
 
   // @ManyToOne -> trazer o id do Item correspondente ao produto
 
-  @NotBlank
-  private String nome;
   @NotNull
   @Positive
   private Double preco;
@@ -20,14 +18,6 @@ public class AlterarProdutoDTO {
   @NotNull
   @Positive
   private Double qtdMedida;
-
-  public String getNome() {
-    return nome;
-  }
-
-  public void setNome(String nome) {
-    this.nome = nome;
-  }
 
   public Double getPreco() {
     return preco;
