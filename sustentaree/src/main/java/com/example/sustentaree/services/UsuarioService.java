@@ -63,7 +63,7 @@ public class UsuarioService {
   }
 
   public List<Usuario> listar(){
-    return this.repository.findAll();
+    return this.repository.findByAtivoTrue();
   }
 
   public Usuario porId(Integer id){

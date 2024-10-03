@@ -20,6 +20,15 @@ public class AlterarProdutoDTO {
   @NotNull
   @Positive
   private Double qtdMedida;
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public String getNome() {
     return nome;

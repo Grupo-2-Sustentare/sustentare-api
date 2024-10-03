@@ -39,12 +39,12 @@ class FechamentoServiceTest {
     @DisplayName("Deve listar todos os Fechamentos")
     public void listarFechamento() {
         List<Fechamento> fechamentos = new ArrayList<>();
-        when(fechamentoRepository.findAll()).thenReturn(fechamentos);
+        when(fechamentoRepository.findByAtivoTrue()).thenReturn(fechamentos);
 
         List<Fechamento> result = fechamentoService.listar();
 
         assertEquals(fechamentos, result);
-        verify(fechamentoRepository, times(1)).findAll();
+        verify(fechamentoRepository, times(1)).findByAtivoTrue();
     }
 
     @Test

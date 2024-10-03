@@ -26,6 +26,15 @@ public class Produto {
   private Integer qtdProduto;
   @Column(name = "qtd_medida")
   private Double qtdMedida;
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public Integer getId() {
     return id;

@@ -22,6 +22,15 @@ public class UnidadeMedida {
   @Schema(description = "Símbolo da unidade de medida", example = "kg")
   @Column(name = "simbolo")
   private String simbolo;
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public Integer getId() {
     return id;

@@ -39,7 +39,7 @@ public class UnidadeMedidaServiceTest {
     UnidadeMedida unidadeMedida = new UnidadeMedida();
     unidadeMedida.setId(1);
 
-    when(unidadeMedidaRepository.findAll()).thenReturn(java.util.List.of(unidadeMedida));
+    when(unidadeMedidaRepository.findByAtivoTrue()).thenReturn(java.util.List.of(unidadeMedida));
 
     var result = unidadeMedidaService.listar();
 

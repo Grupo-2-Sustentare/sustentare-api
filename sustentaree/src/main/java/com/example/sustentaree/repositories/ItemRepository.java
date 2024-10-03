@@ -1,5 +1,6 @@
 package com.example.sustentaree.repositories;
 
+import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.domain.item.Item;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     @Query(value = "select * from item_vencimento;",nativeQuery = true)
     List<Item> getItemVencimento();
+
+    List<Item> findByAtivoTrue();
 }

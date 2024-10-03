@@ -28,6 +28,7 @@ public abstract class UsuarioMapper {
     usuarioTokenDto.setNome(usuario.getNome());
     usuarioTokenDto.setSenha(usuario.getSenha());
     usuarioTokenDto.setToken(token);
+    usuarioTokenDto.setAtivo(usuario.getAtivo());
 
     return usuarioTokenDto;
   }

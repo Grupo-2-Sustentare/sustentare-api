@@ -37,12 +37,12 @@ public class CategoriaItemServiceTest {
   @DisplayName("Deve listar todas as categorias de item")
   public void deveListarTodasCategoriasItem() {
     List<CategoriaItem> categoriaItems = new ArrayList<>();
-    when(categoriaItemRepository.findAll()).thenReturn(categoriaItems);
+    when(categoriaItemRepository.findByAtivoTrue()).thenReturn(categoriaItems);
 
     List<CategoriaItem> resultado = categoriaItemService.listar();
 
     assertEquals(categoriaItems, resultado);
-    verify(categoriaItemRepository, times(1)).findAll();
+    verify(categoriaItemRepository, times(1)).findByAtivoTrue();
   }
 
   @Test

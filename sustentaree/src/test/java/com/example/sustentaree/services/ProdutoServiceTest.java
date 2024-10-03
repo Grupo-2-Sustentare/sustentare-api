@@ -42,12 +42,12 @@ class ProdutoServiceTest {
     @DisplayName("Deve listar todos os Produtos")
     public void listarProdutos() {
         List<Produto> produtos = new ArrayList<>();
-        when(produtoRepository.findAll()).thenReturn(produtos);
+        when(produtoRepository.findByAtivoTrue()).thenReturn(produtos);
 
         List<Produto> result = produtoService.listar();
 
         assertEquals(produtos, result);
-        verify(produtoRepository, times(1)).findAll();
+        verify(produtoRepository, times(1)).findByAtivoTrue();
     }
 
     @Test

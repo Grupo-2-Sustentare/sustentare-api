@@ -34,7 +34,7 @@ public class ProdutoService {
   }
 
   public List<Produto> listar() {
-    return this.produtoRepository.findAll();
+    return this.produtoRepository.findByAtivoTrue();
   }
 
   public Produto porId(Integer id) {

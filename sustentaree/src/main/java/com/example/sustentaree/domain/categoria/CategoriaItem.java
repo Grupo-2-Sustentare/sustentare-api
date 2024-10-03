@@ -13,6 +13,15 @@ public class CategoriaItem {
   private Integer id;
   @Schema(description = "Nome da categoria", example = "Alimentos")
   private String nome;
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public Integer getId() {
     return id;

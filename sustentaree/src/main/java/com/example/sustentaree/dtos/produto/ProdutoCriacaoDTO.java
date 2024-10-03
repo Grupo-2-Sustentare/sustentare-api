@@ -1,5 +1,6 @@
 package com.example.sustentaree.dtos.produto;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -19,6 +20,17 @@ public class ProdutoCriacaoDTO {
   @NotNull
   @Positive
   private Double qtdMedida;
+  @AssertTrue
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
+
   public String getNome() {
     return nome;
   }
