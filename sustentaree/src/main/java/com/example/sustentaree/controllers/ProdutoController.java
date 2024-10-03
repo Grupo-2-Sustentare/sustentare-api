@@ -8,6 +8,7 @@ import com.example.sustentaree.mapper.ProdutoMapper;
 import com.example.sustentaree.services.LambdaService;
 import com.example.sustentaree.services.ProdutoService;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,7 @@ public class ProdutoController {
   }
 
   @PostMapping
+  @Transactional
   public ResponseEntity<ProdutoListagemDTO> criar(@RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO, @RequestParam int fkItem, @RequestParam int idResponsavel){
 
     if (produtoCriacaoDTO.getImagem() != null){

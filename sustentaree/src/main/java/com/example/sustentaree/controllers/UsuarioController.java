@@ -70,6 +70,7 @@ public class UsuarioController {
   })
 
   @PostMapping
+  @Transactional
   public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) {
     UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 

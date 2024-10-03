@@ -20,8 +20,6 @@ public class ProdutoCriacaoDTO {
   private Double qtdMedida;
 
   private String imagem;
-  public String getNome() {
-    return nome;
 
   @AssertTrue
   private Boolean ativo;
@@ -66,5 +64,6 @@ public class ProdutoCriacaoDTO {
   public void setImagem(String imagem) {
     this.imagem = imagem;
   }
+
 }
 

@@ -33,7 +33,7 @@ public class FileService {
             writer.newLine();
             writer.write(String.format("%-7s %-20s %-20s %-10s %-22s %-22s", "ID", "Item", "Nome", "Preço", "Quantidade de Produto", "Quantidade de Medida"));
             for (Produto entity : listaProdutos) {
-                writer.write(String.format("%-7d %-20s %-20s %-10s %-22s %-22s", entity.getId(), entity.getItem().getNome(), entity.getNome(), entity.getPreco(), entity.getQtdProduto(), entity.getQtdMedida()));
+                writer.write(String.format("%-7d %-20s %-20s %-10s %-22s %-22s", entity.getId(), entity.getItem().getNome(), entity.getPreco(), entity.getQtdProduto(), entity.getQtdMedida()));
                 writer.newLine();
             }
 

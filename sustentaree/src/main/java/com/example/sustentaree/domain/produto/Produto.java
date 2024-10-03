@@ -80,7 +80,6 @@ public class Produto {
     final StringBuffer sb = new StringBuffer("Produto{");
     sb.append("id=").append(id);
     sb.append(", item=").append(item);
-    sb.append(", nome='").append(nome).append('\'');
     sb.append(", preco=").append(preco);
     sb.append(", qtdProduto=").append(qtdProduto);
     sb.append(", qtdMedida=").append(qtdMedida);
