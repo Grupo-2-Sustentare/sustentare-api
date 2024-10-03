@@ -16,8 +16,17 @@ public class UsuarioDTO {
   private String email;
   @NotNull
   private Integer acesso;
+  private Boolean ativo;
 
   private String imagem;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public String getNome() {
     return nome;
