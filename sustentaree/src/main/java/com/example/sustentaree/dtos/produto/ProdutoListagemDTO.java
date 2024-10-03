@@ -13,15 +13,6 @@ public class ProdutoListagemDTO {
   private Integer qtdProduto;
   private Double qtdMedida;
   private Item item;
-  private Boolean ativo;
-
-  public Boolean getAtivo() {
-    return ativo;
-  }
-
-  public void setAtivo(Boolean ativo) {
-    this.ativo = ativo;
-  }
 
   public Integer getId() {
     return id;

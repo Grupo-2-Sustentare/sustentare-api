@@ -65,8 +65,7 @@ public class ProdutoService {
   @Transactional
   public void deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-    Produto produto = this.porId(id);
-    this.produtoRepository.delete(produto);
+    this.produtoRepository.updateAtivoById(false, id);
   }
 
 @Transactional

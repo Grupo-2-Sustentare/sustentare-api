@@ -17,15 +17,6 @@ public class UnidadeMedidaDTO {
   private String nome;
   @NotNull
   private String simbolo;
-  private Boolean ativo;
-
-  public Boolean getAtivo() {
-    return ativo;
-  }
-
-  public void setAtivo(Boolean ativo) {
-    this.ativo = ativo;
-  }
 
   public String getCategoria() {
     return categoria;

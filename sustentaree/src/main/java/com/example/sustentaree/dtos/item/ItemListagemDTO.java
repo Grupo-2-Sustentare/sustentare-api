@@ -15,15 +15,6 @@ public class ItemListagemDTO {
   private Integer dias_vencimento;
   private UnidadeMedida unidade_medida;
   private CategoriaItem categoria;
-  private Boolean ativo;
-
-  public Boolean getAtivo() {
-    return ativo;
-  }
-
-  public void setAtivo(Boolean ativo) {
-    this.ativo = ativo;
-  }
 
   public String getNome() {
     return nome;

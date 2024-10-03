@@ -77,9 +77,7 @@ public class ItemService {
   @Transactional
   public void deletar(int id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-
-    Item item = this.porId(id);
-    this.repository.delete(item);
+    this.repository.updateAtivoById(false, id);
   }
 
   public Item itemParado(){

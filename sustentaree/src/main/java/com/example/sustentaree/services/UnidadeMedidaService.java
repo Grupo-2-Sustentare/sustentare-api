@@ -48,8 +48,7 @@ public class UnidadeMedidaService {
   public void deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
 
-    UnidadeMedida unidadeMedida = this.porId(id);
-    this.repository.delete(unidadeMedida);
+    this.repository.updateAtivoById(false, id);
   }
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;

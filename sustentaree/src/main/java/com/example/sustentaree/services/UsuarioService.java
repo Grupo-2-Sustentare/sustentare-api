@@ -103,8 +103,7 @@ public class UsuarioService {
   public void deletar(int id, int idResponsavel){
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
 
-    Usuario usuario = this.porId(id);
-    this.repository.delete(usuario);
+    this.repository.updateAtivoById(false, id);
   }
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
