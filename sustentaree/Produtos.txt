@@ -1,0 +1,18 @@
+Lista de Produtos
+ID      Item                 Nome                 Preço      Quantidade de Produto  Quantidade de Medida  1       Detergente           Detergente Líquido OMO 500ml 3.5        100                    0.5                   
+2       Sacola plástica      Pacote de Sacolas Plásticas Carrefour (100 un) 10.0       50                     100.0                 
+3       Cerveja              Cerveja Lata Skol 350ml 2.5        200                    0.35                  
+4       Chocolate            Chocolate Barra Nestlé 200g 5.0        150                    0.2                   
+5       Panela               Panela Tramontina 2L 20.0       30                     2.0                   
+6       Copo descartável     Copo Descartável Copobrás 200ml (pacote com 50) 4.0        80                     50.0                  
+7       Molho de tomate      Molho de Tomate Heinz 340g 3.75       120                    0.34                  
+8       Filé de frango       Filé de Frango Seara 1kg 10.0       60                     1.0                   
+9       Camarão              Camarão Qualitá 400g 12.0       50                     0.4                   
+10      Arroz                Arroz Tio João 5kg   15.0       70                     5.0                   
+11      Arroz                Arroz Camil 5kg      14.5       80                     5.0                   
+12      Cenoura              Cenoura Orgânica 1kg 3.0        100                    1.0                   
+13      Maçã                 Maçã Fuji 1kg        4.0        80                     1.0                   
+14      Queijo               Queijo Mussarela Tirol 500g 8.0        90                     0.5                   
+15      Sorvete              Sorvete Kibon 1L     7.0        50                     1.0                   
+16      Bolo de chocolate    Bolo de Chocolate Bauducco 1 un 20.0       40                     1.0                   
+17      Detergente           bala                 2.5        100                    1.5                   

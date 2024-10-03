@@ -17,6 +17,8 @@ public class UsuarioDTO {
   @NotNull
   private Integer acesso;
 
+  private String imagem;
+
   public String getNome() {
     return nome;
   }
@@ -47,5 +49,13 @@ public class UsuarioDTO {
 
   public void setAcesso(Integer acesso) {
     this.acesso = acesso;
+  }
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
   }
 }

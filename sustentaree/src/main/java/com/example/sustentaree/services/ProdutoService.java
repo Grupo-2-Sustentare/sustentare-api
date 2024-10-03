@@ -79,4 +79,8 @@ public class ProdutoService {
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
   }
+
+    public Integer getTotalProdutos() {
+        return this.produtoRepository.findAll().size();
+    }
 }
