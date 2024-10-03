@@ -9,8 +9,6 @@ public class AlterarProdutoDTO {
 
   // @ManyToOne -> trazer o id do Item correspondente ao produto
 
-  @NotBlank
-  private String nome;
   @NotNull
   @Positive
   private Double preco;
@@ -28,14 +26,6 @@ public class AlterarProdutoDTO {
 
   public void setAtivo(Boolean ativo) {
     this.ativo = ativo;
-  }
-
-  public String getNome() {
-    return nome;
-  }
-
-  public void setNome(String nome) {
-    this.nome = nome;
   }
 
   public Double getPreco() {

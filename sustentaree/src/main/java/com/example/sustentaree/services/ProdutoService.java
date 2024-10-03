@@ -69,7 +69,9 @@ public class ProdutoService {
     this.produtoRepository.delete(produto);
   }
 
-  public List<Produto> getByHash(String categoria){
+@Transactional
+  public List<Produto> getByHash(String categoria, int idResponsavel) {
+    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
     HashTable hashTable = new HashTable(this.categoriaItemService.listar());
     hashTable.insertMany(this.listar());
     return hashTable.findProdutoByCategoria(categoria);

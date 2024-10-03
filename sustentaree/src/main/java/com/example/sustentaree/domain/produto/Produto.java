@@ -20,7 +20,6 @@ public class Produto {
   @ManyToOne
   @JoinColumn(name = "fk_item")
   private Item item;
-  private String nome;
   private Double preco;
   @Column(name = "qtd_produto")
   private Integer qtdProduto;
@@ -50,14 +49,6 @@ public class Produto {
 
   public void setItem(Item item) {
     this.item = item;
-  }
-
-  public String getNome() {
-    return nome;
-  }
-
-  public void setNome(String nome) {
-    this.nome = nome;
   }
 
   public Double getPreco() {
