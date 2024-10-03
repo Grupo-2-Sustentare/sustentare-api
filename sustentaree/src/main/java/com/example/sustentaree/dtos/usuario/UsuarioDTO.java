@@ -16,6 +16,9 @@ public class UsuarioDTO {
   private String email;
   @NotNull
   private Integer acesso;
+
+  private String imagem;
+
   private Boolean ativo;
 
   public Boolean getAtivo() {
@@ -25,6 +28,7 @@ public class UsuarioDTO {
   public void setAtivo(Boolean ativo) {
     this.ativo = ativo;
   }
+
 
   public String getNome() {
     return nome;
@@ -56,5 +60,13 @@ public class UsuarioDTO {
 
   public void setAcesso(Integer acesso) {
     this.acesso = acesso;
+  }
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
   }
 }

@@ -18,11 +18,17 @@ public class ProdutoCriacaoDTO {
   @NotNull
   @Positive
   private Double qtdMedida;
+
+  private String imagem;
+  public String getNome() {
+    return nome;
+
   @AssertTrue
   private Boolean ativo;
 
   public Boolean getAtivo() {
     return ativo;
+
   }
 
   public void setAtivo(Boolean ativo) {
@@ -52,4 +58,13 @@ public class ProdutoCriacaoDTO {
   public void setQtdMedida(Double qtdMedida) {
     this.qtdMedida = qtdMedida;
   }
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
+  }
 }
+
