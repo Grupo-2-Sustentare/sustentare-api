@@ -3,6 +3,7 @@ package com.example.sustentaree.controllers;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
+import com.example.sustentaree.services.FileService;
 import com.example.sustentaree.services.LambdaService;
 import com.example.sustentaree.services.UsuarioService;
 import com.example.sustentaree.domain.usuario.Usuario;
@@ -39,9 +40,17 @@ public class UsuarioController {
   private final UsuarioService service;
   @Autowired
   private LambdaService lambdaService;
+  @Autowired
+  FileService fileService;
 
   public UsuarioController(UsuarioService service) {
     this.service = service;
+  }
+
+  @PostMapping("/gravarTxt")
+  public ResponseEntity gravarTxt(){
+    fileService.writeProductToFile();
+    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
   @Operation(summary = "Criar um usuário", description = "Cria um usuário com base nas informações fornecidas")
@@ -68,9 +77,8 @@ public class UsuarioController {
         CompletableFuture.runAsync(() ->
                 {
                     byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
-                    Integer totalUsuarios = service.getTotalUsuarios() + 1;
-                    //Converter totalUsuarios para String
-                    String nomeArquivo = "/usuarios/imagens/"+totalUsuarios.toString();
+                    Integer idUsuario = service.getUltimoId() + 1;
+                    String nomeArquivo = "/usuarios/imagens/"+idUsuario.toString();
                     lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
                 }
                 );
@@ -126,11 +134,23 @@ public class UsuarioController {
   @GetMapping
   public ResponseEntity<List<UsuarioDTO>> listar() {
     List<Usuario> usuarios = this.service.listar();
+
     if (usuarios.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
     UsuarioMapper mapper = UsuarioMapper.INSTANCE;
     List<UsuarioDTO> response = mapper.toUsuarioListDTO(usuarios);
+    int contador = 0;
+      for (UsuarioDTO usuario : response) {
+          try {
+              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarios.get(contador).getId().toString());
+              response.get(contador).setImagem(Base64.getEncoder().encodeToString(imagem));
+          }catch (Exception e){
+              System.out.println(e);
+          }
+
+          contador++;
+      }
     return ResponseEntity.ok(response);
   }
 
@@ -157,8 +177,11 @@ public class UsuarioController {
   public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
     Usuario usuario = this.service.porId(id);
 
+    byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+id.toString());
+
     UsuarioMapper mapper = UsuarioMapper.INSTANCE;
     UsuarioDTO response = mapper.toUsuarioDTO(usuario);
+    response.setImagem(Base64.getEncoder().encodeToString(imagem));
 
     return ResponseEntity.ok(response);
   }
@@ -181,7 +204,18 @@ public class UsuarioController {
 
   @PatchMapping("/{id}")
   public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarUsuarioDTO dto, @RequestParam int idResponsavel) {
-    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+
+      if (dto.getImagem() != null){
+          CompletableFuture.runAsync(() ->
+                  {
+                      byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
+                      String nomeArquivo = "/usuarios/imagens/"+id.toString();
+                      lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                  }
+          );
+      }
+
+      UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 
     Usuario entity = mapper.toUsuario(dto);
     Usuario usuarioAtualizado = this.service.atualizar(entity, id, idResponsavel);
@@ -215,6 +249,15 @@ public class UsuarioController {
 
     Usuario entity = mapper.toUsuario(dto);
     Usuario usuarioAtualizado = this.service.atualizarOutros(idSolicitante, entity, id, idResponsavel);
+      if (dto.getImagem() != null){
+          CompletableFuture.runAsync(() ->
+                  {
+                      byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
+                      String nomeArquivo = "/usuarios/imagens/"+id.toString();
+                      lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                  }
+          );
+      }
 
     UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
     return ResponseEntity.ok(response);

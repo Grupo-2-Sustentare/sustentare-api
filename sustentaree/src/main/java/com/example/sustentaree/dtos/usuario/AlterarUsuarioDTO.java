@@ -13,6 +13,7 @@ public class AlterarUsuarioDTO {
   private String senha;
   @NotBlank
   private String email;
+  private String imagem;
 
   public String getNome() {
     return nome;
@@ -36,5 +37,13 @@ public class AlterarUsuarioDTO {
 
   public void setEmail(String email) {
     this.email = email;
+  }
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
   }
 }

@@ -113,4 +113,8 @@ public class UsuarioService {
   public Integer getTotalUsuarios(){
     return this.repository.findAll().size();
   }
+
+  public Integer getUltimoId(){
+    return this.repository.findAll().get(this.repository.findAll().size() - 1).getId();
+  }
 }

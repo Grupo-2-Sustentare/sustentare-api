@@ -74,4 +74,17 @@ public class Produto {
   public void setQtdMedida(Double qtdMedida) {
     this.qtdMedida = qtdMedida;
   }
+
+  @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer("Produto{");
+    sb.append("id=").append(id);
+    sb.append(", item=").append(item);
+    sb.append(", nome='").append(nome).append('\'');
+    sb.append(", preco=").append(preco);
+    sb.append(", qtdProduto=").append(qtdProduto);
+    sb.append(", qtdMedida=").append(qtdMedida);
+    sb.append('}');
+    return sb.toString();
+  }
 }

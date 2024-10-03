@@ -3,9 +3,14 @@ package com.example.sustentaree.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.lambda.LambdaClient;
@@ -13,7 +18,7 @@ import software.amazon.awssdk.services.lambda.model.InvokeRequest;
 import software.amazon.awssdk.services.lambda.model.InvokeResponse;
 import software.amazon.awssdk.services.lambda.model.LambdaException;
 import software.amazon.awssdk.services.s3.S3Client;
-
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 
 import java.util.Base64;
@@ -92,5 +97,31 @@ public class LambdaService {
     }
 
 
+    @GetMapping("/baixarImagem")
+    public byte[] downloadFile(@RequestParam String bucket, @RequestParam String key) {
+        S3Client s3Service = criarClienteS3();
+
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(key)
+                    .build();
+
+            ResponseBytes responseBytes = s3Service.getObjectAsBytes(getObjectRequest);
+            byte[] data = responseBytes.asByteArray();
+
+
+            System.out.println("Tamanho da imagem: " + data.length);
+
+            HttpHeaders headers = new HttpHeaders();
+
+            headers.setContentType(MediaType.IMAGE_JPEG);
+
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Imagem não encontrada");
+        }
+    }
 
 }
