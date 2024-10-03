@@ -47,12 +47,12 @@ public class ItemServiceTest {
   @DisplayName("Deve listar todos os itens")
   public void testListar() {
     List<Item> items = new ArrayList<>();
-    when(itemRepository.findAll()).thenReturn(items);
+    when(itemRepository.findByAtivoTrue()).thenReturn(items);
 
     List<Item> result = itemService.listar();
 
     assertEquals(items, result);
-    verify(itemRepository, times(1)).findAll();
+    verify(itemRepository, times(1)).findByAtivoTrue();
   }
 
   @Test

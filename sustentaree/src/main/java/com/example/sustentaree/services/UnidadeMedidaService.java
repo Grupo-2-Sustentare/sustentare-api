@@ -22,7 +22,7 @@ public class UnidadeMedidaService {
   }
 
   public List<UnidadeMedida> listar() {
-    return this.repository.findAll();
+    return this.repository.findByAtivoTrue();
   }
   public UnidadeMedida porId(Integer id) {
     // TODO criar exception

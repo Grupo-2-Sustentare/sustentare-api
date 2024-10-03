@@ -25,6 +25,15 @@ public class Item {
   @ManyToOne
   @JoinColumn(name = "fk_categoria_item")
   private CategoriaItem categoria;
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public Integer getId() {
     return id;

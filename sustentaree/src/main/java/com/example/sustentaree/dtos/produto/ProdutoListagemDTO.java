@@ -9,12 +9,19 @@ public class ProdutoListagemDTO {
 
   // @ManyToOne -> trazer o id do Item correspondente ao produto
 
-  private String nome;
   private Double preco;
   private Integer qtdProduto;
   private Double qtdMedida;
-
   private Item item;
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public Integer getId() {
     return id;
@@ -30,14 +37,6 @@ public class ProdutoListagemDTO {
 
   public void setItem(Item item) {
     this.item = item;
-  }
-
-  public String getNome() {
-    return nome;
-  }
-
-  public void setNome(String nome) {
-    this.nome = nome;
   }
 
   public Double getPreco() {

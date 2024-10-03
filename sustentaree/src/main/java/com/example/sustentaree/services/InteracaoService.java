@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 
 @Service
 public class InteracaoService {
@@ -68,6 +69,26 @@ public class InteracaoService {
    }
 
     return this.repository.save(novaInteracao);
+  }
+  @Transactional
+  public String gerarCsv(int idResponsavel) {
+    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+    List<InteracaoEstoque> interacaoes = this.listar();
+    StringJoiner csv = new StringJoiner("\n");
+    csv.add("id;produto;dataHora;fechamentoEstoque;categoriaInteracao");
+
+    for (InteracaoEstoque interacaoEstoque : interacaoes) {
+      StringJoiner linha = new StringJoiner(";");
+      linha.add(interacaoEstoque.getId().toString());
+      linha.add(interacaoEstoque.getProduto().getItem().getNome());
+      linha.add(interacaoEstoque.getDataHora().toString());
+      linha.add(interacaoEstoque.getFechamentoEstoque().getDataFim().toString());
+      linha.add(interacaoEstoque.getCategoriaInteracao());
+
+      csv.add(linha.toString());
+    }
+
+    return csv.toString();
   }
 
 //  @Transactional

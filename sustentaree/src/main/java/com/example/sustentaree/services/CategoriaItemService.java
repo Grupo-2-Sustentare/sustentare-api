@@ -23,7 +23,7 @@ public class CategoriaItemService {
   }
 
   public List<CategoriaItem> listar() {
-    return this.repository.findAll();
+    return this.repository.findByAtivoTrue();
   }
 
   public CategoriaItem porId(Integer id) {

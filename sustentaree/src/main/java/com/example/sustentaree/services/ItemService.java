@@ -34,7 +34,7 @@ public class ItemService {
   }
 
   public List<Item> listar() {
-    return this.repository.findAll();
+    return this.repository.findByAtivoTrue();
   }
   public Item porId(int id) {
     return this.repository.findById(id).orElseThrow(

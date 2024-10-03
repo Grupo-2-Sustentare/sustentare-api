@@ -18,6 +18,15 @@ public class Usuario {
   private String senha;
   @Schema(description = "Nível de acesso do usuário", example = "1")
   private Integer acesso;
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public Integer getId() {
     return id;

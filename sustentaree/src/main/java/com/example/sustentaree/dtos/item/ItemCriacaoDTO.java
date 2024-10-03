@@ -1,5 +1,6 @@
 package com.example.sustentaree.dtos.item;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -12,6 +13,16 @@ public class ItemCriacaoDTO {
   @NotNull
   private Boolean perecivel;
   private Integer dias_vencimento;
+  @AssertTrue
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public String getNome() {
     return nome;

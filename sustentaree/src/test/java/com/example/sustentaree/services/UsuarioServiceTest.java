@@ -60,7 +60,7 @@ public class UsuarioServiceTest {
     usuario.setEmail("test@example.com");
     usuario.setSenha("password");
 
-    when(usuarioRepository.findByNome(usuario.getEmail())).thenReturn(Optional.empty());
+    when(usuarioRepository.findByNomeAndAtivoTrue(usuario.getEmail())).thenReturn(Optional.empty());
     when(passwordEncoder.encode(usuario.getSenha())).thenReturn("encodedPassword");
     when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
@@ -77,7 +77,7 @@ public class UsuarioServiceTest {
     usuario.setEmail("test@example.com");
     usuario.setSenha("password");
 
-    when(usuarioRepository.findByNome(usuario.getEmail())).thenReturn(Optional.of(usuario));
+    when(usuarioRepository.findByNomeAndAtivoTrue(usuario.getEmail())).thenReturn(Optional.of(usuario));
 
     assertThrows(ResponseStatusException.class, () -> usuarioService.criar(usuario, 1));
   }
@@ -95,7 +95,7 @@ public class UsuarioServiceTest {
 
     Authentication auth = mock(Authentication.class);
 
-    when(usuarioRepository.findByNome(usuarioLoginDto.getNome())).thenReturn(Optional.of(usuario));
+    when(usuarioRepository.findByNomeAndAtivoTrue(usuarioLoginDto.getNome())).thenReturn(Optional.of(usuario));
     when(authenticationManager.authenticate(any())).thenReturn(auth);
     when(gerenciadorTokenJwt.generateToken(auth)).thenReturn("token");
 
@@ -111,7 +111,7 @@ public class UsuarioServiceTest {
     List<Usuario> usuarios = new ArrayList<>();
     usuarios.add(new Usuario());
 
-    when(usuarioRepository.findAll()).thenReturn(usuarios);
+    when(usuarioRepository.findByAtivoTrue()).thenReturn(usuarios);
 
     List<Usuario> result = usuarioService.listar();
 

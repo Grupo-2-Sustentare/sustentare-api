@@ -91,7 +91,7 @@ public class ProdutoController {
   }
 
   @GetMapping("/hash/{categoria}")
-  public ResponseEntity<List<Produto>> getByHash(@RequestParam String categoria){
-    return ResponseEntity.ok(this.service.getByHash(categoria));
+  public ResponseEntity<List<Produto>> getByHash(@PathVariable String categoria, @RequestParam int idResponsavel){
+    return ResponseEntity.ok(this.service.getByHash(categoria, idResponsavel));
   }
 }

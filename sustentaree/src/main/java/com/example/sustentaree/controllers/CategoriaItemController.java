@@ -86,7 +86,7 @@ public class CategoriaItemController {
   })
 
   @GetMapping
-  public ResponseEntity<List<CategoriaItemDTO>> findAll() {
+  public ResponseEntity<List<CategoriaItemDTO>> findByAtivoTrue() {
     List<CategoriaItem> categorias = this.service.listar();
     if (categorias.isEmpty()) {
       return ResponseEntity.notFound().build();

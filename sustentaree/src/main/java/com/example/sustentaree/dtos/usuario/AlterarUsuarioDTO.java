@@ -13,7 +13,19 @@ public class AlterarUsuarioDTO {
   private String senha;
   @NotBlank
   private String email;
+
   private String imagem;
+
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
+
 
   public String getNome() {
     return nome;

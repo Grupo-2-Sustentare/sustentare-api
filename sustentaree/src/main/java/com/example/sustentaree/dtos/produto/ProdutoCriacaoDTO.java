@@ -1,5 +1,6 @@
 package com.example.sustentaree.dtos.produto;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -8,8 +9,6 @@ import lombok.Data;
 public class ProdutoCriacaoDTO {
 
   // @ManyToOne -> trazer o id do Item correspondente ao produto
-  @NotBlank
-  private String nome;
   @NotNull
   @Positive
   private Double preco;
@@ -19,13 +18,21 @@ public class ProdutoCriacaoDTO {
   @NotNull
   @Positive
   private Double qtdMedida;
+
   private String imagem;
   public String getNome() {
     return nome;
+
+  @AssertTrue
+  private Boolean ativo;
+
+  public Boolean getAtivo() {
+    return ativo;
+
   }
 
-  public void setNome(String nome) {
-    this.nome = nome;
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
   }
 
   public Double getPreco() {
