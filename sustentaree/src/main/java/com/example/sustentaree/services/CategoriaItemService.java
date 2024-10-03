@@ -53,8 +53,7 @@ public class CategoriaItemService {
   public void deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
 
-    CategoriaItem categoriaItem = this.porId(id);
-    this.repository.delete(categoriaItem);
+    this.repository.updateAtivoById(false, id);
   }
 
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
