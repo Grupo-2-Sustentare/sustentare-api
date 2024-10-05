@@ -38,4 +38,14 @@ public class CategoriaItem {
   public void setNome(String nome) {
     this.nome = nome;
   }
+
+  @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer("CategoriaItem{");
+    sb.append("id=").append(id);
+    sb.append(", nome='").append(nome).append('\'');
+    sb.append(", ativo=").append(ativo);
+    sb.append('}');
+    return sb.toString();
+  }
 }

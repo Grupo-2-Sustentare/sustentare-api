@@ -71,4 +71,17 @@ public class UnidadeMedida {
   public void setSimbolo(String simbolo) {
     this.simbolo = simbolo;
   }
+
+  @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer("UnidadeMedida{");
+    sb.append("id=").append(id);
+    sb.append(", categoria='").append(categoria).append('\'');
+    sb.append(", conversao_padrao=").append(conversao_padrao);
+    sb.append(", nome='").append(nome).append('\'');
+    sb.append(", simbolo='").append(simbolo).append('\'');
+    sb.append(", ativo=").append(ativo);
+    sb.append('}');
+    return sb.toString();
+  }
 }

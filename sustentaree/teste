@@ -1,0 +1,34 @@
+00NOTA2024205/10/2024 17:10:3701
+02Produtos de limpeza      Detergente                    falsMetade da Prateleira      null
+02Frente de caixa          Sacola plástica               falsUnidade                   null
+02Bebidas                  Cerveja                       trueMililitro                00365
+02Doces                    Chocolate                     trueGrama                    00180
+02Utensílios de cozinha    Panela                        falsUnidade                   null
+02Descartáveis             Copo descartável              falsUnidade                   null
+02Condimentos avulsos      Molho de tomate               trueLitro                    00720
+02Carnes                   Filé de frango                trueQuilograma               00005
+02Peixes e frutos do mar   Camarão                       trueGrama                    00003
+02Grãos e cereais          Arroz                         falsQuilograma               00365
+02Verduras e legumes       Cenoura                       trueUnidade                  00014
+02Frutas                   Maçã                          trueUnidade                  00030
+02Laticínios               Queijo                        trueQuilograma               00030
+02Congelados               Sorvete                       trueCopo                     00180
+02Sobremesas               Bolo de chocolate             trueUnidade                  00007
+010000000015
+00NOTA2024205/10/2024 17:15:5201
+02Produtos de limpeza      Detergente                    falsMetade da Prateleira      null
+02Frente de caixa          Sacola plástica               falsUnidade                   null
+02Bebidas                  Cerveja                       trueMililitro                00365
+02Doces                    Chocolate                     trueGrama                    00180
+02Utensílios de cozinha    Panela                        falsUnidade                   null
+02Descartáveis             Copo descartável              falsUnidade                   null
+02Condimentos avulsos      Molho de tomate               trueLitro                    00720
+02Carnes                   Filé de frango                trueQuilograma               00005
+02Peixes e frutos do mar   Camarão                       trueGrama                    00003
+02Grãos e cereais          Arroz                         falsQuilograma               00365
+02Verduras e legumes       Cenoura                       trueUnidade                  00014
+02Frutas                   Maçã                          trueUnidade                  00030
+02Laticínios               Queijo                        trueQuilograma               00030
+02Congelados               Sorvete                       trueCopo                     00180
+02Sobremesas               Bolo de chocolate             trueUnidade                  00007
+010000000015

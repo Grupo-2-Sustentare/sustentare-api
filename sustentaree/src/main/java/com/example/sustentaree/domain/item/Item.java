@@ -82,4 +82,18 @@ public class Item {
   public void setCategoria(CategoriaItem categoria) {
     this.categoria = categoria;
   }
+
+  @Override
+  public String toString() {
+    final StringBuffer sb = new StringBuffer("Item{");
+    sb.append("id=").append(id);
+    sb.append(", nome='").append(nome).append('\'');
+    sb.append(", perecivel=").append(perecivel);
+    sb.append(", dias_vencimento=").append(dias_vencimento);
+    sb.append(", unidade_medida=").append(unidade_medida);
+    sb.append(", categoria=").append(categoria);
+    sb.append(", ativo=").append(ativo);
+    sb.append('}');
+    return sb.toString();
+  }
 }

@@ -2,7 +2,9 @@ package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
+import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
+import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
 import com.example.sustentaree.services.LambdaService;
 import com.example.sustentaree.services.UsuarioService;
@@ -42,6 +44,8 @@ public class UsuarioController {
   private LambdaService lambdaService;
   @Autowired
   FileService fileService;
+  @Autowired
+  private ItemRepository itemRepository;
 
   public UsuarioController(UsuarioService service) {
     this.service = service;
@@ -285,6 +289,14 @@ public class UsuarioController {
     this.service.deletar(id, idResponsavel);
 
     return ResponseEntity.noContent().build();
+  }
+
+  @GetMapping("/testTxt")
+    public ResponseEntity testTxt(){
+      List<Item> itens = itemRepository.findAll();
+      fileService.gravaArquivoTxt(itens, "teste");
+    fileService.leArquivoTxt("teste");
+    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
 }
