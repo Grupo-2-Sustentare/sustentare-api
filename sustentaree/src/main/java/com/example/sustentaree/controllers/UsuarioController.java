@@ -291,14 +291,5 @@ public class UsuarioController {
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/testTxt")
-  @Transactional(rollbackOn = Exception.class)
-    public ResponseEntity testTxt(){
-    List<Item> itens = itemRepository.findAll();
-    fileService.gravaArquivoTxt(itens, "teste");
-    fileService.leArquivoTxt("teste");
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
-
 }
 

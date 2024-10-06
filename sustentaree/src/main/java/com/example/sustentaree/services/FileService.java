@@ -157,7 +157,7 @@ public class FileService {
                         item.setDias_vencimento(dias_vencimento);
                         item.setAtivo(true);
 
-                       // itemService.criar(item);
+                        itemService.criar(item);
                         System.out.println(categoria + " " + nome + " " + perecivel + " " + unidade_medida + " " + dias_vencimento);
 
 

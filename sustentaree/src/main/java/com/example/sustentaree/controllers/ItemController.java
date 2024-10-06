@@ -1,6 +1,8 @@
 package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.item.Item;
+import com.example.sustentaree.repositories.ItemRepository;
+import com.example.sustentaree.services.FileService;
 import com.example.sustentaree.services.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,9 +13,11 @@ import com.example.sustentaree.dtos.item.AlterarItemDTO;
 import com.example.sustentaree.dtos.item.ItemCriacaoDTO;
 import com.example.sustentaree.dtos.item.ItemListagemDTO;
 import com.example.sustentaree.mapper.ItemMapper;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +28,10 @@ import java.util.List;
 public class ItemController {
   @Autowired
   private final ItemService service;
+  @Autowired
+  private FileService fileService;
+  @Autowired
+  private ItemRepository itemRepository;
 
   public ItemController(ItemService service) {
     this.service = service;
@@ -161,6 +169,21 @@ public class ItemController {
     this.service.deletar(id, idResponsavel);
 
     return ResponseEntity.notFound().build();
+  }
+
+  @GetMapping("/gravarTxt")
+  @Transactional(rollbackOn = Exception.class)
+  public ResponseEntity gravarTxt(){
+    List<Item> itens = itemRepository.findAll();
+    fileService.gravaArquivoTxt(itens, "teste");
+    return ResponseEntity.status(HttpStatus.OK).build();
+  }
+
+  @GetMapping("/lerTxt")
+  @Transactional
+  public ResponseEntity lerTxt(){
+    fileService.leArquivoTxt("teste");
+    return ResponseEntity.status(HttpStatus.OK).build();
   }
 
 
