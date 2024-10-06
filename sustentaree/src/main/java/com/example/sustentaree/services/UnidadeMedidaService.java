@@ -53,4 +53,8 @@ public class UnidadeMedidaService {
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
   }
+
+  public UnidadeMedida getUnidadeMedidaByNome(String nome) {
+    return this.repository.findByNome(nome);
+  }
 }

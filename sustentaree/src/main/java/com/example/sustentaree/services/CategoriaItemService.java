@@ -59,4 +59,8 @@ public class CategoriaItemService {
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
   }
+
+  public CategoriaItem getCategoriaByName(String nome) {
+    return this.repository.findByNome(nome);
+  }
 }

@@ -18,4 +18,7 @@ public interface UnidadeMedidaRepository extends JpaRepository<UnidadeMedida, In
   @Transactional
   @Query("UPDATE UnidadeMedida u SET u.ativo = :ativo WHERE u.id = :id")
   void updateAtivoById(@Param("ativo") Boolean ativo, @Param("id") Integer id);
+
+    @Query("SELECT u FROM UnidadeMedida u WHERE u.nome = :nome")
+    UnidadeMedida findByNome(@Param("nome") String nome);
 }

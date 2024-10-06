@@ -1,7 +1,9 @@
 package com.example.sustentaree.services;
 
+import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.produto.Produto;
+import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.repositories.ProdutoRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
@@ -21,6 +23,12 @@ public class FileService {
 
     @Autowired
     private ProdutoRepository produtoRepository;
+    @Autowired
+    private CategoriaItemService categoriaItemService;
+    @Autowired
+    private UnidadeMedidaService unidadeMedidaService;
+    @Autowired
+    private ItemService itemService;
 
 
     public void writeProductToFile() {
@@ -74,7 +82,7 @@ public class FileService {
             String corpo = "02";
             corpo += String.format("%-25.25s",i.getCategoria().getNome());
             corpo += String.format("%-30.30s",i.getNome());
-            corpo += String.format("%-4.4s",i.getPerecivel());
+            corpo += String.format("%-5.5s",i.getPerecivel());
             corpo += String.format("%-25.25s",i.getUnidade_medida().getNome());
             corpo += String.format("%05d",i.getDias_vencimento());
 
@@ -128,17 +136,28 @@ public class FileService {
                         System.out.println("DADOS");
                         categoria = registro.substring(2, 27).trim();
                         nome = registro.substring(27, 57).trim();
-                        perecivel = registro.substring(57, 61).trim();
-                        unidade_medida = registro.substring(61, 86).trim();
-                        if (registro.substring(86, 91).trim().equals("null")) {
+                        perecivel = registro.substring(57, 62).trim();
+                        unidade_medida = registro.substring(62, 87).trim();
+                        if (registro.substring(87, 92).trim().equals("null")) {
                             dias_vencimento = null;
                         } else{
-                            dias_vencimento = Integer.valueOf(registro.substring(86, 91).trim());
+                            dias_vencimento = Integer.valueOf(registro.substring(87, 92).trim());
                         }
+
+                        CategoriaItem categoriaItem = categoriaItemService.getCategoriaByName(categoria);
+                        UnidadeMedida unidadeMedidaItem = unidadeMedidaService.getUnidadeMedidaByNome(unidade_medida);
 
                         contaRegDados++;
                         System.out.println(contaRegDados);
-                       // Item item = new Item();
+                        Item item = new Item();
+                        item.setCategoria(categoriaItem);
+                        item.setNome(nome);
+                        item.setPerecivel(Boolean.parseBoolean(perecivel));
+                        item.setUnidade_medida(unidadeMedidaItem);
+                        item.setDias_vencimento(dias_vencimento);
+                        item.setAtivo(true);
+
+                       // itemService.criar(item);
                         System.out.println(categoria + " " + nome + " " + perecivel + " " + unidade_medida + " " + dias_vencimento);
 
 

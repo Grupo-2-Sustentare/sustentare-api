@@ -17,4 +17,7 @@ public interface CategoriaItemRepository extends JpaRepository<CategoriaItem, In
   @Transactional
   @Query("UPDATE CategoriaItem u SET u.ativo = :ativo WHERE u.id = :id")
   void updateAtivoById(@Param("ativo") Boolean ativo, @Param("id") Integer id);
+
+    @Query("SELECT u FROM CategoriaItem u WHERE u.nome = :nome")
+    CategoriaItem findByNome(@Param("nome") String nome);
 }
