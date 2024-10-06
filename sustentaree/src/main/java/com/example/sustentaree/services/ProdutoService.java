@@ -83,4 +83,11 @@ public class ProdutoService {
     public Integer getTotalProdutos() {
         return this.produtoRepository.findAll().size();
     }
+
+    public Integer getUltimoId(){
+      //o repositório executa uma nova consulta ao banco de dados, retornando todos os produtos novamente.
+      // Por isso, ele faz duas consultas separadas: uma para calcular o tamanho da lista e outra para
+      // obter o último item da lista.
+        return this.produtoRepository.findAll().get(this.produtoRepository.findAll().size() - 1).getId();
+    }
 }

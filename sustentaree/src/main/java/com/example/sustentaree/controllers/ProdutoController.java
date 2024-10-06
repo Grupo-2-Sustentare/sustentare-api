@@ -40,8 +40,8 @@ public class ProdutoController {
       CompletableFuture.runAsync(() ->
               {
                 byte[] imagemBytes = Base64.getDecoder().decode(produtoCriacaoDTO.getImagem());
-                Integer totalUsuarios = service.getTotalProdutos() + 1;
-                String nomeArquivo = "/produtos/imagens/"+totalUsuarios.toString();
+                Integer idProduto = service.getUltimoId() + 1;
+                String nomeArquivo = "/produtos/imagens/"+idProduto.toString();
                 lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
               }
       );
