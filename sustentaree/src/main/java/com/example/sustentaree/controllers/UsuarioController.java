@@ -74,7 +74,7 @@ public class UsuarioController {
   })
 
   @PostMapping
-  @Transactional
+  @Transactional(rollbackOn = Exception.class)
   public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) {
     UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 

@@ -33,7 +33,7 @@ public class ProdutoController {
   }
 
   @PostMapping
-  @Transactional
+  @Transactional(rollbackOn = Exception.class)
   public ResponseEntity<ProdutoListagemDTO> criar(@RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO, @RequestParam int fkItem, @RequestParam int idResponsavel){
 
     if (produtoCriacaoDTO.getImagem() != null){
@@ -41,7 +41,6 @@ public class ProdutoController {
               {
                 byte[] imagemBytes = Base64.getDecoder().decode(produtoCriacaoDTO.getImagem());
                 Integer totalUsuarios = service.getTotalProdutos() + 1;
-                //Converter totalUsuarios para String
                 String nomeArquivo = "/produtos/imagens/"+totalUsuarios.toString();
                 lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
               }

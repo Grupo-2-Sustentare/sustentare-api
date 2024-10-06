@@ -180,7 +180,7 @@ public class ItemController {
   }
 
   @GetMapping("/lerTxt")
-  @Transactional
+  @Transactional(rollbackOn = Exception.class)
   public ResponseEntity lerTxt(){
     fileService.leArquivoTxt("teste");
     return ResponseEntity.status(HttpStatus.OK).build();
