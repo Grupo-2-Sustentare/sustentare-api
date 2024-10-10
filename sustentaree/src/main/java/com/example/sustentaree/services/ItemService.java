@@ -96,4 +96,8 @@ public class ItemService {
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
   }
+
+  public Boolean procurarItemPorNome(String nome){
+    return this.repository.existsByNome(nome).isPresent();
+  }
 }

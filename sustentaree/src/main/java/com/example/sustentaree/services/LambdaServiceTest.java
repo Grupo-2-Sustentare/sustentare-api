@@ -1,8 +1,10 @@
 package com.example.sustentaree.services;
 
+import com.example.sustentaree.domain.item.Item;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,8 +25,14 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 
 
@@ -154,4 +162,46 @@ public class LambdaServiceTest {
 //        return ResponseEntity.ok(arquivo);
 //    }
 
+    @Autowired
+    ItemService itemService;
+
+    @GetMapping("/txt")
+    public ResponseEntity<byte[]> exportarTxt() {
+        List<Item> itens = itemService.listar();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+
+            int qtdRegistroDados = 0;
+
+            String header = "00NOTA20242";
+            header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            header += "01";
+            writer.write(header + "\n");
+
+            for (Item i : itens) {
+                String corpo = "02";
+                corpo += String.format("%-25.25s", i.getCategoria().getNome());
+                corpo += String.format("%-30.30s", i.getNome());
+                corpo += String.format("%-5.5s", i.getPerecivel());
+                corpo += String.format("%-25.25s", i.getUnidade_medida().getNome());
+                corpo += String.format("%05d", i.getDias_vencimento());
+
+                writer.write(corpo + "\n");
+                qtdRegistroDados++;
+            }
+
+            String trailer = "01";
+            trailer += String.format("%010d", qtdRegistroDados);
+            writer.write(trailer + "\n");
+        } catch (IOException e) {
+            System.out.println("Erro ao gerar o arquivo: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDispositionFormData("attachment", "arquivo.txt");
+
+        return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+    }
 }

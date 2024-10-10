@@ -5,18 +5,16 @@ import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.produto.Produto;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.repositories.ProdutoRepository;
-import jakarta.persistence.Column;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static java.lang.Integer.valueOf;
 
 @Service
 public class FileService {
@@ -70,6 +68,50 @@ public class FileService {
         }
 
     }
+
+    /*
+
+    @GetMapping("/txt")
+    public ResponseEntity<byte[]> exportarTxt() {
+        List<Item> itens = itemService.listarTodos();  // Simule a recuperação dos itens
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+            // Grava o arquivo no ByteArrayOutputStream
+            int qtdRegistroDados = 0;
+
+            String header = "00NOTA20242";
+            header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            header += "01";
+            writer.write(header + "\n");
+
+            for (Item i : itens) {
+                String corpo = "02";
+                corpo += String.format("%-25.25s", i.getCategoria().getNome());
+                corpo += String.format("%-30.30s", i.getNome());
+                corpo += String.format("%-5.5s", i.getPerecivel());
+                corpo += String.format("%-25.25s", i.getUnidade_medida().getNome());
+                corpo += String.format("%05d", i.getDias_vencimento());
+
+                writer.write(corpo + "\n");
+                qtdRegistroDados++;
+            }
+
+            String trailer = "01";
+            trailer += String.format("%010d", qtdRegistroDados);
+            writer.write(trailer + "\n");
+        } catch (IOException e) {
+            System.out.println("Erro ao gerar o arquivo: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
+        // Criar os headers para a resposta HTTP
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.TEXT_PLAIN);
+        headers.setContentDispositionFormData("attachment", "arquivo.txt");
+
+        return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+    }
+     */
 
     public void gravaArquivoTxt(List<Item> itens, String nomeArq){
         int qtdRegistroDados = 0;
@@ -157,6 +199,10 @@ public class FileService {
                         item.setDias_vencimento(dias_vencimento);
                         item.setAtivo(true);
 
+                        if (itemService.procurarItemPorNome(nome)) {
+                            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Item já cadastrado");
+                        }
+
                         itemService.criar(item);
                         System.out.println(categoria + " " + nome + " " + perecivel + " " + unidade_medida + " " + dias_vencimento);
 
@@ -177,4 +223,78 @@ public class FileService {
             e.printStackTrace();
         }
     }
+    /*
+    public void leArquivoTxt(MultipartFile file) {
+    BufferedReader entrada = null;
+    String registro, tipoRegistro;
+    String categoria, nome, perecivel, unidade_medida;
+    Integer dias_vencimento;
+    int contaRegDados = 0;
+    int qtdRegGravados;
+
+    try {
+        entrada = new BufferedReader(new InputStreamReader(file.getInputStream()));
+        registro = entrada.readLine();
+        while (registro != null) {
+            tipoRegistro = registro.substring(0, 2);
+            switch (tipoRegistro) {
+                case "00":
+                    System.out.println("HEADER");
+                    System.out.println("Data: " + registro.substring(2, 6));
+                    System.out.println("Ano e Semestre: " + registro.substring(6, 11));
+                    System.out.println("Hora de gravação do arquivo: " + registro.substring(11, 30));
+                    System.out.println("Versão do documento de layout: " + registro.substring(30, 32));
+                    break;
+                case "01":
+                    System.out.println("TRAILER");
+                    qtdRegGravados = Integer.parseInt(registro.substring(2, 12));
+                    if (qtdRegGravados == contaRegDados) {
+                        System.out.println("Quantidade de registros gravados compatível com quantidade de reg de dados lidos: " + qtdRegGravados);
+                    } else {
+                        System.out.println("Quantidade de registros gravados incompatível com quantidade de reg de dados lidos: " + qtdRegGravados);
+                    }
+                    contaRegDados = 0;
+                    break;
+                case "02":
+                    System.out.println("DADOS");
+                    categoria = registro.substring(2, 27).trim();
+                    nome = registro.substring(27, 57).trim();
+                    perecivel = registro.substring(57, 62).trim();
+                    unidade_medida = registro.substring(62, 87).trim();
+                    if (registro.substring(87, 92).trim().equals("null")) {
+                        dias_vencimento = null;
+                    } else {
+                        dias_vencimento = Integer.valueOf(registro.substring(87, 92).trim());
+                    }
+
+                    CategoriaItem categoriaItem = categoriaItemService.getCategoriaByName(categoria);
+                    UnidadeMedida unidadeMedidaItem = unidadeMedidaService.getUnidadeMedidaByNome(unidade_medida);
+
+                    contaRegDados++;
+                    System.out.println(contaRegDados);
+                    Item item = new Item();
+                    item.setCategoria(categoriaItem);
+                    item.setNome(nome);
+                    item.setPerecivel(Boolean.parseBoolean(perecivel));
+                    item.setUnidade_medida(unidadeMedidaItem);
+                    item.setDias_vencimento(dias_vencimento);
+                    item.setAtivo(true);
+
+                    itemService.criar(item);
+                    System.out.println(categoria + " " + nome + " " + perecivel + " " + unidade_medida + " " + dias_vencimento);
+
+                    break;
+                default:
+                    System.out.println("ERRO");
+                    break;
+            }
+
+            registro = entrada.readLine();
+        }
+        entrada.close();
+    } catch (IOException e) {
+        System.out.println("Erro ao ler o arquivo " + e.getMessage());
+        e.printStackTrace();
+    }
+     */
 }

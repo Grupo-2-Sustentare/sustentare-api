@@ -74,8 +74,8 @@ public class UsuarioController {
   })
 
   @PostMapping
-  @Transactional(rollbackOn = Exception.class)
   public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) {
+      dto.setAtivo(true);
     UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 
     if (dto.getImagem() != null){

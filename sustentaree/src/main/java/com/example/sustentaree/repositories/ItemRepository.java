@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface ItemRepository extends JpaRepository<Item, Integer> {
@@ -25,4 +26,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     @Transactional
     @Query("UPDATE Item u SET u.ativo = :ativo WHERE u.id = :id")
     void updateAtivoById(@Param("ativo") Boolean ativo, @Param("id") Integer id);
+
+    @Query(value = "SELECT * FROM item WHERE nome = :nome",nativeQuery = true)
+    Optional<Item> existsByNome(String nome);
 }
