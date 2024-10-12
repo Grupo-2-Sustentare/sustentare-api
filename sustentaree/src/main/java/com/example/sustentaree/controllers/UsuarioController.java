@@ -29,7 +29,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Base64;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -149,7 +158,7 @@ public class UsuarioController {
       for (UsuarioDTO usuario : response) {
           try {
               byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarios.get(contador).getId().toString());
-              response.get(contador).setImagem(Base64.getEncoder().encodeToString(imagem));
+              response.get(contador).setImagem(convertToJPEG(imagem,1));
           }catch (Exception e){
               System.out.println(e);
           }
@@ -158,6 +167,44 @@ public class UsuarioController {
       }
     return ResponseEntity.ok(response);
   }
+    private String convertToJPEG(byte[] imageBytes, float quality) throws IOException {
+        // Converte o byte array para BufferedImage
+        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+        if (image == null) {
+            throw new IOException("Image could not be decoded");
+        }
+
+        // Cria uma nova imagem em RGB para garantir o formato JPEG
+        BufferedImage rgbImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
+        rgbImage.getGraphics().drawImage(image, 0, 0, null);
+
+        // Prepara o fluxo de saída para a imagem comprimida
+        ByteArrayOutputStream compressedOutput = new ByteArrayOutputStream();
+
+        // Obtém o ImageWriter para o formato JPEG
+        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
+        if (!writers.hasNext()) {
+            throw new IOException("No writers found for JPEG format");
+        }
+
+        ImageWriter writer = writers.next();
+        ImageWriteParam param = writer.getDefaultWriteParam();
+        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+        param.setCompressionQuality(quality); // Define a qualidade (0 a 1)
+
+        try (ImageOutputStream ios = ImageIO.createImageOutputStream(compressedOutput)) {
+            writer.setOutput(ios);
+            writer.write(null, new javax.imageio.IIOImage(rgbImage, null, null), param);
+        } finally {
+            writer.dispose();
+        }
+
+        // Converte a imagem comprimida de volta para base64
+        return Base64.getEncoder().encodeToString(compressedOutput.toByteArray());
+    }
+
+
+
 
   @Operation(summary = "Buscar um usuário por ID", description = "Retorna um usuário com base no ID fornecido")
   @ApiResponses(value = {
