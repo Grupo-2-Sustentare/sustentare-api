@@ -6,6 +6,15 @@ public class UsuarioTokenDto {
   private String senha;
   private String token;
   private Boolean ativo;
+  private Integer acesso;
+
+  public Integer getAcesso() {
+    return acesso;
+  }
+
+  public void setAcesso(Integer acesso) {
+    this.acesso = acesso;
+  }
 
   public Boolean getAtivo() {
     return ativo;
