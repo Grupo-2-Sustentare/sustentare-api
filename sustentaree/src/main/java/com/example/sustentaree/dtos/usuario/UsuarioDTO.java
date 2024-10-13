@@ -8,6 +8,7 @@ import lombok.Setter;
 
 public class UsuarioDTO {
 
+  private Integer id;
   @NotBlank
   private String nome;
   @NotBlank
@@ -66,5 +67,13 @@ public class UsuarioDTO {
 
   public void setImagem(String imagem) {
     this.imagem = imagem;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
   }
 }
