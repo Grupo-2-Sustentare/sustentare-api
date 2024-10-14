@@ -1,6 +1,8 @@
 package com.example.sustentaree.services;
 
+import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.item.Item;
+import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
@@ -23,10 +26,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -39,6 +39,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/lambdaTest")
 public class LambdaServiceTest {
+
+    @Autowired
+    private CategoriaItemService categoriaItemService;
+    @Autowired
+    private UnidadeMedidaService unidadeMedidaService;
 
     private S3Client criarClienteS3() {
         Region region = Region.US_EAST_1;
@@ -203,5 +208,80 @@ public class LambdaServiceTest {
         headers.setContentDispositionFormData("attachment", "arquivo.txt");
 
         return new ResponseEntity<>(outputStream.toByteArray(), headers, HttpStatus.OK);
+    }
+    @PostMapping(value = "/importarTxt", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity importarTxt(@RequestParam("file") MultipartFile file) {
+        BufferedReader entrada = null;
+        String registro, tipoRegistro;
+        String categoria, nome, perecivel, unidade_medida;
+        Integer dias_vencimento;
+        int contaRegDados = 0;
+        int qtdRegGravados;
+
+        try {
+            entrada = new BufferedReader(new InputStreamReader(file.getInputStream()));
+            registro = entrada.readLine();
+            while (registro != null) {
+                tipoRegistro = registro.substring(0, 2);
+                switch (tipoRegistro) {
+                    case "00":
+                        System.out.println("HEADER");
+                        System.out.println("Data: " + registro.substring(2, 6));
+                        System.out.println("Ano e Semestre: " + registro.substring(6, 11));
+                        System.out.println("Hora de gravação do arquivo: " + registro.substring(11, 30));
+                        System.out.println("Versão do documento de layout: " + registro.substring(30, 32));
+                        break;
+                    case "01":
+                        System.out.println("TRAILER");
+                        qtdRegGravados = Integer.parseInt(registro.substring(2, 12));
+                        if (qtdRegGravados == contaRegDados) {
+                            System.out.println("Quantidade de registros gravados compatível com quantidade de reg de dados lidos: " + qtdRegGravados);
+                        } else {
+                            System.out.println("Quantidade de registros gravados incompatível com quantidade de reg de dados lidos: " + qtdRegGravados);
+                        }
+                        contaRegDados = 0;
+                        break;
+                    case "02":
+                        System.out.println("DADOS");
+                        categoria = registro.substring(2, 27).trim();
+                        nome = registro.substring(27, 57).trim();
+                        perecivel = registro.substring(57, 62).trim();
+                        unidade_medida = registro.substring(62, 87).trim();
+                        if (registro.substring(87, 92).trim().equals("null")) {
+                            dias_vencimento = null;
+                        } else {
+                            dias_vencimento = Integer.valueOf(registro.substring(87, 92).trim());
+                        }
+
+                        CategoriaItem categoriaItem = categoriaItemService.getCategoriaByName(categoria);
+                        UnidadeMedida unidadeMedidaItem = unidadeMedidaService.getUnidadeMedidaByNome(unidade_medida);
+
+                        contaRegDados++;
+                        System.out.println(contaRegDados);
+                        Item item = new Item();
+                        item.setCategoria(categoriaItem);
+                        item.setNome(nome);
+                        item.setPerecivel(Boolean.parseBoolean(perecivel));
+                        item.setUnidade_medida(unidadeMedidaItem);
+                        item.setDias_vencimento(dias_vencimento);
+                        item.setAtivo(true);
+
+                        itemService.criar(item);
+                        System.out.println(categoria + " " + nome + " " + perecivel + " " + unidade_medida + " " + dias_vencimento);
+
+                        break;
+                    default:
+                        System.out.println("ERRO");
+                        break;
+                }
+
+                registro = entrada.readLine();
+            }
+            entrada.close();
+        } catch (IOException e) {
+            System.out.println("Erro ao ler o arquivo " + e.getMessage());
+            e.printStackTrace();
+        }
+        return ResponseEntity.status(201).build();
     }
 }
