@@ -338,5 +338,16 @@ public class UsuarioController {
     return ResponseEntity.noContent().build();
   }
 
+  @GetMapping("/usuario-ultimo-id")
+    public ResponseEntity<UsuarioDTO> getUltimoId(){
+      Integer ultimoIdAdicionado = service.getUltimoId();
+      Usuario usuario = service.porId(ultimoIdAdicionado);
+        UsuarioDTO usuarioDTO = UsuarioMapper.INSTANCE.toUsuarioDTO(usuario);
+      System.out.println("------------------------------------------------");
+      System.out.println("Ultimo ID adicionado: " + usuarioDTO.getNome() + " - " + usuarioDTO.getId());
+      System.out.println("-----------------Ultimo ID-----------------------");
+      return ResponseEntity.ok(usuarioDTO);
+  }
+
 }
 
