@@ -7,6 +7,7 @@ import com.example.sustentaree.services.AuditLogsViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,16 @@ public class AuditLogsViewController {
     @GetMapping
     public ResponseEntity<List<AuditLogsViewDTO>> getAuditLogs() {
         List<AuditLogsView> auditLogs = auditLogsViewService.getAllAuditLogs();
+        List<AuditLogsViewDTO> auditLogsDTO = AuditLogsViewMapper.INSTANCE.toAuditLogsViewDTOList(auditLogs);
+        if (auditLogsDTO.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(auditLogsDTO);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<AuditLogsViewDTO>> getAuditLogEspecifico(@PathVariable Integer id) {
+        List<AuditLogsView> auditLogs = auditLogsViewService.getAuditLogEspecifico(id);
         List<AuditLogsViewDTO> auditLogsDTO = AuditLogsViewMapper.INSTANCE.toAuditLogsViewDTOList(auditLogs);
         if (auditLogsDTO.isEmpty()) {
             return ResponseEntity.noContent().build();

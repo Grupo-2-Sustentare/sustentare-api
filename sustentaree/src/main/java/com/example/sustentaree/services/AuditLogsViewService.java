@@ -14,4 +14,8 @@ public class AuditLogsViewService {
     public List<AuditLogsView> getAllAuditLogs() {
         return auditLogsViewRepository.findAll();
     }
+
+    public List<AuditLogsView> getAuditLogEspecifico(Integer id) {
+        return auditLogsViewRepository.findLogsByFkUsuario(id);
+    }
 }
