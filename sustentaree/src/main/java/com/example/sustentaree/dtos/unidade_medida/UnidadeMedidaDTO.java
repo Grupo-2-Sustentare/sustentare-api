@@ -9,6 +9,7 @@ import lombok.Setter;
 
 public class UnidadeMedidaDTO {
 
+  private Integer id;
   @NotBlank
   private String categoria;
   @NotNull
@@ -17,6 +18,8 @@ public class UnidadeMedidaDTO {
   private String nome;
   @NotNull
   private String simbolo;
+
+  private Boolean ativo;
 
   public String getCategoria() {
     return categoria;
@@ -48,5 +51,21 @@ public class UnidadeMedidaDTO {
 
   public void setSimbolo(String simbolo) {
     this.simbolo = simbolo;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
   }
 }
