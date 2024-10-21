@@ -18,6 +18,8 @@ public abstract class ProdutoMapper {
 
   public abstract ProdutoListagemDTO toProdutoListagemDTO(Produto produto);
 
+  public abstract List<ProdutoListagemDTO> toProdutoListagemDTO(List<Produto> produto);
+
   public abstract List<ProdutoListagemDTO> toProdutoListDTO(List<Produto> produtoList);
 
   public abstract Produto toProdutoUpdate(AlterarProdutoDTO alterarProdutoDTO);

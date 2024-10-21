@@ -13,6 +13,15 @@ public class ProdutoListagemDTO {
   private Integer qtdProduto;
   private Double qtdMedida;
   private Item item;
+  private String imagem;
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
+  }
 
   public Integer getId() {
     return id;
