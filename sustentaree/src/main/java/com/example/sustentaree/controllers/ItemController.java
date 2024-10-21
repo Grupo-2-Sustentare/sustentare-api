@@ -17,9 +17,12 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -171,19 +174,23 @@ public class ItemController {
     return ResponseEntity.notFound().build();
   }
 
-  @GetMapping("/gravarTxt")
+  @PostMapping(value = "/importarTxt", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Transactional(rollbackOn = Exception.class)
-  public ResponseEntity gravarTxt(){
-    List<Item> itens = itemRepository.findAll();
-    fileService.gravaArquivoTxt(itens, "teste");
+  public ResponseEntity gravarTxt(@RequestParam("file") MultipartFile file){
+    fileService.importarTxt(file);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 
-  @GetMapping("/lerTxt")
+  @GetMapping("/exportarTxt")
   @Transactional(rollbackOn = Exception.class)
   public ResponseEntity lerTxt(){
-    fileService.leArquivoTxt("teste");
-    return ResponseEntity.status(HttpStatus.OK).build();
+    byte[] exportarFile = fileService.exportarTxt();
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.TEXT_PLAIN);
+    headers.setContentDispositionFormData("attachment", "arquivo.txt");
+
+    return new ResponseEntity<>(exportarFile, headers, HttpStatus.OK);
   }
 
 

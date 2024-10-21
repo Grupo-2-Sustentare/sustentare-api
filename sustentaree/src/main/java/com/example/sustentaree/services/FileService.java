@@ -4,14 +4,21 @@ import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.produto.Produto;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
+import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.repositories.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -114,28 +121,6 @@ public class FileService {
     }
      */
 
-    public void gravaArquivoTxt(List<Item> itens, String nomeArq){
-        int qtdRegistroDados = 0;
-
-        String header = "00NOTA20242";
-        header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
-        header += "01";
-        gravarRegistro(nomeArq, header);
-        for(Item i: itens){
-            String corpo = "02";
-            corpo += String.format("%-25.25s",i.getCategoria().getNome());
-            corpo += String.format("%-30.30s",i.getNome());
-            corpo += String.format("%-5.5s",i.getPerecivel());
-            corpo += String.format("%-25.25s",i.getUnidade_medida().getNome());
-            corpo += String.format("%05d",i.getDias_vencimento());
-
-            gravarRegistro(nomeArq, corpo);
-            qtdRegistroDados++;
-        }
-        String trailer = "01";
-        trailer += String.format("%010d", qtdRegistroDados);
-        gravarRegistro(nomeArq, trailer);
-    }
 
     public void leArquivoTxt(String nomeArq){
         BufferedReader entrada = null;
@@ -281,7 +266,10 @@ public class FileService {
                         item.setDias_vencimento(dias_vencimento);
                         item.setAtivo(true);
 
-                        itemService.criar(item);
+                        if (!itemService.procurarItemPorNome(nome)){
+                            itemService.criar(item);
+                        }
+
                         System.out.println(categoria + " " + nome + " " + perecivel + " " + unidade_medida + " " + dias_vencimento);
 
                         break;
@@ -297,6 +285,40 @@ public class FileService {
             System.out.println("Erro ao ler o arquivo " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public byte[] exportarTxt() {
+        List<Item> itens = itemService.listar();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+
+            int qtdRegistroDados = 0;
+
+            String header = "00NOTA20242";
+            header += LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
+            header += "01";
+            writer.write(header + "\n");
+
+            for (Item i : itens) {
+                String corpo = "02";
+                corpo += String.format("%-25.25s", i.getCategoria().getNome());
+                corpo += String.format("%-30.30s", i.getNome());
+                corpo += String.format("%-5.5s", i.getPerecivel());
+                corpo += String.format("%-25.25s", i.getUnidade_medida().getNome());
+                corpo += String.format("%05d", i.getDias_vencimento());
+
+                writer.write(corpo + "\n");
+                qtdRegistroDados++;
+            }
+
+            String trailer = "01";
+            trailer += String.format("%010d", qtdRegistroDados);
+            writer.write(trailer + "\n");
+        } catch (IOException e) {
+            System.out.println("Erro ao gerar o arquivo: " + e.getMessage());
+        }
+
+        return outputStream.toByteArray();
     }
 
 }

@@ -27,6 +27,6 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
     @Query("UPDATE Item u SET u.ativo = :ativo WHERE u.id = :id")
     void updateAtivoById(@Param("ativo") Boolean ativo, @Param("id") Integer id);
 
-    @Query(value = "SELECT * FROM item WHERE nome = :nome",nativeQuery = true)
+    @Query(value = "SELECT * FROM item WHERE nome = :nome ORDER BY id_item DESC LIMIT 1", nativeQuery = true)
     Optional<Item> existsByNome(String nome);
 }
