@@ -288,7 +288,7 @@ public class FileService {
     }
 
     public byte[] exportarTxt() {
-        List<Item> itens = itemService.listar();
+        List<Item> itens = itemService.listarSemImagem();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (OutputStreamWriter writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
 

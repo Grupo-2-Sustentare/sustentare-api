@@ -15,6 +15,16 @@ public class ItemCriacaoDTO {
   private Integer dias_vencimento;
   @AssertTrue
   private Boolean ativo;
+  private String imagem;
+
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
+  }
 
   public Boolean getAtivo() {
     return ativo;

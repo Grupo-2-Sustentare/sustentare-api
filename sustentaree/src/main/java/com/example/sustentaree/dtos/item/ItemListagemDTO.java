@@ -13,8 +13,16 @@ public class ItemListagemDTO {
   private String nome;
   private Boolean perecivel;
   private Integer dias_vencimento;
-  private UnidadeMedida unidade_medida;
-  private CategoriaItem categoria;
+  private String imagem;
+
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
+  }
 
   public String getNome() {
     return nome;
@@ -40,19 +48,4 @@ public class ItemListagemDTO {
     this.dias_vencimento = dias_vencimento;
   }
 
-  public UnidadeMedida getUnidade_medida() {
-    return unidade_medida;
-  }
-
-  public void setUnidade_medida(UnidadeMedida unidade_medida) {
-    this.unidade_medida = unidade_medida;
-  }
-
-  public CategoriaItem getCategoria() {
-    return categoria;
-  }
-
-  public void setCategoria(CategoriaItem categoria) {
-    this.categoria = categoria;
-  }
 }

@@ -4,6 +4,7 @@ import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
 import com.example.sustentaree.services.ItemService;
+import com.example.sustentaree.services.LambdaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -24,7 +25,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/itens")
@@ -35,6 +38,8 @@ public class ItemController {
   private FileService fileService;
   @Autowired
   private ItemRepository itemRepository;
+  @Autowired
+  private LambdaService lambdaService;
 
   public ItemController(ItemService service) {
     this.service = service;
@@ -64,8 +69,21 @@ public class ItemController {
       @RequestParam int categoriaItemId,
       @RequestParam int idResponsavel
   ) {
+
+    if (dto.getImagem() != null){
+      CompletableFuture.runAsync(() ->
+              {
+                byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
+                Integer idUsuario = service.getUltimoId() + 1;
+                String nomeArquivo = "/itens/imagens/"+idUsuario.toString();
+                lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+              }
+      );
+    }
+
     ItemMapper mapper = ItemMapper.INSTANCE;
     Item novoItem = mapper.toItem(dto);
+    novoItem.setAtivo(true);
     Item item = this.service.criar(novoItem, unidadeMedidaId, categoriaItemId, idResponsavel);
     ItemListagemDTO response = mapper.toItemListagemDTO(item);
 
@@ -90,15 +108,13 @@ public class ItemController {
 
   @GetMapping
   public ResponseEntity<List<ItemListagemDTO>> listar() {
-    List<Item> items = this.service.listar();
+    List<ItemListagemDTO> items = this.service.listar();
 
     if (items.isEmpty()) {
       return ResponseEntity.noContent().build();
     }
 
-    ItemMapper mapper = ItemMapper.INSTANCE;
-    List<ItemListagemDTO> response = mapper.toItemListDto(items);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(items);
   }
 
   @Operation(summary = "Buscar item por ID", description = "Retorna um item com base no ID fornecido")

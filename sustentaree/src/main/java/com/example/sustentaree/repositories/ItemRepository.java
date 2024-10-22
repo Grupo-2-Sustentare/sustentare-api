@@ -29,4 +29,7 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     @Query(value = "SELECT * FROM item WHERE nome = :nome ORDER BY id_item DESC LIMIT 1", nativeQuery = true)
     Optional<Item> existsByNome(String nome);
+
+    @Query(value = "SELECT * FROM item ORDER BY id_item DESC LIMIT 1", nativeQuery = true)
+    Optional<Item> getUltimoId();
 }
