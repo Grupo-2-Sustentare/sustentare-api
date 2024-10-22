@@ -88,7 +88,7 @@ public class ProdutoController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
     this.service.deletar(id, idResponsavel);
-    return ResponseEntity.notFound().build();
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/hash/{categoria}")
