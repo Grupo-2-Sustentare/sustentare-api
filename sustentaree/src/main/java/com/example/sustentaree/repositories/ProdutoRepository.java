@@ -17,4 +17,10 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
   @Transactional
   @Query("UPDATE Produto u SET u.ativo = :ativo WHERE u.id = :id")
   void updateAtivoById(@Param("ativo") Boolean ativo, @Param("id") Integer id);
+
+  @Query("SELECT p FROM Produto p WHERE p.item.id = :itemId")
+  List<Produto> findByItemId(@Param("itemId") Integer itemId);
+
+  @Query("SELECT p FROM Produto p WHERE p.item.id IN :itemIds")
+  List<Produto> findByItemIds(@Param("itemIds") List<Integer> itemIds);
 }

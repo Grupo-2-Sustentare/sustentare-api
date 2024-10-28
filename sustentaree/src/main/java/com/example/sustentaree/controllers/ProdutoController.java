@@ -95,4 +95,19 @@ public class ProdutoController {
   public ResponseEntity<List<Produto>> getByHash(@PathVariable String categoria, @RequestParam int idResponsavel){
     return ResponseEntity.ok(this.service.getByHash(categoria, idResponsavel));
   }
+
+  @GetMapping("/categoria/{id}")
+  public ResponseEntity<List<ProdutoListagemDTO>> listarPorCategoria(@PathVariable int id){
+    List<Produto> produtos = this.service.listarPorItem(id);
+    ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+    List<ProdutoListagemDTO> response = mapper.toProdutoListDTO(produtos);
+    return ResponseEntity.ok(response);
+  }
+  @GetMapping("/categorias")
+  public ResponseEntity<List<ProdutoListagemDTO>> listarPorCategorias(@RequestParam List<Integer> ids){
+    List<Produto> produtos = this.service.listarPorItens(ids);
+    ProdutoMapper mapper = ProdutoMapper.INSTANCE;
+    List<ProdutoListagemDTO> response = mapper.toProdutoListDTO(produtos);
+    return ResponseEntity.ok(response);
+  }
 }

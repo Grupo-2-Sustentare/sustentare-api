@@ -42,6 +42,12 @@ public class ProdutoService {
           () -> new RuntimeException("Produto")
     );
   }
+  public List<Produto> listarPorItem(Integer idItem) {
+    return this.produtoRepository.findByItemId(idItem);
+  }
+  public List<Produto> listarPorItens(List<Integer> listaIds) {
+    return this.produtoRepository.findByItemIds(listaIds);
+  }
   @Transactional
   public Produto criar(Produto novoProduto,
                        Integer fkItem, int idResponsavel) {
