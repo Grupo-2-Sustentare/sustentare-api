@@ -104,8 +104,8 @@ public class ProdutoController {
     return ResponseEntity.ok(response);
   }
   @GetMapping("/categorias")
-  public ResponseEntity<List<ProdutoListagemDTO>> listarPorCategorias(@RequestParam List<Integer> ids){
-    List<Produto> produtos = this.service.listarPorItens(ids);
+  public ResponseEntity<List<ProdutoListagemDTO>> listarPorCategorias(@RequestParam String nomes){
+    List<Produto> produtos = this.service.listarPorItens(nomes);
     ProdutoMapper mapper = ProdutoMapper.INSTANCE;
     List<ProdutoListagemDTO> response = mapper.toProdutoListDTO(produtos);
     return ResponseEntity.ok(response);

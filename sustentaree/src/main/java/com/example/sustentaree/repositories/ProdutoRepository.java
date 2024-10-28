@@ -21,6 +21,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
   @Query("SELECT p FROM Produto p WHERE p.item.id = :itemId")
   List<Produto> findByItemId(@Param("itemId") Integer itemId);
 
-  @Query("SELECT p FROM Produto p WHERE p.item.id IN :itemIds")
-  List<Produto> findByItemIds(@Param("itemIds") List<Integer> itemIds);
+  @Query("SELECT p FROM Produto p WHERE FIND_IN_SET(p.item.nome, :nomes) > 0 OR :nomes IS NULL")
+  List<Produto> listByItemNome(@Param("nomes") String nomes);
 }

@@ -45,8 +45,8 @@ public class ProdutoService {
   public List<Produto> listarPorItem(Integer idItem) {
     return this.produtoRepository.findByItemId(idItem);
   }
-  public List<Produto> listarPorItens(List<Integer> listaIds) {
-    return this.produtoRepository.findByItemIds(listaIds);
+  public List<Produto> listarPorItens(String nomes) {
+    return this.produtoRepository.listByItemNome(nomes);
   }
   @Transactional
   public Produto criar(Produto novoProduto,
