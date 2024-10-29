@@ -23,7 +23,8 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
 
   @Query(value = "SELECT p.* FROM produto p " +
         "JOIN item i ON p.fk_item = i.id_item " +
-        "WHERE (i.nome IN (:nomes) OR :nomes IS NULL)",
+        "JOIN categoria_item ci ON i.fk_categoria_item = ci.id_categoria_item " +
+        "WHERE (ci.nome IN (:nomes) OR :nomes IS NULL)",
         nativeQuery = true)
   List<Produto> listByItemNome(@Param("nomes") String nomes);
 
