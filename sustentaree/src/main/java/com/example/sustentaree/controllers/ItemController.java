@@ -198,7 +198,7 @@ public class ItemController {
   public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
     this.service.deletar(id, idResponsavel);
 
-    return ResponseEntity.notFound().build();
+    return ResponseEntity.noContent().build();
   }
 
   @PostMapping(value = "/importarTxt", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
