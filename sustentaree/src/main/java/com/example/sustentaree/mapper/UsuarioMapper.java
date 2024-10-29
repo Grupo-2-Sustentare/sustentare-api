@@ -5,6 +5,7 @@ import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioImagemByteDTO;
+import com.example.sustentaree.dtos.usuario.UsuarioSemImagemDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -22,6 +23,8 @@ public abstract class UsuarioMapper {
   public abstract List<UsuarioDTO> toUsuarioListDTO(List<Usuario> usuarios);
   public abstract Usuario toUsuario(AlterarUsuarioDTO alterarUsuarioDTO);
   public abstract List<UsuarioImagemByteDTO> toUsuarioImagemByteListDTO(List<Usuario> usuarios);
+  public abstract UsuarioSemImagemDTO toUsuarioSemImagemDTO(Usuario usuario);
+  public abstract List<UsuarioSemImagemDTO> toUsuarioSemImagemDTOList(List<Usuario> usuarios);
 
   public static UsuarioTokenDto of(Usuario usuario, String token){
     UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto();

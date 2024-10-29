@@ -3,6 +3,7 @@ package com.example.sustentaree.controllers;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.domain.item.Item;
+import com.example.sustentaree.dtos.usuario.UsuarioSemImagemDTO;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
@@ -167,6 +168,20 @@ public class UsuarioController {
       }
     return ResponseEntity.ok(response);
   }
+
+    @GetMapping("listar-sem-imagem")
+    public ResponseEntity<List<UsuarioSemImagemDTO>> listarSemImagem() {
+        List<Usuario> usuarios = this.service.listar();
+
+        if (usuarios.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+        List<UsuarioSemImagemDTO> response = mapper.toUsuarioSemImagemDTOList(usuarios);
+
+        return ResponseEntity.ok(response);
+    }
+
     private String convertToJPEG(byte[] imageBytes, float quality) throws IOException {
         // Converte o byte array para BufferedImage
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
