@@ -64,12 +64,5 @@ public class ItemListagemDTO {
   public void setId(Integer id) {
     this.id = id;
   }
-
-  public Boolean getAtivo() {
-    return ativo;
-  }
-
-  public void setAtivo(Boolean ativo) {
-    this.ativo = ativo;
-  }
+  
 }
