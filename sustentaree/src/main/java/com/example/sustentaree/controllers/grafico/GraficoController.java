@@ -4,6 +4,7 @@ import com.example.sustentaree.domain.grafico.ViewEntradasSaidas;
 import com.example.sustentaree.domain.grafico.ViewVencerNaSemana;
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.dtos.ComprasDTO;
+import com.example.sustentaree.dtos.PerdasPorMesDTO;
 import com.example.sustentaree.dtos.ValorEntradasSaidasMesDTO;
 import com.example.sustentaree.services.GraficoService;
 import com.example.sustentaree.services.InteracaoService;
@@ -69,6 +70,21 @@ public class GraficoController {
 
         try {
             List<ComprasDTO> resultados = graficoService.getComprasRegularesVsNaoPlanejadas(dataInicio, dataFim, categorias, itens);
+            return ResponseEntity.ok(resultados);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/perdas-por-mes")
+    public ResponseEntity<List<PerdasPorMesDTO>> getPerdasPorMes(
+        @RequestParam String dataInicio,
+        @RequestParam String dataFim,
+        @RequestParam(required = false) String categorias,
+        @RequestParam(required = false) String itens) {
+
+        try {
+            List<PerdasPorMesDTO> resultados = graficoService.getPerdasPorMes(dataInicio, dataFim, categorias, itens);
             return ResponseEntity.ok(resultados);
         } catch (Exception e) {
             return ResponseEntity.status(500).build();

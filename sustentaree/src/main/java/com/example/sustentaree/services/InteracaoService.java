@@ -92,6 +92,15 @@ public class InteracaoService {
   }
 
 //  @Transactional
+//  public InteracaoEstoque upsert(InteracaoEstoque interacaoEstoque, Integer idProduto, Integer idFechamento, Integer idResponsavel) {
+//    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+//
+//
+//
+//    return this.repository.save(interacaoEstoque);
+//  }
+
+//  @Transactional
 //  public void deletar(Integer id, int idResponsavel) {
 //    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
 //
