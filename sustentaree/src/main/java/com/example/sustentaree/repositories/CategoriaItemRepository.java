@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface CategoriaItemRepository extends JpaRepository<CategoriaItem, Integer> {
-  List<CategoriaItem> findByAtivoTrue();
+  List<CategoriaItem> findByAtivoTrueOrderByNome();
   @Modifying
   @Transactional
   @Query("UPDATE CategoriaItem u SET u.ativo = :ativo WHERE u.id = :id")
