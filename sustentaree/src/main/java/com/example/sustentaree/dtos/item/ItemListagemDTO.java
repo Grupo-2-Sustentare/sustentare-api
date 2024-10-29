@@ -14,7 +14,15 @@ public class ItemListagemDTO {
   private Boolean perecivel;
   private Integer dias_vencimento;
   private String imagem;
+  private Boolean ativo;
 
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 
   public String getImagem() {
     return imagem;
