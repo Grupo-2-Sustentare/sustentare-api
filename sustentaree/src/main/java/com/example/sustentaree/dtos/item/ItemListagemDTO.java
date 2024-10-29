@@ -10,10 +10,12 @@ import lombok.Setter;
 
 public class ItemListagemDTO {
 
+  private Integer id;
   private String nome;
   private Boolean perecivel;
   private Integer dias_vencimento;
   private String imagem;
+  private Boolean ativo;
 
 
   public String getImagem() {
@@ -48,4 +50,19 @@ public class ItemListagemDTO {
     this.dias_vencimento = dias_vencimento;
   }
 
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
+
+  public Boolean getAtivo() {
+    return ativo;
+  }
+
+  public void setAtivo(Boolean ativo) {
+    this.ativo = ativo;
+  }
 }

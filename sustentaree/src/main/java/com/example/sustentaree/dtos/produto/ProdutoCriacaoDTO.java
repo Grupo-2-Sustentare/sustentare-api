@@ -1,22 +1,19 @@
 package com.example.sustentaree.dtos.produto;
 
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 public class ProdutoCriacaoDTO {
 
   // @ManyToOne -> trazer o id do Item correspondente ao produto
   @NotNull
-  @Positive
+  @PositiveOrZero
   private Double preco;
   @NotNull
-  @Positive
+  @PositiveOrZero
   private Integer qtdProduto;
   @NotNull
-  @Positive
+  @PositiveOrZero
   private Double qtdMedida;
 
   private String imagem;
