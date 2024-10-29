@@ -14,6 +14,8 @@ public class AlterarItemDTO {
   @NotNull
   private Boolean perecivel;
   private Integer dias_vencimento;
+  private UnidadeMedida unidade_medida;
+  private CategoriaItem categoria;
   private Boolean ativo;
 
   public Boolean getAtivo() {
@@ -46,5 +48,21 @@ public class AlterarItemDTO {
 
   public void setDias_vencimento(Integer dias_vencimento) {
     this.dias_vencimento = dias_vencimento;
+  }
+
+  public UnidadeMedida getUnidade_medida() {
+    return unidade_medida;
+  }
+
+  public void setUnidade_medida(UnidadeMedida unidade_medida) {
+    this.unidade_medida = unidade_medida;
+  }
+
+  public CategoriaItem getCategoria() {
+    return categoria;
+  }
+
+  public void setCategoria(CategoriaItem categoria) {
+    this.categoria = categoria;
   }
 }
