@@ -16,7 +16,16 @@ public class AlterarItemDTO {
   private Integer dias_vencimento;
   private UnidadeMedida unidade_medida;
   private CategoriaItem categoria;
+  private String imagem;
   private Boolean ativo;
+
+  public String getImagem() {
+    return imagem;
+  }
+
+  public void setImagem(String imagem) {
+    this.imagem = imagem;
+  }
 
   public Boolean getAtivo() {
     return ativo;

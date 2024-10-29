@@ -161,12 +161,23 @@ public class ItemController {
 
   @PutMapping("{id}")
   public ResponseEntity<ItemListagemDTO> atualizar(
-      @PathVariable int id,
+      @PathVariable Integer id,
       @RequestBody @Valid AlterarItemDTO alterarItemDTO,
       @RequestParam int unidadeMedidaId,
       @RequestParam int categoriaItemId,
       @RequestParam int idResponsavel
   ) {
+
+    if (alterarItemDTO.getImagem() != null){
+      CompletableFuture.runAsync(() ->
+              {
+                byte[] imagemBytes = Base64.getDecoder().decode(alterarItemDTO.getImagem());
+                String nomeArquivo = "/itens/imagens/"+id.toString();
+                lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+              }
+      );
+    }
+
     ItemMapper mapper = ItemMapper.INSTANCE;
 
     Item item = mapper.toItemUpdate(alterarItemDTO);
