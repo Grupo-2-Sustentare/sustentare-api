@@ -7,7 +7,6 @@ import com.example.sustentaree.dtos.produto.ProdutoListagemDTO;
 import com.example.sustentaree.mapper.ProdutoMapper;
 import com.example.sustentaree.services.LambdaService;
 import com.example.sustentaree.services.ProdutoService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,7 +104,7 @@ public class ProdutoController {
   }
   @GetMapping("/categorias")
   public ResponseEntity<List<ProdutoListagemDTO>> listarPorCategorias(@RequestParam String nomes){
-    List<Produto> produtos = this.service.listarPorItens(nomes);
+    List<Produto> produtos = this.service.listarPorCategorias(nomes);
     ProdutoMapper mapper = ProdutoMapper.INSTANCE;
     List<ProdutoListagemDTO> response = mapper.toProdutoListDTO(produtos);
     return ResponseEntity.ok(response);

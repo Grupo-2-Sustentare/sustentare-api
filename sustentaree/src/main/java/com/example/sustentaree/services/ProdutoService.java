@@ -1,13 +1,11 @@
 package com.example.sustentaree.services;
-
 import com.example.sustentaree.domain.produto.Produto;
 import com.example.sustentaree.repositories.ProdutoRepository;
 import com.example.sustentaree.services.data_structure.HashTable;
 import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -34,7 +32,9 @@ public class ProdutoService {
   }
 
   public List<Produto> listar() {
-    return this.produtoRepository.findByAtivoTrue();
+    List<Produto> produtos = this.produtoRepository.findByAtivoTrue();
+    produtos.sort(Comparator.comparing(o -> o.getItem().getNome()));
+    return produtos;
   }
 
   public Produto porId(Integer id) {
@@ -45,9 +45,11 @@ public class ProdutoService {
   public List<Produto> listarPorItem(Integer idItem) {
     return this.produtoRepository.findByItemId(idItem);
   }
-  public List<Produto> listarPorItens(String nomes) {
-    return this.produtoRepository.listByItemNome(nomes);
+
+  public List<Produto> listarPorCategorias(String nomes) {
+    return this.produtoRepository.listByCategory(nomes);
   }
+
   @Transactional
   public Produto criar(Produto novoProduto,
                        Integer fkItem, int idResponsavel) {

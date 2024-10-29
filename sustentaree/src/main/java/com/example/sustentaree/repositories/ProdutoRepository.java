@@ -1,6 +1,5 @@
 package com.example.sustentaree.repositories;
 
-import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.produto.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -24,8 +23,9 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
   @Query(value = "SELECT p.* FROM produto p " +
         "JOIN item i ON p.fk_item = i.id_item " +
         "JOIN categoria_item ci ON i.fk_categoria_item = ci.id_categoria_item " +
-        "WHERE (ci.nome IN (:nomes) OR :nomes IS NULL)",
+        "WHERE FIND_IN_SET(ci.nome, :nomes)" +
+          "ORDER BY i.nome",
         nativeQuery = true)
-  List<Produto> listByItemNome(@Param("nomes") String nomes);
+  List<Produto> listByCategory(@Param("nomes") String nomes);
 
 }
