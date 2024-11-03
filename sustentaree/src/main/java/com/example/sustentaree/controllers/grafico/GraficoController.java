@@ -3,9 +3,7 @@ package com.example.sustentaree.controllers.grafico;
 import com.example.sustentaree.domain.grafico.ViewEntradasSaidas;
 import com.example.sustentaree.domain.grafico.ViewVencerNaSemana;
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
-import com.example.sustentaree.dtos.ComprasDTO;
-import com.example.sustentaree.dtos.PerdasPorMesDTO;
-import com.example.sustentaree.dtos.ValorEntradasSaidasMesDTO;
+import com.example.sustentaree.dtos.*;
 import com.example.sustentaree.services.GraficoService;
 import com.example.sustentaree.services.InteracaoService;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,29 +28,30 @@ public class GraficoController {
         this.graficoService = graficoService;
     }
 
-    @GetMapping("/entradaSaidaMes")
-    public ResponseEntity<List<ViewEntradasSaidas>> entradaSaidasMes(){
-        List<ViewEntradasSaidas> viewEntradasSaidas = graficoService.entradasSaidas();
-        if(viewEntradasSaidas == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(viewEntradasSaidas);
-    }
-
-    @GetMapping("/vencerNaSemana")
-    public ResponseEntity<List<ViewVencerNaSemana>> vencerNaSemana(){
-        List<ViewVencerNaSemana> viewVencerNaSemanas = graficoService.vencerNaSemana();
-        if(viewVencerNaSemanas == null){
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(viewVencerNaSemanas);
-    }
+//    @GetMapping("/entradaSaidaMes")
+//    public ResponseEntity<List<ViewEntradasSaidas>> entradaSaidasMes(){
+//        List<ViewEntradasSaidas> viewEntradasSaidas = graficoService.entradasSaidas();
+//        if(viewEntradasSaidas == null){
+//            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+//        }
+//        return ResponseEntity.ok(viewEntradasSaidas);
+//    }
+//
+//    @GetMapping("/vencerNaSemana")
+//    public ResponseEntity<List<ViewVencerNaSemana>> vencerNaSemana(){
+//        List<ViewVencerNaSemana> viewVencerNaSemanas = graficoService.vencerNaSemana();
+//        if(viewVencerNaSemanas == null){
+//            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+//        }
+//        return ResponseEntity.ok(viewVencerNaSemanas);
+//    }
     @GetMapping("/valor-entradas-saidas")
     public ResponseEntity<List<ValorEntradasSaidasMesDTO>> getValorEntradasSaidasMes(
         @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
         @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
         @RequestParam(required = false) String categorias,
-        @RequestParam(required = false) String itens) {
+        @RequestParam(required = false) String itens
+    ) {
 
         try {
             List<ValorEntradasSaidasMesDTO> resultados = graficoService.getValorEntradasSaidasMes(dataInicio, dataFim, categorias, itens);
@@ -66,7 +65,8 @@ public class GraficoController {
         @RequestParam String dataInicio,
         @RequestParam String dataFim,
         @RequestParam(required = false) String categorias,
-        @RequestParam(required = false) String itens) {
+        @RequestParam(required = false) String itens
+    ) {
 
         try {
             List<ComprasDTO> resultados = graficoService.getComprasRegularesVsNaoPlanejadas(dataInicio, dataFim, categorias, itens);
@@ -81,11 +81,40 @@ public class GraficoController {
         @RequestParam String dataInicio,
         @RequestParam String dataFim,
         @RequestParam(required = false) String categorias,
-        @RequestParam(required = false) String itens) {
+        @RequestParam(required = false) String itens
+    ) {
 
         try {
             List<PerdasPorMesDTO> resultados = graficoService.getPerdasPorMes(dataInicio, dataFim, categorias, itens);
             return ResponseEntity.ok(resultados);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/colaboradores/log-operacoes")
+    public ResponseEntity<List<AuditoriaColaboradoresDTO>> getLogOperacoes(
+        @RequestParam String dataInicio,
+        @RequestParam String dataFim,
+        @RequestParam(required = false) String colaboradores
+    ) {
+        try {
+            List<AuditoriaColaboradoresDTO> auditoriaColaboradores = graficoService.getAuditoriaColaboradores(dataInicio, dataFim, colaboradores);
+            return ResponseEntity.ok(auditoriaColaboradores);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    @GetMapping("/colaboradores/entrada-saida")
+    public ResponseEntity<List<EntradasSaidasColaboradoresDTO>> getEntradaSaida(
+        @RequestParam String dataInicio,
+        @RequestParam String dataFim,
+        @RequestParam(required = false) String colaboradores
+    ) {
+        try {
+            List<EntradasSaidasColaboradoresDTO> entradasSaidasColaboradores = graficoService.getEntradasSaidasPorColaborador(dataInicio, dataFim, colaboradores);
+            return ResponseEntity.ok(entradasSaidasColaboradores);
         } catch (Exception e) {
             return ResponseEntity.status(500).build();
         }

@@ -38,7 +38,8 @@ public class UsuarioService {
   }
   @Transactional
   public Usuario criar(Usuario usuario, int idResponsavel){
-    if(this.repository.findByNome(usuario.getEmail()).isPresent()){
+    Usuario temUser = this.repository.findByNomeAndAtivoTrueOrEmailAndAtivoTrue(usuario.getNome(), usuario.getEmail()).orElse(null);
+    if(temUser != null){
       throw new ResponseStatusException(409, "Email de usuário já cadastrado", null);
     }
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);

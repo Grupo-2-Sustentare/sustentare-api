@@ -11,14 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.jpa.repository.Query;
 
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByNomeAndAtivoTrue(String nome);
+    Optional<Usuario> findByNomeAndAtivoTrueOrEmailAndAtivoTrue(String nome, String email);
     Optional<Usuario> findByNome(String nome);
-
     @Query("SELECT MAX(u) FROM Usuario u")
     Integer findMaxIdUsuario();
 

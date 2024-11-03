@@ -2,9 +2,7 @@ package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.grafico.ViewEntradasSaidas;
 import com.example.sustentaree.domain.grafico.ViewVencerNaSemana;
-import com.example.sustentaree.dtos.ComprasDTO;
-import com.example.sustentaree.dtos.PerdasPorMesDTO;
-import com.example.sustentaree.dtos.ValorEntradasSaidasMesDTO;
+import com.example.sustentaree.dtos.*;
 import com.example.sustentaree.repositories.ViewEntradasSaidasRepository;
 import com.example.sustentaree.repositories.ViewVencerNaSemanaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,26 +52,22 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            // Definir parâmetros de entrada
             callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));;
             callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
-            // Executar a procedure
             boolean hasResults = callableStatement.execute();
 
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        // Capturar os valores retornados da procedure
                         String mesAno = rs.getString("mes_ano");
                         String categoria = rs.getString("categoria");
                         String item = rs.getString("item");
                         Double valorEntradas = rs.getDouble("valor_entradas");
                         Double valorSaidas = rs.getDouble("valor_saidas");
 
-                        // Criar o DTO e adicionar à lista de resultados
                         ValorEntradasSaidasMesDTO dto = new ValorEntradasSaidasMesDTO(mesAno, categoria, item, valorEntradas, valorSaidas);
                         resultados.add(dto);
                     }
@@ -92,24 +86,20 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            // Definir parâmetros de entrada
             callableStatement.setString(1, dataInicio);
             callableStatement.setString(2, dataFim);
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
-            // Executar a procedure
             boolean hasResults = callableStatement.execute();
 
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        // Capturar os valores retornados da procedure
                         String mesAno = rs.getString("mes_ano");
                         String tipoPerda = rs.getString("tipo_perda");
                         Integer qtdPerda = rs.getInt("qtd_perda");
 
-                        // Criar o DTO e adicionar à lista de resultados
                         PerdasPorMesDTO dto = new PerdasPorMesDTO(mesAno, tipoPerda, qtdPerda);
                         resultados.add(dto);
                     }
@@ -128,24 +118,20 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            // Definir parâmetros de entrada
             callableStatement.setString(1, dataInicio);
             callableStatement.setString(2, dataFim);
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
-            // Executar a procedure
             boolean hasResults = callableStatement.execute();
 
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        // Capturar os valores retornados da procedure
                         String mesAno = rs.getString("mes_ano");
                         String tipoCompra = rs.getString("tipo_compra");
                         Integer qtdCompras = rs.getInt("qtd_compras");
 
-                        // Criar o DTO e adicionar à lista de resultados
                         ComprasDTO dto = new ComprasDTO(mesAno, tipoCompra, qtdCompras);
                         resultados.add(dto);
                     }
@@ -155,5 +141,71 @@ public class GraficoService {
 
         return resultados;
     }
+    public List<AuditoriaColaboradoresDTO> getAuditoriaColaboradores(String dataInicio, String dataFim, String responsaveis) throws Exception {
+        String query = "{CALL sp_auditoria_colaboradores(?, ?, ?)}";
 
+        List<AuditoriaColaboradoresDTO> resultados = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection();
+             CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.setString(1, dataInicio);
+            callableStatement.setString(2, dataFim);
+            callableStatement.setString(3, responsaveis);
+
+            boolean hasResults = callableStatement.execute();
+
+            if (hasResults) {
+                try (ResultSet rs = callableStatement.getResultSet()) {
+                    while (rs.next()) {
+                        Integer idResponsavel = rs.getInt("id_responsavel");
+                        String responsavelNome = rs.getString("responsavel_nome");
+                        Date dataAcao = rs.getTimestamp("data_acao");
+                        String descricaoAuditoria = rs.getString("descricao_auditoria");
+                        String tipoAudit = rs.getString("tipo_audit");
+                        String detalhesRegistro = rs.getString("detalhes_registro");
+
+                        AuditoriaColaboradoresDTO dto = new AuditoriaColaboradoresDTO(
+                            idResponsavel, responsavelNome, dataAcao, descricaoAuditoria, tipoAudit, detalhesRegistro
+                        );
+                        resultados.add(dto);
+                    }
+                }
+            }
+        }
+
+        return resultados;
+    }
+    public List<EntradasSaidasColaboradoresDTO> getEntradasSaidasPorColaborador(String dataInicio, String dataFim, String colaboradores) throws Exception {
+        String query = "{CALL sp_entradas_saidas_por_colaborador(?, ?, ?)}";
+
+        List<EntradasSaidasColaboradoresDTO> resultados = new ArrayList<>();
+
+        try (Connection connection = dataSource.getConnection();
+             CallableStatement callableStatement = connection.prepareCall(query)) {
+
+            callableStatement.setString(1, dataInicio);
+            callableStatement.setString(2, dataFim);
+            callableStatement.setString(3, colaboradores);
+
+            boolean hasResults = callableStatement.execute();
+
+            if (hasResults) {
+                try (ResultSet rs = callableStatement.getResultSet()) {
+                    while (rs.next()) {
+                        Integer colaborador = rs.getInt("colaborador");
+                        Integer qtdEntradas = rs.getInt("qtd_entradas");
+                        Integer qtdSaidas = rs.getInt("qtd_saidas");
+
+                        EntradasSaidasColaboradoresDTO dto = new EntradasSaidasColaboradoresDTO(
+                            colaborador, qtdEntradas, qtdSaidas
+                        );
+                        resultados.add(dto);
+                    }
+                }
+            }
+        }
+
+        return resultados;
+    }
 }

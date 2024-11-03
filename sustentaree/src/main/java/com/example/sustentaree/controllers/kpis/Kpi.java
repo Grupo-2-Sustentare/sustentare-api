@@ -37,56 +37,56 @@ public class Kpi {
         this.kpisService = kpisService;
     }
 
-    @GetMapping("/itemMaisAntigo")
-    public ResponseEntity<List<ViewItemParado>> getKpiItemMaisAntigo() {
-        List<ViewItemParado> itens = kpisService.itemParado();
-        if (itens.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(itens);
-    }
+//    @GetMapping("/itemMaisAntigo")
+//    public ResponseEntity<List<ViewItemParado>> getKpiItemMaisAntigo() {
+//        List<ViewItemParado> itens = kpisService.itemParado();
+//        if (itens.isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+//        }
+//        return ResponseEntity.ok(itens);
+//    }
+//
+//    @GetMapping("/ultimaAdicao")
+//    public ResponseEntity<InteracaoEstoque> getKpiUltimaAdicao() {
+//        InteracaoEstoque interacaoEstoque = interacaoService.kpiUltimaAdicaoEstoque();
+//        if (interacaoEstoque == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//        return ResponseEntity.ok(interacaoEstoque);
+//    }
+//
+//    @GetMapping("/maiorRetirada")
+//    public ResponseEntity<List<InteracaoEstoque>> getKpiMaiorRetirada() {
+//        List<InteracaoEstoque> interacaoEstoque = interacaoService.kpiMaiorRetirada();
+//        if (interacaoEstoque == null) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+//        }
+//        return ResponseEntity.ok(interacaoEstoque);
+//    }
+//
+//    @GetMapping("/vencimento")
+//    public ResponseEntity<List<Item>> getKpiVencimento() {
+//        List<Item> interacaoEstoques = itemService.kpiVencimento();
+//        if (interacaoEstoques.isEmpty()) {
+//            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+//        }
+//        return ResponseEntity.ok(interacaoEstoques);
+//    }
 
-    @GetMapping("/ultimaAdicao")
-    public ResponseEntity<InteracaoEstoque> getKpiUltimaAdicao() {
-        InteracaoEstoque interacaoEstoque = interacaoService.kpiUltimaAdicaoEstoque();
-        if (interacaoEstoque == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(interacaoEstoque);
-    }
-
-    @GetMapping("/maiorRetirada")
-    public ResponseEntity<List<InteracaoEstoque>> getKpiMaiorRetirada() {
-        List<InteracaoEstoque> interacaoEstoque = interacaoService.kpiMaiorRetirada();
-        if (interacaoEstoque == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        return ResponseEntity.ok(interacaoEstoque);
-    }
-
-    @GetMapping("/vencimento")
-    public ResponseEntity<List<Item>> getKpiVencimento() {
-        List<Item> interacaoEstoques = itemService.kpiVencimento();
-        if (interacaoEstoques.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
-        return ResponseEntity.ok(interacaoEstoques);
-    }
-
-    @GetMapping("/perdas")
-    public ResponseEntity<KpiPerdasDto> getKpiPerdas(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
-        @RequestParam(required = false) String categorias,
-        @RequestParam(required = false) String itens) {
-
-        try {
-            KpiPerdasDto resultado = kpisService.getKpiPerdas(dataInicio, dataFim, categorias, itens);
-            return ResponseEntity.ok(resultado);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
-    }
+//    @GetMapping("/perdas")
+//    public ResponseEntity<KpiPerdasDto> getKpiPerdas(
+//        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+//        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+//        @RequestParam(required = false) String categorias,
+//        @RequestParam(required = false) String itens) {
+//
+//        try {
+//            KpiPerdasDto resultado = kpisService.getKpiPerdas(dataInicio, dataFim, categorias, itens);
+//            return ResponseEntity.ok(resultado);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).build();
+//        }
+//    }
 
     @GetMapping("/compras-nao-planejadas")
     public ResponseEntity<KpiComprasNaoPlanejadasDTO> getKpiComprasNaoPlanejadas(
