@@ -1,9 +1,12 @@
 package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
+import com.example.sustentaree.domain.produto.Produto;
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueCriacaoDTO;
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueListagemDTO;
+import com.example.sustentaree.dtos.produto.ProdutoCriacaoDTO;
 import com.example.sustentaree.mapper.InteracaoEstoqueMapper;
+import com.example.sustentaree.mapper.ProdutoMapper;
 import com.example.sustentaree.services.InteracaoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +31,15 @@ public class InteracaoEstoqueController {
   @PostMapping
   public ResponseEntity<InteracaoEstoqueListagemDTO> criar(
         @RequestBody @Valid InteracaoEstoqueCriacaoDTO interacaoEstoqueCriacaoDTO,
-        @RequestParam int idProduto,
-        @RequestParam int fkFechamento,
+        @RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO,
+        @RequestParam int fkItem,
         @RequestParam int idResponsavel
   ) {
+    ProdutoMapper produtoMapper = ProdutoMapper.INSTANCE;
+    Produto produto = produtoMapper.toProduto(produtoCriacaoDTO);
     InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
     InteracaoEstoque interacaoEstoque = mapper.toInteracaoEstoque(interacaoEstoqueCriacaoDTO);
-    InteracaoEstoque interacaoEstoqueNovo = this.service.criar(interacaoEstoque, idProduto, fkFechamento, idResponsavel);
+    InteracaoEstoque interacaoEstoqueNovo = this.service.criar(interacaoEstoque, produto, fkItem, idResponsavel);
     InteracaoEstoqueListagemDTO response = mapper.toInteracaoEstoqueListagemDTO(interacaoEstoqueNovo);
 
     return ResponseEntity.ok(response);

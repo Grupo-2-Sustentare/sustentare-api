@@ -22,9 +22,19 @@ public class Produto {
   private Double preco;
   @Column(name = "qtd_produto")
   private Integer qtdProduto;
+  @Column(name = "qtd_produto_total")
+  private Integer qtdProdutoTotal;
   @Column(name = "qtd_medida")
   private Double qtdMedida;
   private Boolean ativo;
+
+  public Integer getQtdProdutoTotal() {
+    return qtdProdutoTotal;
+  }
+
+  public void setQtdProdutoTotal(Integer qtdProdutoTotal) {
+    this.qtdProdutoTotal = qtdProdutoTotal;
+  }
 
   public Boolean getAtivo() {
     return ativo;

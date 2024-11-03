@@ -50,10 +50,21 @@ public class ProdutoService {
     return this.produtoRepository.listByCategory(nomes);
   }
 
+  public Produto getByItemIdAndAtivo(Integer idItem) {
+    return this.produtoRepository.findByItemAndAtivo(idItem, true);
+  }
+
   @Transactional
-  public Produto criar(Produto novoProduto,
-                       Integer fkItem, int idResponsavel) {
+  public Produto criar(
+      Produto novoProduto,
+      Integer fkItem, int idResponsavel
+  ) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+
+    Produto produtoExistente = this.getByItemIdAndAtivo(fkItem);
+    if (produtoExistente != null) {
+      this.deletar(produtoExistente.getId(), idResponsavel);
+    }
     novoProduto.setItem(itemService.porId(fkItem));
     return this.produtoRepository.save(novoProduto);
   }

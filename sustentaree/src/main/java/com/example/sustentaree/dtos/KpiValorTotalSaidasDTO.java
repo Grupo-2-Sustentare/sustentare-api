@@ -9,7 +9,6 @@ public class KpiValorTotalSaidasDTO {
     this.totalSaidas = totalSaidas;
   }
 
-  // Getter e Setter
   public BigDecimal getTotalSaidas() {
     return totalSaidas;
   }

@@ -9,7 +9,6 @@ public class KpiComprasNaoPlanejadasDTO {
     this.situacao = situacao;
   }
 
-  // Getters e Setters
   public Integer getTotalComprasNaoPlanejadas() {
     return totalComprasNaoPlanejadas;
   }

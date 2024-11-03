@@ -7,6 +7,7 @@ import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.produto.Produto;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.exception.EntidadeNaoEncontradaException;
+import com.example.sustentaree.exception.EstoqueInsuficienteException;
 import com.example.sustentaree.repositories.InteracaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,22 +53,32 @@ public class InteracaoService {
   @Transactional
   public InteracaoEstoque criar(
       InteracaoEstoque novaInteracao,
-      Integer fkProduto,
-      Integer fkFechamento,
+      Produto novoProduto,
+      Integer fkItem,
       Integer idResponsavel
   ) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-
-   if (fkFechamento == 0){
-     Produto produto = this.produtoService.porId(fkProduto);
-     novaInteracao.setProduto(produto);
-   }else {
-     Produto produto = this.produtoService.porId(fkProduto);
-     novaInteracao.setProduto(produto);
-     Fechamento fechamento = this.fechamentoService.porId(fkFechamento);
-     novaInteracao.setFechamentoEstoque(fechamento);
-   }
-
+    Produto ultimoProduto = produtoService.getByItemIdAndAtivo(novoProduto.getItem().getId());
+//    Se tiver ultimo produto, calcula a quantidade total com base na categoria de interação
+//    ( Se for algum tipo de ENTRADA, SOMA, se for QUALQUER COISA SUBTRAI)
+    if (ultimoProduto != null) {
+      if (novaInteracao.getCategoriaInteracao().equals("Entrada") || novaInteracao.getCategoriaInteracao().equals("Compra de última hora")) {
+        novoProduto.setQtdProdutoTotal(ultimoProduto.getQtdProdutoTotal() + novoProduto.getQtdProduto());
+      } else {
+//        Se for saída, verifica se tem estoque suficiente para realizar a subtração
+        if (ultimoProduto.getQtdProdutoTotal() < novoProduto.getQtdProduto()) {
+          throw new EstoqueInsuficienteException("Estoque insuficiente para realizar a subtração.");
+        }
+        novoProduto.setQtdProdutoTotal(ultimoProduto.getQtdProdutoTotal() - novoProduto.getQtdProduto());
+      }
+    }
+    else {
+//    Se não tiver, seta a quantidade total como a quantidade
+      novoProduto.setQtdProdutoTotal(novoProduto.getQtdProduto());
+  }
+//    Cria o produto e o adiciona a essa interação
+    Produto produtoCriado = this.produtoService.criar(novoProduto, fkItem, idResponsavel);
+    novaInteracao.setProduto(produtoCriado);
     return this.repository.save(novaInteracao);
   }
   @Transactional
@@ -90,23 +101,6 @@ public class InteracaoService {
 
     return csv.toString();
   }
-
-//  @Transactional
-//  public InteracaoEstoque upsert(InteracaoEstoque interacaoEstoque, Integer idProduto, Integer idFechamento, Integer idResponsavel) {
-//    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-//
-//
-//
-//    return this.repository.save(interacaoEstoque);
-//  }
-
-//  @Transactional
-//  public void deletar(Integer id, int idResponsavel) {
-//    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-//
-//    InteracaoEstoque interacaoEstoque = this.porId(id);
-//    this.repository.delete(interacaoEstoque);
-//  }
 
   public InteracaoEstoque kpiUltimaAdicaoEstoque() {
     return repository.findByUltimaAdicao();

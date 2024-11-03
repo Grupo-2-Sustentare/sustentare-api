@@ -28,4 +28,5 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
         nativeQuery = true)
   List<Produto> listByCategory(@Param("nomes") String nomes);
 
+  Produto findByItemAndAtivo(Integer idItem, Boolean ativo);
 }

@@ -9,7 +9,6 @@ public class KpiValorTotalEntradasDTO {
     this.totalEntradas = totalEntradas;
   }
 
-  // Getter e Setter
   public BigDecimal getTotalEntradas() {
     return totalEntradas;
   }

@@ -11,7 +11,6 @@ public class PerdasPorMesDTO {
     this.qtdPerda = qtdPerda;
   }
 
-  // Getters e Setters
   public String getMesAno() {
     return mesAno;
   }

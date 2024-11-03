@@ -15,7 +15,6 @@ public class ValorEntradasSaidasMesDTO {
     this.valorSaidas = valorSaidas;
   }
 
-  // Getters e Setters
   public String getMesAno() {
     return mesAno;
   }

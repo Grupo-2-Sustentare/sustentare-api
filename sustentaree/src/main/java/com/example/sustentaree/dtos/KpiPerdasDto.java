@@ -9,7 +9,6 @@ public class KpiPerdasDto {
     this.situacao = situacao;
   }
 
-  // Getters and Setters
   public int getTotalPerdas() {
     return totalPerdas;
   }
