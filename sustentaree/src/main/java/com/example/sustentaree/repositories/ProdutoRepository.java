@@ -1,5 +1,6 @@
 package com.example.sustentaree.repositories;
 
+import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.produto.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -28,5 +29,5 @@ public interface ProdutoRepository extends JpaRepository<Produto, Integer> {
         nativeQuery = true)
   List<Produto> listByCategory(@Param("nomes") String nomes);
 
-  Produto findByItemAndAtivo(Integer idItem, Boolean ativo);
+  Produto findByItemAndAtivo(Item item, Boolean ativo);
 }

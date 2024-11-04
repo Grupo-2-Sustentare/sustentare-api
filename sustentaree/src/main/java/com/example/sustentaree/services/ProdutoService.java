@@ -50,8 +50,8 @@ public class ProdutoService {
     return this.produtoRepository.listByCategory(nomes);
   }
 
-  public Produto getByItemIdAndAtivo(Integer idItem) {
-    return this.produtoRepository.findByItemAndAtivo(idItem, true);
+  public Produto getByItemIdAndAtivo(int idItem) {
+    return this.produtoRepository.findByItemAndAtivo(itemService.porId(idItem), true);
   }
 
   @Transactional

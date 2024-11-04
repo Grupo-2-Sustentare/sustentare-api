@@ -2,6 +2,7 @@ package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.domain.produto.Produto;
+import com.example.sustentaree.dtos.InteracaoEstoqueComProdutoDTO;
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueCriacaoDTO;
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueListagemDTO;
 import com.example.sustentaree.dtos.produto.ProdutoCriacaoDTO;
@@ -30,15 +31,15 @@ public class InteracaoEstoqueController {
 
   @PostMapping
   public ResponseEntity<InteracaoEstoqueListagemDTO> criar(
-        @RequestBody @Valid InteracaoEstoqueCriacaoDTO interacaoEstoqueCriacaoDTO,
-        @RequestBody @Valid ProdutoCriacaoDTO produtoCriacaoDTO,
+        @RequestBody @Valid InteracaoEstoqueComProdutoDTO interacaoEstoqueCriacaoDTO,
         @RequestParam int fkItem,
         @RequestParam int idResponsavel
   ) {
     ProdutoMapper produtoMapper = ProdutoMapper.INSTANCE;
-    Produto produto = produtoMapper.toProduto(produtoCriacaoDTO);
     InteracaoEstoqueMapper mapper = InteracaoEstoqueMapper.INSTANCE;
-    InteracaoEstoque interacaoEstoque = mapper.toInteracaoEstoque(interacaoEstoqueCriacaoDTO);
+
+    Produto produto = produtoMapper.toProduto(interacaoEstoqueCriacaoDTO.getProdutoCriacaoDTO());
+    InteracaoEstoque interacaoEstoque = mapper.toInteracaoEstoque(interacaoEstoqueCriacaoDTO.getInteracaoEstoqueCriacaoDTO());
     InteracaoEstoque interacaoEstoqueNovo = this.service.criar(interacaoEstoque, produto, fkItem, idResponsavel);
     InteracaoEstoqueListagemDTO response = mapper.toInteracaoEstoqueListagemDTO(interacaoEstoqueNovo);
 

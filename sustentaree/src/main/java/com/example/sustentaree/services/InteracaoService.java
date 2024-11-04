@@ -58,7 +58,7 @@ public class InteracaoService {
       Integer idResponsavel
   ) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-    Produto ultimoProduto = produtoService.getByItemIdAndAtivo(novoProduto.getItem().getId());
+    Produto ultimoProduto = produtoService.getByItemIdAndAtivo(fkItem);
 //    Se tiver ultimo produto, calcula a quantidade total com base na categoria de interação
 //    ( Se for algum tipo de ENTRADA, SOMA, se for QUALQUER COISA SUBTRAI)
     if (ultimoProduto != null) {
