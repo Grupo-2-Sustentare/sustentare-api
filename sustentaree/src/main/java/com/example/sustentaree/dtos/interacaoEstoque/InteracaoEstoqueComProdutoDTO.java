@@ -1,4 +1,4 @@
-package com.example.sustentaree.dtos;
+package com.example.sustentaree.dtos.interacaoEstoque;
 
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueCriacaoDTO;
 import com.example.sustentaree.dtos.produto.ProdutoCriacaoDTO;

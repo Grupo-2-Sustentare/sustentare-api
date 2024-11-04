@@ -12,6 +12,8 @@ public class ProdutoCriacaoDTO {
   @NotNull
   @PositiveOrZero
   private Integer qtdProduto;
+  @PositiveOrZero
+  private Integer qtdProdutoTotal;
   @NotNull
   @PositiveOrZero
   private Double qtdMedida;
@@ -20,6 +22,14 @@ public class ProdutoCriacaoDTO {
 
   @AssertTrue
   private Boolean ativo;
+
+  public Integer getQtdProdutoTotal() {
+    return qtdProdutoTotal;
+  }
+
+  public void setQtdProdutoTotal(Integer qtdProdutoTotal) {
+    this.qtdProdutoTotal = qtdProdutoTotal;
+  }
 
   public Boolean getAtivo() {
     return ativo;

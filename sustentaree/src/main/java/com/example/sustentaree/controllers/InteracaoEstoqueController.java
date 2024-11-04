@@ -2,10 +2,8 @@ package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.domain.produto.Produto;
-import com.example.sustentaree.dtos.InteracaoEstoqueComProdutoDTO;
-import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueCriacaoDTO;
+import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueComProdutoDTO;
 import com.example.sustentaree.dtos.interacaoEstoque.InteracaoEstoqueListagemDTO;
-import com.example.sustentaree.dtos.produto.ProdutoCriacaoDTO;
 import com.example.sustentaree.mapper.InteracaoEstoqueMapper;
 import com.example.sustentaree.mapper.ProdutoMapper;
 import com.example.sustentaree.services.InteracaoService;

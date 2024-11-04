@@ -11,8 +11,17 @@ public class ProdutoListagemDTO {
 
   private Double preco;
   private Integer qtdProduto;
+  private Integer qtdProdutoTotal;
   private Double qtdMedida;
   private Item item;
+
+  public Integer getQtdProdutoTotal() {
+    return qtdProdutoTotal;
+  }
+
+  public void setQtdProdutoTotal(Integer qtdProdutoTotal) {
+    this.qtdProdutoTotal = qtdProdutoTotal;
+  }
 
   public Integer getId() {
     return id;

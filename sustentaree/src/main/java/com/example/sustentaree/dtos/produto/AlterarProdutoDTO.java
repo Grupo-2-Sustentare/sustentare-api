@@ -3,6 +3,7 @@ package com.example.sustentaree.dtos.produto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 public class AlterarProdutoDTO {
@@ -13,7 +14,7 @@ public class AlterarProdutoDTO {
   @Positive
   private Double preco;
   @NotNull
-  @Positive
+  @PositiveOrZero
   private Integer qtdProduto;
   @NotNull
   @Positive
