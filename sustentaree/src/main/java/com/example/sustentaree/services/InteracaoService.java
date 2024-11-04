@@ -81,19 +81,16 @@ public class InteracaoService {
     novaInteracao.setProduto(produtoCriado);
     return this.repository.save(novaInteracao);
   }
-  @Transactional
-  public String gerarCsv(int idResponsavel) {
-    this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+  public String gerarCsv() {
     List<InteracaoEstoque> interacaoes = this.listar();
     StringJoiner csv = new StringJoiner("\n");
-    csv.add("id;produto;dataHora;fechamentoEstoque;categoriaInteracao");
+    csv.add("id;produto;dataHora;categoriaInteracao");
 
     for (InteracaoEstoque interacaoEstoque : interacaoes) {
       StringJoiner linha = new StringJoiner(";");
       linha.add(interacaoEstoque.getId().toString());
       linha.add(interacaoEstoque.getProduto().getItem().getNome());
       linha.add(interacaoEstoque.getDataHora().toString());
-      linha.add(interacaoEstoque.getFechamentoEstoque().getDataFim().toString());
       linha.add(interacaoEstoque.getCategoriaInteracao());
 
       csv.add(linha.toString());

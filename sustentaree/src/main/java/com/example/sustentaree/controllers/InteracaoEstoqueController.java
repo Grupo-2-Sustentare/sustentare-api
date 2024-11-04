@@ -60,10 +60,10 @@ public class InteracaoEstoqueController {
     return ResponseEntity.ok(mapper.toInteracaoEstoqueListagemDTO(interacaoEstoque));
   }
 
-  @GetMapping("/csv/{idResponsavel}")
-  public ResponseEntity<String> gerarCsv(@PathVariable int idResponsavel) {
+  @GetMapping("/csv")
+  public ResponseEntity<String> gerarCsv() {
     {
-      String csv = this.service.gerarCsv(idResponsavel);
+      String csv = this.service.gerarCsv();
       HttpHeaders headers = new HttpHeaders();
       headers.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=interacoes_de_estoque.csv");
       headers.setContentType(MediaType.TEXT_PLAIN);

@@ -25,10 +25,6 @@ public class InteracaoEstoque {
   @Column(name = "data_hora")
   private LocalDateTime dataHora;
 
-  @ManyToOne
-  @JoinColumn(name = "fk_fechamento_estoque")
-  private Fechamento fechamentoEstoque;
-
   @Column(name = "categoria_interacao")
   private String categoriaInteracao;
 
@@ -54,14 +50,6 @@ public class InteracaoEstoque {
 
   public void setProduto(Produto produto) {
     this.produto = produto;
-  }
-
-  public Fechamento getFechamentoEstoque() {
-    return fechamentoEstoque;
-  }
-
-  public void setFechamentoEstoque(Fechamento fechamentoEstoque) {
-    this.fechamentoEstoque = fechamentoEstoque;
   }
 
   public String getCategoriaInteracao() {
