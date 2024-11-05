@@ -73,20 +73,20 @@ public class Kpi {
 //        return ResponseEntity.ok(interacaoEstoques);
 //    }
 
-//    @GetMapping("/perdas")
-//    public ResponseEntity<KpiPerdasDto> getKpiPerdas(
-//        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-//        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
-//        @RequestParam(required = false) String categorias,
-//        @RequestParam(required = false) String itens) {
-//
-//        try {
-//            KpiPerdasDto resultado = kpisService.getKpiPerdas(dataInicio, dataFim, categorias, itens);
-//            return ResponseEntity.ok(resultado);
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).build();
-//        }
-//    }
+    @GetMapping("/perdas")
+    public ResponseEntity<KpiPerdasDto> getKpiPerdas(
+        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam(required = false) String categorias,
+        @RequestParam(required = false) String itens) {
+
+        try {
+            KpiPerdasDto resultado = kpisService.getKpiPerdas(dataInicio, dataFim, categorias, itens);
+            return ResponseEntity.ok(resultado);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 
     @GetMapping("/compras-nao-planejadas")
     public ResponseEntity<KpiComprasNaoPlanejadasDTO> getKpiComprasNaoPlanejadas(
