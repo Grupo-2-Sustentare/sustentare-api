@@ -62,13 +62,11 @@ public class GraficoService {
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        String mesAno = rs.getString("mes_ano");
-                        String categoria = rs.getString("categoria");
-                        String item = rs.getString("item");
+                        LocalDate data = rs.getDate("data").toLocalDate();
                         Double valorEntradas = rs.getDouble("valor_entradas");
                         Double valorSaidas = rs.getDouble("valor_saidas");
 
-                        ValorEntradasSaidasMesDTO dto = new ValorEntradasSaidasMesDTO(mesAno, categoria, item, valorEntradas, valorSaidas);
+                        ValorEntradasSaidasMesDTO dto = new ValorEntradasSaidasMesDTO(data, valorEntradas, valorSaidas);
                         resultados.add(dto);
                     }
                 }
