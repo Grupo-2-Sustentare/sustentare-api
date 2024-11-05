@@ -2,31 +2,25 @@ package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
-import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.dtos.usuario.UsuarioSemImagemDTO;
-import com.example.sustentaree.mapper.UnidadeMedidaMapper;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
 import com.example.sustentaree.services.LambdaService;
+import com.example.sustentaree.services.ImagemService;
 import com.example.sustentaree.services.UsuarioService;
 import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.UsuarioMapper;
-import com.example.sustentaree.repositories.UsuarioRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -41,7 +35,6 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -56,6 +49,8 @@ public class UsuarioController {
   FileService fileService;
   @Autowired
   private ItemRepository itemRepository;
+  @Autowired
+  private ImagemService imagemService;
 
   public UsuarioController(UsuarioService service) {
     this.service = service;
@@ -146,28 +141,41 @@ public class UsuarioController {
       ))
   })
 
-  @GetMapping
-  public ResponseEntity<List<UsuarioDTO>> listar() {
-    List<Usuario> usuarios = this.service.listar();
+//  @GetMapping
+//  public ResponseEntity<List<UsuarioDTO>> listar() {
+//    List<Usuario> usuarios = this.service.listar();
+//
+//    if (usuarios.isEmpty()) {
+//      return ResponseEntity.noContent().build();
+//    }
+//    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+//    List<UsuarioDTO> response = mapper.toUsuarioListDTO(usuarios);
+//    int contador = 0;
+//      for (UsuarioDTO usuario : response) {
+//          try {
+//              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarios.get(contador).getId().toString());
+//              response.get(contador).setImagem(convertToJPEG(imagem,1));
+//          }catch (Exception e){
+//              System.out.println(e);
+//          }
+//
+//          contador++;
+//      }
+//    return ResponseEntity.ok(response);
+//  }
 
-    if (usuarios.isEmpty()) {
-      return ResponseEntity.noContent().build();
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> listar() {
+        List<Usuario> usuarios = this.service.listar();
+
+        if (usuarios.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        List<UsuarioDTO> response = imagemService.addImagensS3Usuarios(usuarios);
+
+        return ResponseEntity.ok(response);
     }
-    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
-    List<UsuarioDTO> response = mapper.toUsuarioListDTO(usuarios);
-    int contador = 0;
-      for (UsuarioDTO usuario : response) {
-          try {
-              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarios.get(contador).getId().toString());
-              response.get(contador).setImagem(convertToJPEG(imagem,1));
-          }catch (Exception e){
-              System.out.println(e);
-          }
-
-          contador++;
-      }
-    return ResponseEntity.ok(response);
-  }
 
     @GetMapping("listar-sem-imagem")
     public ResponseEntity<List<UsuarioSemImagemDTO>> listarSemImagem() {
@@ -240,18 +248,28 @@ public class UsuarioController {
       ))
   })
 
-  @GetMapping("/{id}")
-  public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
-    Usuario usuario = this.service.porId(id);
+//  @GetMapping("/{id}")
+//  public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
+//    Usuario usuario = this.service.porId(id);
+//
+//    byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+id.toString());
+//
+//    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+//    UsuarioDTO response = mapper.toUsuarioDTO(usuario);
+//    response.setImagem(Base64.getEncoder().encodeToString(imagem));
+//
+//    return ResponseEntity.ok(response);
+//  }
 
-    byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+id.toString());
-
-    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
-    UsuarioDTO response = mapper.toUsuarioDTO(usuario);
-    response.setImagem(Base64.getEncoder().encodeToString(imagem));
-
-    return ResponseEntity.ok(response);
-  }
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
+      Usuario usuario = this.service.porId(id);
+      if (usuario == null){
+          return ResponseEntity.notFound().build();
+      }
+      UsuarioDTO usuarioDTO = imagemService.addImagemS3Usuario(usuario);
+      return ResponseEntity.ok(usuarioDTO);
+    }
 
   @Operation(summary = "Atualizar um usuário", description = "Atualiza um usuário com base nas informações fornecidas")
   @ApiResponses(value = {
@@ -353,22 +371,32 @@ public class UsuarioController {
     return ResponseEntity.noContent().build();
   }
 
-  @GetMapping("/usuario-ultimo-id")
+//  @GetMapping("/usuario-ultimo-id")
+//    public ResponseEntity<UsuarioDTO> getUltimoId(){
+//      Integer ultimoIdAdicionado = service.getUltimoId();
+//      Usuario usuario = service.porId(ultimoIdAdicionado);
+//        UsuarioDTO usuarioDTO = UsuarioMapper.INSTANCE.toUsuarioDTO(usuario);
+//          try {
+//              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarioDTO.getId().toString());
+//              usuarioDTO.setImagem(convertToJPEG(imagem,1));
+//          }catch (Exception e){
+//              System.out.println(e);
+//          }
+//      System.out.println("------------------------------------------------");
+//      System.out.println("Ultimo ID adicionado: " + usuarioDTO.getNome() + " - " + usuarioDTO.getId() + " - " + usuarioDTO.getImagem());
+//      System.out.println("-----------------Ultimo ID-----------------------");
+//      return ResponseEntity.ok(usuarioDTO);
+//  }
+
+    @GetMapping("/usuario-ultimo-id")
     public ResponseEntity<UsuarioDTO> getUltimoId(){
-      Integer ultimoIdAdicionado = service.getUltimoId();
-      Usuario usuario = service.porId(ultimoIdAdicionado);
-        UsuarioDTO usuarioDTO = UsuarioMapper.INSTANCE.toUsuarioDTO(usuario);
-          try {
-              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarioDTO.getId().toString());
-              usuarioDTO.setImagem(convertToJPEG(imagem,1));
-          }catch (Exception e){
-              System.out.println(e);
-          }
-      System.out.println("------------------------------------------------");
-      System.out.println("Ultimo ID adicionado: " + usuarioDTO.getNome() + " - " + usuarioDTO.getId() + " - " + usuarioDTO.getImagem());
-      System.out.println("-----------------Ultimo ID-----------------------");
-      return ResponseEntity.ok(usuarioDTO);
-  }
+        Integer ultimoIdAdicionado = service.getUltimoId();
+        Usuario usuario = service.porId(ultimoIdAdicionado);
+
+        UsuarioDTO usuarioDTO = imagemService.addImagemS3Usuario(usuario);
+
+        return ResponseEntity.ok(usuarioDTO);
+    }
 
 }
 
