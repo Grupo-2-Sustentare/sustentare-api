@@ -203,8 +203,8 @@ public class ItemController {
 
   @PostMapping(value = "/importarTxt", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   @Transactional(rollbackOn = Exception.class)
-  public ResponseEntity gravarTxt(@RequestParam("file") MultipartFile file){
-    fileService.importarTxt(file);
+  public ResponseEntity gravarTxt(@RequestParam("file") MultipartFile file, @RequestParam("idResponsavel") int idResponsavel) {
+    fileService.importarTxt(file, idResponsavel);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 

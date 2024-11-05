@@ -61,11 +61,11 @@ public class UsuarioController {
     this.service = service;
   }
 
-  @PostMapping("/gravarTxt")
-  public ResponseEntity gravarTxt(){
-    fileService.writeProductToFile();
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
+//  @PostMapping("/gravarTxt")
+//  public ResponseEntity gravarTxt(){
+//    fileService.writeProductToFile();
+//    return ResponseEntity.status(HttpStatus.OK).build();
+//  }
 
   @Operation(summary = "Criar um usuário", description = "Cria um usuário com base nas informações fornecidas")
   @ApiResponses(value = {
@@ -358,8 +358,14 @@ public class UsuarioController {
       Integer ultimoIdAdicionado = service.getUltimoId();
       Usuario usuario = service.porId(ultimoIdAdicionado);
         UsuarioDTO usuarioDTO = UsuarioMapper.INSTANCE.toUsuarioDTO(usuario);
+          try {
+              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarioDTO.getId().toString());
+              usuarioDTO.setImagem(convertToJPEG(imagem,1));
+          }catch (Exception e){
+              System.out.println(e);
+          }
       System.out.println("------------------------------------------------");
-      System.out.println("Ultimo ID adicionado: " + usuarioDTO.getNome() + " - " + usuarioDTO.getId());
+      System.out.println("Ultimo ID adicionado: " + usuarioDTO.getNome() + " - " + usuarioDTO.getId() + " - " + usuarioDTO.getImagem());
       System.out.println("-----------------Ultimo ID-----------------------");
       return ResponseEntity.ok(usuarioDTO);
   }

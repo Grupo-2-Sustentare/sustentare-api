@@ -141,11 +141,6 @@ public class ItemService {
     return this.repository.save(novoItem);
   }
 
-  public Item criar(Item item) {
-    this.sessaoUsuarioService.setCurrentUserSession(101);
-    return this.repository.save(item);
-  }
-
   @Transactional
   public Item Atualizar(
       Item item,

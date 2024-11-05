@@ -64,5 +64,5 @@ public class ItemListagemDTO {
   public void setId(Integer id) {
     this.id = id;
   }
-  
+
 }
