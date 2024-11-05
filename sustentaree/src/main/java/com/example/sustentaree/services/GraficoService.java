@@ -78,7 +78,7 @@ public class GraficoService {
         return resultados;
     }
 
-    public List<PerdasPorMesDTO> getPerdasPorMes(String dataInicio, String dataFim, String categorias, String itens) throws Exception {
+    public List<PerdasPorMesDTO> getPerdasPorMes(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_perdas_por_mes(?, ?, ?, ?)}";  // Query para chamar a procedure
 
         List<PerdasPorMesDTO> resultados = new ArrayList<>();
@@ -86,8 +86,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setString(1, dataInicio);
-            callableStatement.setString(2, dataFim);
+            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
+            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -96,11 +96,10 @@ public class GraficoService {
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        String mesAno = rs.getString("mes_ano");
                         String tipoPerda = rs.getString("tipo_perda");
                         Integer qtdPerda = rs.getInt("qtd_perda");
 
-                        PerdasPorMesDTO dto = new PerdasPorMesDTO(mesAno, tipoPerda, qtdPerda);
+                        PerdasPorMesDTO dto = new PerdasPorMesDTO(tipoPerda, qtdPerda);
                         resultados.add(dto);
                     }
                 }
@@ -110,7 +109,7 @@ public class GraficoService {
         return resultados;
     }
 
-    public List<ComprasDTO> getComprasRegularesVsNaoPlanejadas(String dataInicio, String dataFim, String categorias, String itens) throws Exception {
+    public List<ComprasDTO> getComprasRegularesVsNaoPlanejadas(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_compras_regulares_vs_nao_planejadas(?, ?, ?, ?)}";  // Query para chamar a procedure
 
         List<ComprasDTO> resultados = new ArrayList<>();
@@ -118,8 +117,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setString(1, dataInicio);
-            callableStatement.setString(2, dataFim);
+            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
+            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -128,11 +127,10 @@ public class GraficoService {
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        String mesAno = rs.getString("mes_ano");
                         String tipoCompra = rs.getString("tipo_compra");
                         Integer qtdCompras = rs.getInt("qtd_compras");
 
-                        ComprasDTO dto = new ComprasDTO(mesAno, tipoCompra, qtdCompras);
+                        ComprasDTO dto = new ComprasDTO(tipoCompra, qtdCompras);
                         resultados.add(dto);
                     }
                 }
@@ -141,7 +139,7 @@ public class GraficoService {
 
         return resultados;
     }
-    public List<AuditoriaColaboradoresDTO> getAuditoriaColaboradores(String dataInicio, String dataFim, String responsaveis) throws Exception {
+    public List<AuditoriaColaboradoresDTO> getAuditoriaColaboradores(Date dataInicio, Date dataFim, String responsaveis) throws Exception {
         String query = "{CALL sp_auditoria_colaboradores(?, ?, ?)}";
 
         List<AuditoriaColaboradoresDTO> resultados = new ArrayList<>();
@@ -149,8 +147,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setString(1, dataInicio);
-            callableStatement.setString(2, dataFim);
+            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
+            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
             callableStatement.setString(3, responsaveis);
 
             boolean hasResults = callableStatement.execute();
@@ -176,7 +174,7 @@ public class GraficoService {
 
         return resultados;
     }
-    public List<EntradasSaidasColaboradoresDTO> getEntradasSaidasPorColaborador(String dataInicio, String dataFim, String colaboradores) throws Exception {
+    public List<EntradasSaidasColaboradoresDTO> getEntradasSaidasPorColaborador(Date dataInicio, Date dataFim, String colaboradores) throws Exception {
         String query = "{CALL sp_entradas_saidas_por_colaborador(?, ?, ?)}";
 
         List<EntradasSaidasColaboradoresDTO> resultados = new ArrayList<>();
@@ -184,8 +182,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setString(1, dataInicio);
-            callableStatement.setString(2, dataFim);
+            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
+            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
             callableStatement.setString(3, colaboradores);
 
             boolean hasResults = callableStatement.execute();

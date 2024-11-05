@@ -51,73 +51,50 @@ public class GraficoController {
         @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
         @RequestParam(required = false) String categorias,
         @RequestParam(required = false) String itens
-    ) {
-
-        try {
-            List<ValorEntradasSaidasMesDTO> resultados = graficoService.getValorEntradasSaidasMes(dataInicio, dataFim, categorias, itens);
-            return ResponseEntity.ok(resultados);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    ) throws Exception {
+         List<ValorEntradasSaidasMesDTO> resultados = graficoService.getValorEntradasSaidasMes(dataInicio, dataFim, categorias, itens);
+         return ResponseEntity.ok(resultados);
     }
     @GetMapping("/regulares-vs-nao-planejadas")
     public ResponseEntity<List<ComprasDTO>> getComprasRegularesVsNaoPlanejadas(
-        @RequestParam String dataInicio,
-        @RequestParam String dataFim,
-        @RequestParam(required = false) String categorias,
-        @RequestParam(required = false) String itens
-    ) {
-
-        try {
-            List<ComprasDTO> resultados = graficoService.getComprasRegularesVsNaoPlanejadas(dataInicio, dataFim, categorias, itens);
-            return ResponseEntity.ok(resultados);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+            @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+            @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+            @RequestParam(required = false) String categorias,
+            @RequestParam(required = false) String itens
+    ) throws Exception {
+        List<ComprasDTO> resultados = graficoService.getComprasRegularesVsNaoPlanejadas(dataInicio, dataFim, categorias, itens);
+        return ResponseEntity.ok(resultados);
     }
 
     @GetMapping("/perdas-por-mes")
     public ResponseEntity<List<PerdasPorMesDTO>> getPerdasPorMes(
-        @RequestParam String dataInicio,
-        @RequestParam String dataFim,
+        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
         @RequestParam(required = false) String categorias,
         @RequestParam(required = false) String itens
-    ) {
-
-        try {
-            List<PerdasPorMesDTO> resultados = graficoService.getPerdasPorMes(dataInicio, dataFim, categorias, itens);
-            return ResponseEntity.ok(resultados);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    ) throws Exception {
+        List<PerdasPorMesDTO> resultados = graficoService.getPerdasPorMes(dataInicio, dataFim, categorias, itens);
+        return ResponseEntity.ok(resultados);
     }
 
     @GetMapping("/colaboradores/log-operacoes")
     public ResponseEntity<List<AuditoriaColaboradoresDTO>> getLogOperacoes(
-        @RequestParam String dataInicio,
-        @RequestParam String dataFim,
+        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
         @RequestParam(required = false) String colaboradores
-    ) {
-        try {
-            List<AuditoriaColaboradoresDTO> auditoriaColaboradores = graficoService.getAuditoriaColaboradores(dataInicio, dataFim, colaboradores);
-            return ResponseEntity.ok(auditoriaColaboradores);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    ) throws Exception {
+        List<AuditoriaColaboradoresDTO> auditoriaColaboradores = graficoService.getAuditoriaColaboradores(dataInicio, dataFim, colaboradores);
+        return ResponseEntity.ok(auditoriaColaboradores);
     }
 
     @GetMapping("/colaboradores/entrada-saida")
     public ResponseEntity<List<EntradasSaidasColaboradoresDTO>> getEntradaSaida(
-        @RequestParam String dataInicio,
-        @RequestParam String dataFim,
+        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
         @RequestParam(required = false) String colaboradores
-    ) {
-        try {
-            List<EntradasSaidasColaboradoresDTO> entradasSaidasColaboradores = graficoService.getEntradasSaidasPorColaborador(dataInicio, dataFim, colaboradores);
-            return ResponseEntity.ok(entradasSaidasColaboradores);
-        } catch (Exception e) {
-            return ResponseEntity.status(500).build();
-        }
+    ) throws Exception {
+        List<EntradasSaidasColaboradoresDTO> entradasSaidasColaboradores = graficoService.getEntradasSaidasPorColaborador(dataInicio, dataFim, colaboradores);
+        return ResponseEntity.ok(entradasSaidasColaboradores);
     }
 
 }
