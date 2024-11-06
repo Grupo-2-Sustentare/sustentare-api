@@ -8,7 +8,8 @@ import com.example.sustentaree.repositories.ViewVencerNaSemanaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +45,7 @@ public class GraficoService {
         return viewVencerNaSemanas;
     }
 
-    public List<ValorEntradasSaidasMesDTO> getValorEntradasSaidasMes(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
+    public List<ValorEntradasSaidasMesDTO> getValorEntradasSaidasMes(LocalDate dataInicio, LocalDate dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_valor_entradas_saidas_mes(?, ?, ?, ?)}";  // Query para chamar a procedure
 
         List<ValorEntradasSaidasMesDTO> resultados = new ArrayList<>();
@@ -52,8 +53,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));;
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, Date.valueOf(dataInicio));
+            callableStatement.setDate(2, Date.valueOf(dataFim));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -62,13 +63,11 @@ public class GraficoService {
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        String mesAno = rs.getString("mes_ano");
-                        String categoria = rs.getString("categoria");
-                        String item = rs.getString("item");
+                        LocalDate data = rs.getDate("data").toLocalDate();
                         Double valorEntradas = rs.getDouble("valor_entradas");
                         Double valorSaidas = rs.getDouble("valor_saidas");
 
-                        ValorEntradasSaidasMesDTO dto = new ValorEntradasSaidasMesDTO(mesAno, categoria, item, valorEntradas, valorSaidas);
+                        ValorEntradasSaidasMesDTO dto = new ValorEntradasSaidasMesDTO(data, valorEntradas, valorSaidas);
                         resultados.add(dto);
                     }
                 }
@@ -78,7 +77,7 @@ public class GraficoService {
         return resultados;
     }
 
-    public List<PerdasPorMesDTO> getPerdasPorMes(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
+    public List<PerdasPorMesDTO> getPerdasPorMes(LocalDate dataInicio, LocalDate dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_perdas_por_mes(?, ?, ?, ?)}";  // Query para chamar a procedure
 
         List<PerdasPorMesDTO> resultados = new ArrayList<>();
@@ -86,8 +85,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, Date.valueOf(dataInicio));
+            callableStatement.setDate(2, Date.valueOf(dataFim));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -109,7 +108,7 @@ public class GraficoService {
         return resultados;
     }
 
-    public List<ComprasDTO> getComprasRegularesVsNaoPlanejadas(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
+    public List<ComprasDTO> getComprasRegularesVsNaoPlanejadas(LocalDate dataInicio, LocalDate dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_compras_regulares_vs_nao_planejadas(?, ?, ?, ?)}";  // Query para chamar a procedure
 
         List<ComprasDTO> resultados = new ArrayList<>();
@@ -117,8 +116,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, Date.valueOf(dataInicio));
+            callableStatement.setDate(2, Date.valueOf(dataFim));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -139,7 +138,7 @@ public class GraficoService {
 
         return resultados;
     }
-    public List<AuditoriaColaboradoresDTO> getAuditoriaColaboradores(Date dataInicio, Date dataFim, String responsaveis) throws Exception {
+    public List<AuditoriaColaboradoresDTO> getAuditoriaColaboradores(LocalDate dataInicio, LocalDate dataFim, String responsaveis) throws Exception {
         String query = "{CALL sp_auditoria_colaboradores(?, ?, ?)}";
 
         List<AuditoriaColaboradoresDTO> resultados = new ArrayList<>();
@@ -147,8 +146,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, Date.valueOf(dataInicio));
+            callableStatement.setDate(2, Date.valueOf(dataFim));
             callableStatement.setString(3, responsaveis);
 
             boolean hasResults = callableStatement.execute();
@@ -158,7 +157,7 @@ public class GraficoService {
                     while (rs.next()) {
                         Integer idResponsavel = rs.getInt("id_responsavel");
                         String responsavelNome = rs.getString("responsavel_nome");
-                        Date dataAcao = rs.getTimestamp("data_acao");
+                        LocalDate dataAcao = rs.getDate("data_acao").toLocalDate();
                         String descricaoAuditoria = rs.getString("descricao_auditoria");
                         String tipoAudit = rs.getString("tipo_audit");
                         String detalhesRegistro = rs.getString("detalhes_registro");
@@ -174,7 +173,7 @@ public class GraficoService {
 
         return resultados;
     }
-    public List<EntradasSaidasColaboradoresDTO> getEntradasSaidasPorColaborador(Date dataInicio, Date dataFim, String colaboradores) throws Exception {
+    public List<EntradasSaidasColaboradoresDTO> getEntradasSaidasPorColaborador(LocalDate dataInicio, LocalDate dataFim, String colaboradores) throws Exception {
         String query = "{CALL sp_entradas_saidas_por_colaborador(?, ?, ?)}";
 
         List<EntradasSaidasColaboradoresDTO> resultados = new ArrayList<>();
@@ -182,8 +181,8 @@ public class GraficoService {
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, Date.valueOf(dataInicio));
+            callableStatement.setDate(2, Date.valueOf(dataFim));
             callableStatement.setString(3, colaboradores);
 
             boolean hasResults = callableStatement.execute();

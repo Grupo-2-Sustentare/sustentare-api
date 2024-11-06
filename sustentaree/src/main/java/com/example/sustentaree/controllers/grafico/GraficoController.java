@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -47,8 +48,8 @@ public class GraficoController {
 //    }
     @GetMapping("/valor-entradas-saidas")
     public ResponseEntity<List<ValorEntradasSaidasMesDTO>> getValorEntradasSaidasMes(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam("dataInicio") LocalDate dataInicio,
+        @RequestParam("dataFim") LocalDate dataFim,
         @RequestParam(required = false) String categorias,
         @RequestParam(required = false) String itens
     ) throws Exception {
@@ -57,8 +58,8 @@ public class GraficoController {
     }
     @GetMapping("/regulares-vs-nao-planejadas")
     public ResponseEntity<List<ComprasDTO>> getComprasRegularesVsNaoPlanejadas(
-            @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-            @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+            @RequestParam("dataInicio") LocalDate dataInicio,
+            @RequestParam("dataFim") LocalDate dataFim,
             @RequestParam(required = false) String categorias,
             @RequestParam(required = false) String itens
     ) throws Exception {
@@ -68,8 +69,8 @@ public class GraficoController {
 
     @GetMapping("/perdas-por-mes")
     public ResponseEntity<List<PerdasPorMesDTO>> getPerdasPorMes(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam("dataInicio") LocalDate dataInicio,
+        @RequestParam("dataFim") LocalDate dataFim,
         @RequestParam(required = false) String categorias,
         @RequestParam(required = false) String itens
     ) throws Exception {
@@ -79,8 +80,8 @@ public class GraficoController {
 
     @GetMapping("/colaboradores/log-operacoes")
     public ResponseEntity<List<AuditoriaColaboradoresDTO>> getLogOperacoes(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam("dataInicio") LocalDate dataInicio,
+        @RequestParam("dataFim") LocalDate dataFim,
         @RequestParam(required = false) String colaboradores
     ) throws Exception {
         List<AuditoriaColaboradoresDTO> auditoriaColaboradores = graficoService.getAuditoriaColaboradores(dataInicio, dataFim, colaboradores);
@@ -89,8 +90,8 @@ public class GraficoController {
 
     @GetMapping("/colaboradores/entrada-saida")
     public ResponseEntity<List<EntradasSaidasColaboradoresDTO>> getEntradaSaida(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam("dataInicio") LocalDate dataInicio,
+        @RequestParam("dataFim") LocalDate dataFim,
         @RequestParam(required = false) String colaboradores
     ) throws Exception {
         List<EntradasSaidasColaboradoresDTO> entradasSaidasColaboradores = graficoService.getEntradasSaidasPorColaborador(dataInicio, dataFim, colaboradores);

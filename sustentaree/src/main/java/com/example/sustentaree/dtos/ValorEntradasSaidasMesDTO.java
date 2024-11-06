@@ -1,42 +1,27 @@
 package com.example.sustentaree.dtos;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class ValorEntradasSaidasMesDTO {
-  private String mesAno;
-  private String categoria;
-  private String item;
+  private String diaMes;
   private Double valorEntradas;
   private Double valorSaidas;
+  private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MM");
 
-  public ValorEntradasSaidasMesDTO(String mesAno, String categoria, String item, Double valorEntradas, Double valorSaidas) {
-    this.mesAno = mesAno;
-    this.categoria = categoria;
-    this.item = item;
+  public ValorEntradasSaidasMesDTO(LocalDate data, Double valorEntradas, Double valorSaidas) {
+    this.diaMes = data.format(FORMATTER);
     this.valorEntradas = valorEntradas;
     this.valorSaidas = valorSaidas;
   }
 
-  public String getMesAno() {
-    return mesAno;
+  public String getDiaMes() {
+    return diaMes;
   }
 
-  public void setMesAno(String mesAno) {
-    this.mesAno = mesAno;
-  }
-
-  public String getCategoria() {
-    return categoria;
-  }
-
-  public void setCategoria(String categoria) {
-    this.categoria = categoria;
-  }
-
-  public String getItem() {
-    return item;
-  }
-
-  public void setItem(String item) {
-    this.item = item;
+  public void setDiaMes(String diaMes) {
+    this.diaMes = diaMes;
   }
 
   public Double getValorEntradas() {
