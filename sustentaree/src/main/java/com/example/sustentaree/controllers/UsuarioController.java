@@ -79,7 +79,7 @@ public class UsuarioController {
   })
 
   @PostMapping
-  public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) {
+  public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) throws IOException {
       dto.setAtivo(true);
     UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 
@@ -99,6 +99,10 @@ public class UsuarioController {
     Usuario usuarioSalvo = this.service.criar(entity, idResponsavel);
 
     UsuarioDTO response =  mapper.toUsuarioDTO(usuarioSalvo);
+    if (dto.getImagem() != null){
+        response.setImagem(imagemService.convertToJPEG(Base64.getDecoder().decode(dto.getImagem()),1));
+    }
+
     return ResponseEntity.created(null).body(response);
   }
 
@@ -392,9 +396,10 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> getUltimoId(){
         Integer ultimoIdAdicionado = service.getUltimoId();
         Usuario usuario = service.porId(ultimoIdAdicionado);
-
         UsuarioDTO usuarioDTO = imagemService.addImagemS3Usuario(usuario);
-
+        System.out.println("------------------------------------------------");
+        System.out.println("Ultimo ID adicionado: " + usuarioDTO.getNome() + " - " + usuarioDTO.getId() + " - " + usuarioDTO.getImagem());
+        System.out.println("-----------------Ultimo ID-----------------------");
         return ResponseEntity.ok(usuarioDTO);
     }
 

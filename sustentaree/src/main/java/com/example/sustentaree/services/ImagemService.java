@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 public class ImagemService {
-    String bucketName = "sustentaree-s3";
+    String bucketName = "teste-sustentare";
     String usuarioPath = "/usuarios/imagens/";
     String itemPath = "/itens/imagens/";
 
@@ -31,11 +31,15 @@ public class ImagemService {
     private LambdaService lambdaService;
 
     public UsuarioDTO addImagemS3Usuario(Usuario usuario){
-        byte[] imagem = lambdaService.downloadFile(bucketName, usuarioPath+usuario.getId().toString());
-
         UsuarioMapper mapper = UsuarioMapper.INSTANCE;
         UsuarioDTO usuarioDTO = mapper.toUsuarioDTO(usuario);
-        usuarioDTO.setImagem(Base64.getEncoder().encodeToString(imagem));
+        try {
+            byte[] imagem = lambdaService.downloadFile(bucketName, usuarioPath+usuario.getId().toString());
+            usuarioDTO.setImagem(Base64.getEncoder().encodeToString(imagem));
+        }catch (Exception e){
+            System.out.println(e);
+        }
+
         return usuarioDTO;
     }
 
@@ -70,7 +74,7 @@ public class ImagemService {
         return itemListagemDTO;
     }
 
-    private String convertToJPEG(byte[] imageBytes, float quality) throws IOException {
+    public String convertToJPEG(byte[] imageBytes, float quality) throws IOException {
         // Converte o byte array para BufferedImage
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
         if (image == null) {
