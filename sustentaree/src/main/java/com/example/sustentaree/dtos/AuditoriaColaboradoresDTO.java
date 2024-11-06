@@ -1,15 +1,14 @@
 package com.example.sustentaree.dtos;
-import java.time.LocalDate;
 
 public class AuditoriaColaboradoresDTO {
   private Integer idResponsavel;
   private String responsavelNome;
-  private LocalDate dataAcao;
+  private String dataAcao;
   private String descricaoAuditoria;
   private String tipoAudit;
   private String detalhesRegistro;
 
-  public AuditoriaColaboradoresDTO(Integer idResponsavel, String responsavelNome, LocalDate dataAcao, String descricaoAuditoria, String tipoAudit, String detalhesRegistro) {
+  public AuditoriaColaboradoresDTO(Integer idResponsavel, String responsavelNome, String dataAcao, String descricaoAuditoria, String tipoAudit, String detalhesRegistro) {
     this.idResponsavel = idResponsavel;
     this.responsavelNome = responsavelNome;
     this.dataAcao = dataAcao;
@@ -34,11 +33,11 @@ public class AuditoriaColaboradoresDTO {
     this.responsavelNome = responsavelNome;
   }
 
-  public LocalDate getDataAcao() {
+  public String getDataAcao() {
     return dataAcao;
   }
 
-  public void setDataAcao(LocalDate dataAcao) {
+  public void setDataAcao(String dataAcao) {
     this.dataAcao = dataAcao;
   }
 

@@ -1,21 +1,21 @@
 package com.example.sustentaree.dtos;
 
 public class EntradasSaidasColaboradoresDTO {
-  private Integer colaborador;
+  private String colaborador;
   private Integer qtdEntradas;
   private Integer qtdSaidas;
 
-  public EntradasSaidasColaboradoresDTO(Integer colaborador, Integer qtdEntradas, Integer qtdSaidas) {
+  public EntradasSaidasColaboradoresDTO(String colaborador, Integer qtdEntradas, Integer qtdSaidas) {
     this.colaborador = colaborador;
     this.qtdEntradas = qtdEntradas;
     this.qtdSaidas = qtdSaidas;
   }
 
-  public Integer getColaborador() {
+  public String getColaborador() {
     return colaborador;
   }
 
-  public void setColaborador(Integer colaborador) {
+  public void setColaborador(String colaborador) {
     this.colaborador = colaborador;
   }
 

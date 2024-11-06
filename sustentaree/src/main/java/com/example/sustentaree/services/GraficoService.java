@@ -7,19 +7,13 @@ import com.example.sustentaree.repositories.ViewEntradasSaidasRepository;
 import com.example.sustentaree.repositories.ViewVencerNaSemanaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.sql.Date;
+import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.sql.DataSource;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
 
 @Service
@@ -157,13 +151,19 @@ public class GraficoService {
                     while (rs.next()) {
                         Integer idResponsavel = rs.getInt("id_responsavel");
                         String responsavelNome = rs.getString("responsavel_nome");
-                        LocalDate dataAcao = rs.getDate("data_acao").toLocalDate();
                         String descricaoAuditoria = rs.getString("descricao_auditoria");
                         String tipoAudit = rs.getString("tipo_audit");
                         String detalhesRegistro = rs.getString("detalhes_registro");
 
+                        DateTimeFormatter FORM_DATA = DateTimeFormatter.ofPattern("dd/MM");
+                        LocalDate dataAcao = rs.getDate("data_acao").toLocalDate();
+                        DateTimeFormatter FORM_HORA = DateTimeFormatter.ofPattern("HH:mm");
+                        LocalTime horaAcao = rs.getTime("data_acao").toLocalTime();
+
+                        String dataHoraAcao = dataAcao.format(FORM_DATA) + " " + horaAcao.format(FORM_HORA);
+
                         AuditoriaColaboradoresDTO dto = new AuditoriaColaboradoresDTO(
-                            idResponsavel, responsavelNome, dataAcao, descricaoAuditoria, tipoAudit, detalhesRegistro
+                            idResponsavel, responsavelNome, dataHoraAcao, descricaoAuditoria, tipoAudit, detalhesRegistro
                         );
                         resultados.add(dto);
                     }
@@ -190,7 +190,7 @@ public class GraficoService {
             if (hasResults) {
                 try (ResultSet rs = callableStatement.getResultSet()) {
                     while (rs.next()) {
-                        Integer colaborador = rs.getInt("colaborador");
+                        String colaborador = rs.getString("colaborador");
                         Integer qtdEntradas = rs.getInt("qtd_entradas");
                         Integer qtdSaidas = rs.getInt("qtd_saidas");
 
