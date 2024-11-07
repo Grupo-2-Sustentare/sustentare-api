@@ -23,7 +23,7 @@ import java.util.List;
 
 @Service
 public class ImagemService {
-    String bucketName = "teste-sustentare";
+    String bucketName = "sustentare-bucket-test";
     String usuarioPath = "/usuarios/imagens/";
     String itemPath = "/itens/imagens/";
 
