@@ -31,20 +31,32 @@ public class ImagemService {
     @Autowired
     @Lazy
     private ItemService itemService;
+    @Autowired
+    @Lazy
+    private UsuarioService usuarioService;
 
     @Value("${nome.bucket}")
     private String bucketName;
     @Value("${metodo.Lambda.aws.enviar.imagem.publica}")
     private String publicFunctionName;
+    @Value("${metodo.Lambda.aws.enviar.imagem.privada}")
+    private String privateFunctionName;
     private String usuarioPath = "/usuarios/imagens/";
     private String itemPath = "/itens/imagens/";
 
 
     public EnvioImagemS3DTO tratarImagemItem(String imagem){
         byte[] imagemBytes = Base64.getDecoder().decode(imagem);
-        Integer idUsuario = itemService.getUltimoId() + 1;
-        String nomeArquivo = itemPath + idUsuario.toString();
+        Integer idItem = itemService.getUltimoId() + 1;
+        String nomeArquivo = itemPath + idItem.toString();
         return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, publicFunctionName);
+    }
+
+    public EnvioImagemS3DTO tratarImagemUsuario(String imagem){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        Integer idUsuario = usuarioService.getUltimoId() + 1;
+        String nomeArquivo = usuarioPath + idUsuario.toString();
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, privateFunctionName);
     }
 
     public UsuarioDTO addImagemS3Usuario(Usuario usuario){
