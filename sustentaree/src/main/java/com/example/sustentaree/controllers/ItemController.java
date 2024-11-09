@@ -1,8 +1,10 @@
 package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.item.Item;
+import com.example.sustentaree.dtos.EnvioImagemS3DTO;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
+import com.example.sustentaree.services.ImagemService;
 import com.example.sustentaree.services.ItemService;
 import com.example.sustentaree.services.LambdaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +18,6 @@ import com.example.sustentaree.dtos.item.ItemListagemDTO;
 import com.example.sustentaree.mapper.ItemMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,12 @@ public class ItemController {
   private ItemRepository itemRepository;
   @Autowired
   private LambdaService lambdaService;
+  @Autowired
+  private ImagemService imagemService;
+  @Autowired
+  private ItemService itemService;
+
+
 
   public ItemController(ItemService service) {
     this.service = service;
@@ -73,10 +80,8 @@ public class ItemController {
     if (dto.getImagem() != null){
       CompletableFuture.runAsync(() ->
               {
-                byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
-                Integer idUsuario = service.getUltimoId() + 1;
-                String nomeArquivo = "/itens/imagens/"+idUsuario.toString();
-                lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarImagemItem(dto.getImagem());
+                lambdaService.enviarImagemS3(envioImagemS3DTO);
               }
       );
     }
@@ -171,9 +176,8 @@ public class ItemController {
     if (alterarItemDTO.getImagem() != null){
       CompletableFuture.runAsync(() ->
               {
-                byte[] imagemBytes = Base64.getDecoder().decode(alterarItemDTO.getImagem());
-                String nomeArquivo = "/itens/imagens/"+id.toString();
-                lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarImagemItem(alterarItemDTO.getImagem());
+                lambdaService.enviarImagemS3(envioImagemS3DTO);
               }
       );
     }

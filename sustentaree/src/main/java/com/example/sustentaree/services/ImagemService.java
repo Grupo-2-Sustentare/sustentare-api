@@ -2,11 +2,14 @@ package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.usuario.Usuario;
+import com.example.sustentaree.dtos.EnvioImagemS3DTO;
 import com.example.sustentaree.dtos.item.ItemListagemDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.ItemMapper;
 import com.example.sustentaree.mapper.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -23,12 +26,26 @@ import java.util.List;
 
 @Service
 public class ImagemService {
-    String bucketName = "sustentare-bucket-test";
-    String usuarioPath = "/usuarios/imagens/";
-    String itemPath = "/itens/imagens/";
-
     @Autowired
     private LambdaService lambdaService;
+    @Autowired
+    @Lazy
+    private ItemService itemService;
+
+    @Value("${nome.bucket}")
+    private String bucketName;
+    @Value("${functionName.publica}")
+    private String publicFunctionName;
+    private String usuarioPath = "/usuarios/imagens/";
+    private String itemPath = "/itens/imagens/";
+
+
+    public EnvioImagemS3DTO tratarImagemItem(String imagem){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        Integer idUsuario = itemService.getUltimoId() + 1;
+        String nomeArquivo = itemPath + idUsuario.toString();
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, publicFunctionName);
+    }
 
     public UsuarioDTO addImagemS3Usuario(Usuario usuario){
         UsuarioMapper mapper = UsuarioMapper.INSTANCE;
