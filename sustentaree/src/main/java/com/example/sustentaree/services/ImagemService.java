@@ -34,7 +34,7 @@ public class ImagemService {
 
     @Value("${nome.bucket}")
     private String bucketName;
-    @Value("${functionName.publica}")
+    @Value("${metodo.Lambda.aws.enviar.imagem.publica}")
     private String publicFunctionName;
     private String usuarioPath = "/usuarios/imagens/";
     private String itemPath = "/itens/imagens/";
