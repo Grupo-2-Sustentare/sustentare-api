@@ -52,6 +52,12 @@ public class ImagemService {
         return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, publicFunctionName);
     }
 
+    public EnvioImagemS3DTO tratarEditarImagemItem(String imagem, int id){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        String nomeArquivo = itemPath + id;
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, publicFunctionName);
+    }
+
     public EnvioImagemS3DTO tratarImagemUsuario(String imagem){
         byte[] imagemBytes = Base64.getDecoder().decode(imagem);
         Integer idUsuario = usuarioService.getUltimoId() + 1;

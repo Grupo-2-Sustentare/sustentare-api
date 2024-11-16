@@ -26,6 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -171,12 +172,11 @@ public class ItemController {
       @RequestParam int unidadeMedidaId,
       @RequestParam int categoriaItemId,
       @RequestParam int idResponsavel
-  ) {
-
+  ) throws IOException {
     if (alterarItemDTO.getImagem() != null){
       CompletableFuture.runAsync(() ->
               {
-                EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarImagemItem(alterarItemDTO.getImagem());
+                EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarEditarImagemItem(alterarItemDTO.getImagem(),id);
                 lambdaService.enviarImagemS3(envioImagemS3DTO);
               }
       );
@@ -188,6 +188,9 @@ public class ItemController {
     Item itemAtualizado = this.service.Atualizar(item, id, unidadeMedidaId, categoriaItemId, idResponsavel);
 
     ItemListagemDTO response = mapper.toItemListagemDTO(itemAtualizado);
+    if (alterarItemDTO.getImagem() != null){
+      response.setImagem(imagemService.convertToJPEG(Base64.getDecoder().decode(alterarItemDTO.getImagem()),1));
+    }
     return ResponseEntity.ok(response);
   }
 
