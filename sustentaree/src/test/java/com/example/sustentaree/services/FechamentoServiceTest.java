@@ -1,9 +1,6 @@
 package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.fechamento.Fechamento;
-import com.example.sustentaree.domain.produto.Produto;
-import com.example.sustentaree.repositories.FechamentoRepository;
-import com.example.sustentaree.repositories.ProdutoRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

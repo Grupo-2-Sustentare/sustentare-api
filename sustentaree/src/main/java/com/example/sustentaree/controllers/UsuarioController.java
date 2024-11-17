@@ -62,22 +62,6 @@ public class UsuarioController {
 //    return ResponseEntity.status(HttpStatus.OK).build();
 //  }
 
-  @Operation(summary = "Criar um usuário", description = "Cria um usuário com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      ))
-  })
-
   @PostMapping
   public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) throws IOException {
       dto.setAtivo(true);
@@ -128,22 +112,6 @@ public class UsuarioController {
 
     return ResponseEntity.status(200).body(usuarioToken);
   }
-
-  @Operation(summary = "Listar usuários", description = "Lista todos os usuários cadastrados")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Lista de usuários retornada com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Nenhum usuário encontrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      ))
-  })
 
 //  @GetMapping
 //  public ResponseEntity<List<UsuarioDTO>> listar() {
@@ -230,28 +198,6 @@ public class UsuarioController {
         return Base64.getEncoder().encodeToString(compressedOutput.toByteArray());
     }
 
-
-
-
-  @Operation(summary = "Buscar um usuário por ID", description = "Retorna um usuário com base no ID fornecido")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuário retornado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class),
-          examples = @ExampleObject(
-              value = "{\n  \"nome\": \"TESTE FODA Exemplo\",\n  \"senha\": \"123456\",\n  \"acesso\": 1\n}"
-          )
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      ))
-  })
-
 //  @GetMapping("/{id}")
 //  public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
 //    Usuario usuario = this.service.porId(id);
@@ -275,22 +221,6 @@ public class UsuarioController {
       return ResponseEntity.ok(usuarioDTO);
     }
 
-  @Operation(summary = "Atualizar um usuário", description = "Atualiza um usuário com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      ))
-  })
-
   @PatchMapping("/{id}")
   public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarUsuarioDTO dto, @RequestParam int idResponsavel) {
 
@@ -312,22 +242,6 @@ public class UsuarioController {
     UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
     return ResponseEntity.ok(response);
   }
-
-  @Operation(summary = "Alterar um usuário", description = "Altera um usuário com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuário alterado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      ))
-  })
 
 //    TODO - Implementar validação de que o idSolicitante é igual ao id do usuário logado no front
 //    TODO - Pensar em uma maneira de não precisar da validação front-end para garantir a segurança do método.
@@ -351,22 +265,6 @@ public class UsuarioController {
     UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
     return ResponseEntity.ok(response);
   }
-
-  @Operation(summary = "Remover um usuário", description = "Remove um usuário com base no ID fornecido")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Usuário removido com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioDTO.class)
-      ))
-  })
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> excluir(@PathVariable Integer id, @RequestParam int idResponsavel) {

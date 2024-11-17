@@ -45,24 +45,7 @@ public class ItemController {
     this.service = service;
   }
 
-  @Operation(summary = "Criar um item", description = "Cria um item com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Item criado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemCriacaoDTO.class)
-      )),
-      @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemCriacaoDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemCriacaoDTO.class)
-      ))
-  })
-
   @PostMapping
-//    TODO explicar o motivo de usar o @RequestParam para os id's ao invés de @RequestBody neste caso específico (Raphael)
   public ResponseEntity<ItemListagemDTO> criar(
       @RequestBody @Valid ItemCriacaoDTO dto,
       @RequestParam int unidadeMedidaId,
@@ -90,22 +73,6 @@ public class ItemController {
     return ResponseEntity.ok(response);
   }
 
-  @Operation(summary = "Listar itens", description = "Lista todos os itens cadastrados")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Lista de itens retornada com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemListagemDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Nenhum item cadastrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemListagemDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemListagemDTO.class)
-      ))
-  })
-
   @GetMapping
   public ResponseEntity<List<ItemListagemDTO>> listar() {
     List<ItemListagemDTO> items = this.service.listar();
@@ -117,22 +84,6 @@ public class ItemController {
     return ResponseEntity.ok(items);
   }
 
-  @Operation(summary = "Buscar item por ID", description = "Retorna um item com base no ID fornecido")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Item retornado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemListagemDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Item não encontrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemListagemDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemListagemDTO.class)
-      ))
-  })
-
   @GetMapping("/{id}")
   public ResponseEntity<ItemListagemDTO> buscarPorId(@PathVariable Integer id) {
     Item item = this.service.porId(id);
@@ -142,22 +93,6 @@ public class ItemController {
 
     return ResponseEntity.ok(response);
   }
-
-  @Operation(summary = "Atualizar um item", description = "Atualiza um item com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Item atualizado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemCriacaoDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Item não encontrado", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemCriacaoDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = ItemCriacaoDTO.class)
-      ))
-  })
 
   @PutMapping("{id}")
   public ResponseEntity<ItemListagemDTO> atualizar(
@@ -187,13 +122,6 @@ public class ItemController {
     return ResponseEntity.ok(response);
   }
 
-  @Operation(summary = "Remover um item", description = "Remove um item com base no ID fornecido")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Item removido com sucesso"),
-      @ApiResponse(responseCode = "404", description = "Item não encontrado"),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
-  })
-
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
     this.service.deletar(id, idResponsavel);
@@ -219,6 +147,5 @@ public class ItemController {
 
     return new ResponseEntity<>(exportarFile, headers, HttpStatus.OK);
   }
-
 
 }

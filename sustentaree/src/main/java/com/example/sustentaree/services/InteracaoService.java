@@ -1,11 +1,7 @@
 package com.example.sustentaree.services;
 
-import com.example.sustentaree.domain.categoria.CategoriaItem;
-import com.example.sustentaree.domain.fechamento.Fechamento;
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
-import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.produto.Produto;
-import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.exception.EntidadeNaoEncontradaException;
 import com.example.sustentaree.exception.EstoqueInsuficienteException;
 import com.example.sustentaree.repositories.InteracaoRepository;
@@ -23,17 +19,13 @@ public class InteracaoService {
   private final InteracaoRepository repository;
 
   @Autowired
-  private final FechamentoService fechamentoService;
-
-  @Autowired
   private final ProdutoService produtoService;
 
   @Autowired
   private SessaoUsuarioService sessaoUsuarioService;
 
-  public InteracaoService(InteracaoRepository repository, FechamentoService fechamentoService, ProdutoService produtoService) {
+  public InteracaoService(InteracaoRepository repository, ProdutoService produtoService) {
     this.repository = repository;
-    this.fechamentoService = fechamentoService;
     this.produtoService = produtoService;
   }
 

@@ -1,19 +1,6 @@
 package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.fechamento.Fechamento;
-import com.example.sustentaree.repositories.FechamentoRepository;
-import com.example.sustentaree.services.FechamentoService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 //@ExtendWith(MockitoExtension.class)
 class FechamentoControllerTest {

@@ -1,8 +1,6 @@
 package com.example.sustentaree.dtos.interacaoEstoque;
 
-import com.example.sustentaree.domain.fechamento.Fechamento;
 import com.example.sustentaree.domain.produto.Produto;
-import lombok.Data;
 
 import java.time.LocalDateTime;
 
@@ -13,9 +11,6 @@ public class InteracaoEstoqueListagemDTO {
   private Produto produto;
 
   private LocalDateTime dataHora;
-
-  //    0 ou 1 fechamento estoque para cada interação do estoque
-  private Fechamento fechamento;
 
   private String categoriaInteracao;
 
@@ -41,14 +36,6 @@ public class InteracaoEstoqueListagemDTO {
 
   public void setDataHora(LocalDateTime dataHora) {
     this.dataHora = dataHora;
-  }
-
-  public Fechamento getFechamento() {
-    return fechamento;
-  }
-
-  public void setFechamento(Fechamento fechamento) {
-    this.fechamento = fechamento;
   }
 
   public String getCategoriaInteracao() {

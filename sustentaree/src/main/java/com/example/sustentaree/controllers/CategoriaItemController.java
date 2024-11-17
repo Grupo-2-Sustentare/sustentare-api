@@ -29,25 +29,6 @@ public class CategoriaItemController {
     this.service = service;
   }
 
-  @Operation(summary = "Criar uma categoria", description = "Cria uma categoria com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Categoria criada com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class),
-          examples = @ExampleObject(
-              value = "{\n  \"nome\": \"Categoria Exemplo\",\n  \"descricao\": \"Descrição Exemplo\"\n}"
-          )
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      ))
-  })
-
   @PostMapping
   public ResponseEntity<CategoriaItemDTO> criar(
       @Parameter(
@@ -69,22 +50,6 @@ public class CategoriaItemController {
     return ResponseEntity.ok(response);
   }
 
-  @Operation(summary = "Obter todas as categorias", description = "Retorna uma lista com todas as categorias cadastradas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Lista de categorias retornada com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Nenhuma categoria encontrada", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      ))
-  })
-
   @GetMapping
   public ResponseEntity<List<CategoriaItemDTO>> findByAtivoTrue() {
     List<CategoriaItem> categorias = this.service.listar();
@@ -96,22 +61,6 @@ public class CategoriaItemController {
     return ResponseEntity.ok(mapper.toCategoriaItemListDTO(categorias));
   }
 
-  @Operation(summary = "Obter uma categoria por ID", description = "Retorna uma categoria com base no ID fornecido")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Categoria retornada com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Categoria não encontrada", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      ))
-  })
-
   @GetMapping("/{id}")
   public ResponseEntity<CategoriaItemDTO> buscarPorID(@PathVariable Integer id) {
     CategoriaItem categoriaItem = this.service.porId(id);
@@ -119,22 +68,6 @@ public class CategoriaItemController {
     CategoriaItemMapper mapper = CategoriaItemMapper.INSTANCE;
     return ResponseEntity.ok(mapper.toCategoriaItemDTO(categoriaItem));
   }
-
-  @Operation(summary = "Atualizar uma categoria", description = "Atualiza uma categoria com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Categoria atualizada com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Categoria não encontrada", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      ))
-  })
 
   @PutMapping("/{id}")
   public ResponseEntity<CategoriaItemDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid CategoriaItemDTO dto, @RequestParam int idResponsavel) {
@@ -145,22 +78,6 @@ public class CategoriaItemController {
 
     return ResponseEntity.ok(mapper.toCategoriaItemDTO(categoriaItem));
   }
-
-  @Operation(summary = "Remover uma categoria", description = "Remove uma categoria com base no ID fornecido")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "204", description = "Categoria removida com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "404", description = "Categoria não encontrada", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = CategoriaItemDTO.class)
-      ))
-  })
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
