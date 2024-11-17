@@ -5,18 +5,12 @@ import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
 import com.example.sustentaree.services.ItemService;
 import com.example.sustentaree.services.LambdaService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import com.example.sustentaree.dtos.item.AlterarItemDTO;
 import com.example.sustentaree.dtos.item.ItemCriacaoDTO;
 import com.example.sustentaree.dtos.item.ItemListagemDTO;
 import com.example.sustentaree.mapper.ItemMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -146,6 +140,32 @@ public class ItemController {
     headers.setContentDispositionFormData("attachment", "arquivo.txt");
 
     return new ResponseEntity<>(exportarFile, headers, HttpStatus.OK);
+  }
+
+  @GetMapping("/por-categria/{id}")
+  public ResponseEntity<List<ItemListagemDTO>> listarPorCategoria(@PathVariable Integer id) {
+    List<Item> itens = this.service.listByCategoriaItem(id);
+    ItemMapper mapper = ItemMapper.INSTANCE;
+    List<ItemListagemDTO> items = mapper.toItemListDto(itens);
+
+    if (items.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(items);
+  }
+
+  @GetMapping("/por-unidade-medida/{id}")
+  public ResponseEntity<List<ItemListagemDTO>> listarPorUnidadeMedida(@PathVariable Integer id) {
+    List<Item> itens = this.service.listByUnidadeMedida(id);
+    ItemMapper mapper = ItemMapper.INSTANCE;
+    List<ItemListagemDTO> items = mapper.toItemListDto(itens);
+
+    if (items.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(items);
   }
 
 }

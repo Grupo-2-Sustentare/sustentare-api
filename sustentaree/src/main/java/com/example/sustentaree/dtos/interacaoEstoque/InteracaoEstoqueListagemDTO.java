@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 public class InteracaoEstoqueListagemDTO {
   private Integer id;
 
-  // Ajustar o fkProduto.
   private Produto produto;
 
   private LocalDateTime dataHora;

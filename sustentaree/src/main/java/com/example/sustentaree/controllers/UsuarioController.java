@@ -12,17 +12,10 @@ import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.UsuarioMapper;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -56,12 +49,6 @@ public class UsuarioController {
     this.service = service;
   }
 
-//  @PostMapping("/gravarTxt")
-//  public ResponseEntity gravarTxt(){
-//    fileService.writeProductToFile();
-//    return ResponseEntity.status(HttpStatus.OK).build();
-//  }
-
   @PostMapping
   public ResponseEntity<UsuarioDTO> criar(@RequestBody @Valid UsuarioDTO dto, @RequestParam int idResponsavel) throws IOException {
       dto.setAtivo(true);
@@ -90,51 +77,12 @@ public class UsuarioController {
     return ResponseEntity.created(null).body(response);
   }
 
-  @Operation(summary = "Login de usuário", description = "Realiza o login de um usuário com base nas informações fornecidas")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "Usuário logado com sucesso", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioTokenDto.class)
-      )),
-      @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioTokenDto.class)
-      )),
-      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
-          mediaType = "application/json",
-          schema = @Schema(implementation = UsuarioTokenDto.class)
-      ))
-  })
-
   @PostMapping("/login")
   public ResponseEntity<UsuarioTokenDto> login(@RequestBody UsuarioLoginDto usuarioLoginDto){
     UsuarioTokenDto usuarioToken = this.service.autenticar(usuarioLoginDto);
 
     return ResponseEntity.status(200).body(usuarioToken);
   }
-
-//  @GetMapping
-//  public ResponseEntity<List<UsuarioDTO>> listar() {
-//    List<Usuario> usuarios = this.service.listar();
-//
-//    if (usuarios.isEmpty()) {
-//      return ResponseEntity.noContent().build();
-//    }
-//    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
-//    List<UsuarioDTO> response = mapper.toUsuarioListDTO(usuarios);
-//    int contador = 0;
-//      for (UsuarioDTO usuario : response) {
-//          try {
-//              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarios.get(contador).getId().toString());
-//              response.get(contador).setImagem(convertToJPEG(imagem,1));
-//          }catch (Exception e){
-//              System.out.println(e);
-//          }
-//
-//          contador++;
-//      }
-//    return ResponseEntity.ok(response);
-//  }
 
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listar() {
@@ -198,19 +146,6 @@ public class UsuarioController {
         return Base64.getEncoder().encodeToString(compressedOutput.toByteArray());
     }
 
-//  @GetMapping("/{id}")
-//  public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
-//    Usuario usuario = this.service.porId(id);
-//
-//    byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+id.toString());
-//
-//    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
-//    UsuarioDTO response = mapper.toUsuarioDTO(usuario);
-//    response.setImagem(Base64.getEncoder().encodeToString(imagem));
-//
-//    return ResponseEntity.ok(response);
-//  }
-
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
       Usuario usuario = this.service.porId(id);
@@ -272,23 +207,6 @@ public class UsuarioController {
 
     return ResponseEntity.noContent().build();
   }
-
-//  @GetMapping("/usuario-ultimo-id")
-//    public ResponseEntity<UsuarioDTO> getUltimoId(){
-//      Integer ultimoIdAdicionado = service.getUltimoId();
-//      Usuario usuario = service.porId(ultimoIdAdicionado);
-//        UsuarioDTO usuarioDTO = UsuarioMapper.INSTANCE.toUsuarioDTO(usuario);
-//          try {
-//              byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+usuarioDTO.getId().toString());
-//              usuarioDTO.setImagem(convertToJPEG(imagem,1));
-//          }catch (Exception e){
-//              System.out.println(e);
-//          }
-//      System.out.println("------------------------------------------------");
-//      System.out.println("Ultimo ID adicionado: " + usuarioDTO.getNome() + " - " + usuarioDTO.getId() + " - " + usuarioDTO.getImagem());
-//      System.out.println("-----------------Ultimo ID-----------------------");
-//      return ResponseEntity.ok(usuarioDTO);
-//  }
 
     @GetMapping("/usuario-ultimo-id")
     public ResponseEntity<UsuarioDTO> getUltimoId(){

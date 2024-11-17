@@ -1,6 +1,7 @@
 package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
+import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.mapper.CategoriaItemMapper;
 import com.example.sustentaree.repositories.CategoriaItemRepository;
 import com.example.sustentaree.services.data_structure.HashTable;
@@ -16,6 +17,8 @@ import java.util.List;
 public class CategoriaItemService {
   @Autowired
   private final CategoriaItemRepository repository;
+  @Autowired
+  private ItemService itemService;
   @Autowired
   private SessaoUsuarioService sessaoUsuarioService;
 
@@ -53,6 +56,10 @@ public class CategoriaItemService {
   @Transactional
   public void deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+    List<Item> item = this.itemService.listByCategoriaItem(id);
+    if (item.size() > 0) {
+      throw new RuntimeException("Categoria de item não pode ser deletada pois está associada a um item");
+    }
 
     this.repository.updateAtivoById(false, id);
   }
