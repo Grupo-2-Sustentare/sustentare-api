@@ -1,10 +1,10 @@
 package com.example.sustentaree.controllers;
 
+import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.item.Item;
+import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.repositories.ItemRepository;
-import com.example.sustentaree.services.FileService;
-import com.example.sustentaree.services.ItemService;
-import com.example.sustentaree.services.LambdaService;
+import com.example.sustentaree.services.*;
 import com.example.sustentaree.dtos.item.AlterarItemDTO;
 import com.example.sustentaree.dtos.item.ItemCriacaoDTO;
 import com.example.sustentaree.dtos.item.ItemListagemDTO;
@@ -29,9 +29,11 @@ public class ItemController {
   @Autowired
   private final ItemService service;
   @Autowired
-  private FileService fileService;
+  private CategoriaItemService categoriaItemService;
   @Autowired
-  private ItemRepository itemRepository;
+  private UnidadeMedidaService unidadeMedidaService;
+  @Autowired
+  private FileService fileService;
   @Autowired
   private LambdaService lambdaService;
 

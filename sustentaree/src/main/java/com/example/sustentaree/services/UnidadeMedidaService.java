@@ -14,9 +14,10 @@ public class UnidadeMedidaService {
   @Autowired
   private final UnidadeMedidaRepository repository;
   @Autowired
-  private SessaoUsuarioService sessaoUsuarioService;
+  private ItemValidationService itemValidationService;
   @Autowired
-  private ItemService itemService;
+  private SessaoUsuarioService sessaoUsuarioService;
+
   public UnidadeMedidaService(UnidadeMedidaRepository repository) {
     this.repository = repository;
   }
@@ -47,8 +48,8 @@ public class UnidadeMedidaService {
   @Transactional
   public void deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-    List<Item> item = this.itemService.listByUnidadeMedida(id);
-    if (item.size() > 0) {
+    List<Item> items = this.itemValidationService.listByUnidadeMedida(id,this);
+    if (items.size() > 0) {
       throw new RuntimeException("Unidade de medida não pode ser deletada pois está associada a um item");
     }
     this.repository.updateAtivoById(false, id);

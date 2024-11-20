@@ -19,20 +19,18 @@ public class ItemService {
   @Autowired
   private final ItemRepository repository;
   @Autowired
-  private final UnidadeMedidaService unidadeMedidaService;
-  @Autowired
-  private final CategoriaItemService categoriaItemService;
-  @Autowired
   private SessaoUsuarioService sessaoUsuarioService;
   @Autowired
   private LambdaService lambdaService;
   @Autowired
   private ImagemService imagemService;
+  @Autowired
+  private CategoriaItemService categoriaItemService;
+  @Autowired
+  private UnidadeMedidaService unidadeMedidaService;
 
-  public ItemService(ItemRepository repository, UnidadeMedidaService unidadeMedidaService, CategoriaItemService categoriaItemService) {
+  public ItemService(ItemRepository repository) {
     this.repository = repository;
-    this.unidadeMedidaService = unidadeMedidaService;
-    this.categoriaItemService = categoriaItemService;
   }
 
   public List<ItemListagemDTO> listar() {
@@ -123,14 +121,12 @@ public class ItemService {
     }
     return 0;
   }
-
-  public List<Item> listByUnidadeMedida (int id){
+  public List<Item> listByUnidadeMedida(int id) {
     UnidadeMedida unidadeMedida = this.unidadeMedidaService.porId(id);
-    return this.repository.findByUnidadeMedida(unidadeMedida);
+    return this.repository.findByUnidade_medida(unidadeMedida);
   }
-
   public List<Item> listByCategoriaItem (int id){
     CategoriaItem categoriaItem = this.categoriaItemService.porId(id);
-    return this.repository.findByCategoriaItem(categoriaItem);
+    return this.repository.findByCategoria(categoriaItem);
   }
 }
