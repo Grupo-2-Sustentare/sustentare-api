@@ -1,6 +1,7 @@
 package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
+import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.dtos.categoria.CategoriaItemDTO;
 import com.example.sustentaree.services.CategoriaItemService;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -80,9 +81,11 @@ public class CategoriaItemController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
-    this.service.deletar(id, idResponsavel);
-
+  public ResponseEntity<List<Item>> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
+    List<Item> itensEncontrados = this.service.deletar(id, idResponsavel);
+    if (!itensEncontrados.isEmpty()){
+      return ResponseEntity.badRequest().body(itensEncontrados);
+    }
     return ResponseEntity.noContent().build();
   }
 }
