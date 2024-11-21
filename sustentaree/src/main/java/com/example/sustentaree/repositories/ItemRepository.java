@@ -1,8 +1,8 @@
 package com.example.sustentaree.repositories;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
-import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.domain.item.Item;
+import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +19,10 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     @Query(value = "select * from item_vencimento;",nativeQuery = true)
     List<Item> getItemVencimento();
-
+    @Query("SELECT i FROM Item i WHERE i.unidade_medida = :unidadeMedida")
+    List<Item> findByUnidade_medida(UnidadeMedida unidadeMedida);
+    @Query("SELECT i FROM Item i WHERE i.categoria = :categoriaItem")
+    List<Item> findByCategoria(CategoriaItem categoriaItem);
     List<Item> findByAtivoTrue();
 
     @Modifying
@@ -32,4 +35,5 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     @Query(value = "SELECT * FROM item ORDER BY id_item DESC LIMIT 1", nativeQuery = true)
     Optional<Item> getUltimoId();
+
 }

@@ -1,10 +1,8 @@
 package com.example.sustentaree.services;
 
+import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
-import com.example.sustentaree.dtos.unidade_medida.UnidadeMedidaDTO;
-import com.example.sustentaree.mapper.UnidadeMedidaMapper;
 import com.example.sustentaree.repositories.UnidadeMedidaRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +14,10 @@ public class UnidadeMedidaService {
   @Autowired
   private final UnidadeMedidaRepository repository;
   @Autowired
+  private ItemValidationService itemValidationService;
+  @Autowired
   private SessaoUsuarioService sessaoUsuarioService;
+
   public UnidadeMedidaService(UnidadeMedidaRepository repository) {
     this.repository = repository;
   }
@@ -45,10 +46,15 @@ public class UnidadeMedidaService {
     return this.criar(unidadeMedida, idResponsavel);
   }
   @Transactional
-  public void deletar(Integer id, int idResponsavel) {
+  public List<Item> deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-
+    List<Item> itens = this.itemValidationService.listByUnidadeMedida(id,this);
+    if (!itens.isEmpty()) {
+      System.out.println("-> UnidadeMedida não pode ser deletada pois está associada a um ou mais itens");
+      return itens;
+    }
     this.repository.updateAtivoById(false, id);
+    return itens;
   }
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;

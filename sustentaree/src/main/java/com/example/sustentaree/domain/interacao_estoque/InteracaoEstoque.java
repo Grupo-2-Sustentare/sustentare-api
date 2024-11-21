@@ -1,12 +1,7 @@
 package com.example.sustentaree.domain.interacao_estoque;
 
-import com.example.sustentaree.domain.fechamento.Fechamento;
 import com.example.sustentaree.domain.produto.Produto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.time.LocalDateTime;
 

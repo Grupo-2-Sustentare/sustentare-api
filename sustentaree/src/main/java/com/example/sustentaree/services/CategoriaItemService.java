@@ -1,15 +1,16 @@
 package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.categoria.CategoriaItem;
-import com.example.sustentaree.mapper.CategoriaItemMapper;
+import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.repositories.CategoriaItemRepository;
-import com.example.sustentaree.services.data_structure.HashTable;
-import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -18,6 +19,8 @@ public class CategoriaItemService {
   private final CategoriaItemRepository repository;
   @Autowired
   private SessaoUsuarioService sessaoUsuarioService;
+  @Autowired
+  private ItemValidationService itemValidationService;
 
   public CategoriaItemService(CategoriaItemRepository repository) {
     this.repository = repository;
@@ -51,11 +54,18 @@ public class CategoriaItemService {
     return this.criar(categoriaItem, idResponsavel);
   }
   @Transactional
-  public void deletar(Integer id, int idResponsavel) {
+  public List<Item> deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-
+    List<Item> itens = this.itemValidationService.listByCategoriaItem(id, this);
+    if (!itens.isEmpty()) {
+      System.out.println("CategoriaItem não pode ser deletada pois está associada a um ou mais itens");
+      return itens;
+    }
     this.repository.updateAtivoById(false, id);
+    return itens;
   }
+
+
 
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
