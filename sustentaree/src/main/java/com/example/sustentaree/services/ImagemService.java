@@ -65,6 +65,12 @@ public class ImagemService {
         return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, privateFunctionName);
     }
 
+    public EnvioImagemS3DTO tratarEditarImagemUsuario(String imagem, int id){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        String nomeArquivo = usuarioPath + id;
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, privateFunctionName);
+    }
+
     public UsuarioDTO addImagemS3Usuario(Usuario usuario){
         UsuarioMapper mapper = UsuarioMapper.INSTANCE;
         UsuarioDTO usuarioDTO = mapper.toUsuarioDTO(usuario);

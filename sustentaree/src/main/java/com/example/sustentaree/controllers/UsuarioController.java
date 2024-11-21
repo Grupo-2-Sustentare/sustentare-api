@@ -3,6 +3,7 @@ package com.example.sustentaree.controllers;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.dtos.EnvioImagemS3DTO;
+import com.example.sustentaree.dtos.usuario.AtualizarUsuarioDto;
 import com.example.sustentaree.dtos.usuario.UsuarioSemImagemDTO;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
@@ -220,12 +221,12 @@ public class UsuarioController {
   })
 
   @PatchMapping("/{id}")
-  public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarUsuarioDTO dto, @RequestParam int idResponsavel) {
+  public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AtualizarUsuarioDto dto, @RequestParam int idResponsavel) {
 
       if (dto.getImagem() != null){
           CompletableFuture.runAsync(() ->
                   {
-                      EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarImagemUsuario(dto.getImagem());
+                      EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarEditarImagemUsuario(dto.getImagem(), id);
                       lambdaService.enviarImagemS3(envioImagemS3DTO);
                   }
           );
@@ -234,9 +235,10 @@ public class UsuarioController {
       UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 
     Usuario entity = mapper.toUsuario(dto);
+    entity.setAtivo(true);
     Usuario usuarioAtualizado = this.service.atualizar(entity, id, idResponsavel);
 
-    UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
+      UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
     return ResponseEntity.ok(response);
   }
 
