@@ -1,6 +1,7 @@
 package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.item.Item;
+import com.example.sustentaree.dtos.item.ItemListagemDTO;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.CategoriaItemService;
 import com.example.sustentaree.services.ItemService;
@@ -49,7 +50,7 @@ public class ItemServiceTest {
     List<Item> items = new ArrayList<>();
     when(itemRepository.findByAtivoTrue()).thenReturn(items);
 
-    List<Item> result = itemService.listar();
+    List<ItemListagemDTO> result = itemService.listar();
 
     assertEquals(items, result);
     verify(itemRepository, times(1)).findByAtivoTrue();
