@@ -1,5 +1,6 @@
 package com.example.sustentaree.controllers;
 
+import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.dtos.unidade_medida.UnidadeMedidaDTO;
 import com.example.sustentaree.mapper.UnidadeMedidaMapper;
@@ -78,12 +79,15 @@ public class UnidadeMedidaController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> removerUnidadeMedida
+  public ResponseEntity<List<Item>> removerUnidadeMedida
       (
           @PathVariable Integer id,
           @RequestParam int idResponsavel
       ) {
-    this.service.deletar(id, idResponsavel);
+    List<Item> itensEncontrados = this.service.deletar(id, idResponsavel);
+    if (!itensEncontrados.isEmpty()){
+      return ResponseEntity.badRequest().body(itensEncontrados);
+    }
     return ResponseEntity.noContent().build();
   }
 }

@@ -46,13 +46,15 @@ public class UnidadeMedidaService {
     return this.criar(unidadeMedida, idResponsavel);
   }
   @Transactional
-  public void deletar(Integer id, int idResponsavel) {
+  public List<Item> deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-    List<Item> items = this.itemValidationService.listByUnidadeMedida(id,this);
-    if (items.size() > 0) {
-      throw new RuntimeException("Unidade de medida não pode ser deletada pois está associada a um item");
+    List<Item> itens = this.itemValidationService.listByUnidadeMedida(id,this);
+    if (!itens.isEmpty()) {
+      System.out.println("-> UnidadeMedida não pode ser deletada pois está associada a um ou mais itens");
+      return itens;
     }
     this.repository.updateAtivoById(false, id);
+    return itens;
   }
   public void setSessaoUsuarioService(SessaoUsuarioService sessaoUsuarioService) {
     this.sessaoUsuarioService = sessaoUsuarioService;
