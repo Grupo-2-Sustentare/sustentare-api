@@ -1,16 +1,22 @@
 package com.example.sustentaree.controllers;
 
-import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.item.Item;
-import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import com.example.sustentaree.repositories.ItemRepository;
-import com.example.sustentaree.services.*;
+import com.example.sustentaree.services.FileService;
+import com.example.sustentaree.services.ItemService;
+import com.example.sustentaree.services.LambdaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import com.example.sustentaree.dtos.item.AlterarItemDTO;
 import com.example.sustentaree.dtos.item.ItemCriacaoDTO;
 import com.example.sustentaree.dtos.item.ItemListagemDTO;
 import com.example.sustentaree.mapper.ItemMapper;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,11 +35,9 @@ public class ItemController {
   @Autowired
   private final ItemService service;
   @Autowired
-  private CategoriaItemService categoriaItemService;
-  @Autowired
-  private UnidadeMedidaService unidadeMedidaService;
-  @Autowired
   private FileService fileService;
+  @Autowired
+  private ItemRepository itemRepository;
   @Autowired
   private LambdaService lambdaService;
 
@@ -41,7 +45,24 @@ public class ItemController {
     this.service = service;
   }
 
+  @Operation(summary = "Criar um item", description = "Cria um item com base nas informações fornecidas")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Item criado com sucesso", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemCriacaoDTO.class)
+      )),
+      @ApiResponse(responseCode = "400", description = "Requisição inválida", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemCriacaoDTO.class)
+      )),
+      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemCriacaoDTO.class)
+      ))
+  })
+
   @PostMapping
+//    TODO explicar o motivo de usar o @RequestParam para os id's ao invés de @RequestBody neste caso específico (Raphael)
   public ResponseEntity<ItemListagemDTO> criar(
       @RequestBody @Valid ItemCriacaoDTO dto,
       @RequestParam int unidadeMedidaId,
@@ -69,6 +90,22 @@ public class ItemController {
     return ResponseEntity.ok(response);
   }
 
+  @Operation(summary = "Listar itens", description = "Lista todos os itens cadastrados")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Lista de itens retornada com sucesso", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemListagemDTO.class)
+      )),
+      @ApiResponse(responseCode = "404", description = "Nenhum item cadastrado", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemListagemDTO.class)
+      )),
+      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemListagemDTO.class)
+      ))
+  })
+
   @GetMapping
   public ResponseEntity<List<ItemListagemDTO>> listar() {
     List<ItemListagemDTO> items = this.service.listar();
@@ -80,6 +117,22 @@ public class ItemController {
     return ResponseEntity.ok(items);
   }
 
+  @Operation(summary = "Buscar item por ID", description = "Retorna um item com base no ID fornecido")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Item retornado com sucesso", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemListagemDTO.class)
+      )),
+      @ApiResponse(responseCode = "404", description = "Item não encontrado", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemListagemDTO.class)
+      )),
+      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemListagemDTO.class)
+      ))
+  })
+
   @GetMapping("/{id}")
   public ResponseEntity<ItemListagemDTO> buscarPorId(@PathVariable Integer id) {
     Item item = this.service.porId(id);
@@ -89,6 +142,22 @@ public class ItemController {
 
     return ResponseEntity.ok(response);
   }
+
+  @Operation(summary = "Atualizar um item", description = "Atualiza um item com base nas informações fornecidas")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Item atualizado com sucesso", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemCriacaoDTO.class)
+      )),
+      @ApiResponse(responseCode = "404", description = "Item não encontrado", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemCriacaoDTO.class)
+      )),
+      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = ItemCriacaoDTO.class)
+      ))
+  })
 
   @PutMapping("{id}")
   public ResponseEntity<ItemListagemDTO> atualizar(
@@ -118,6 +187,13 @@ public class ItemController {
     return ResponseEntity.ok(response);
   }
 
+  @Operation(summary = "Remover um item", description = "Remove um item com base no ID fornecido")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "204", description = "Item removido com sucesso"),
+      @ApiResponse(responseCode = "404", description = "Item não encontrado"),
+      @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
+  })
+
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> remover(@PathVariable Integer id, @RequestParam int idResponsavel) {
     this.service.deletar(id, idResponsavel);
@@ -144,30 +220,5 @@ public class ItemController {
     return new ResponseEntity<>(exportarFile, headers, HttpStatus.OK);
   }
 
-  @GetMapping("/por-categria/{id}")
-  public ResponseEntity<List<ItemListagemDTO>> listarPorCategoria(@PathVariable Integer id) {
-    List<Item> itens = this.service.listByCategoriaItem(id);
-    ItemMapper mapper = ItemMapper.INSTANCE;
-    List<ItemListagemDTO> items = mapper.toItemListDto(itens);
-
-    if (items.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
-
-    return ResponseEntity.ok(items);
-  }
-
-  @GetMapping("/por-unidade-medida/{id}")
-  public ResponseEntity<List<ItemListagemDTO>> listarPorUnidadeMedida(@PathVariable Integer id) {
-    List<Item> itens = this.service.listByUnidadeMedida(id);
-    ItemMapper mapper = ItemMapper.INSTANCE;
-    List<ItemListagemDTO> items = mapper.toItemListDto(itens);
-
-    if (items.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
-
-    return ResponseEntity.ok(items);
-  }
 
 }

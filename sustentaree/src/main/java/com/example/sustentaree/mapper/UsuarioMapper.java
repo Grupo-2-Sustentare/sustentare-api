@@ -2,10 +2,7 @@ package com.example.sustentaree.mapper;
 
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
 import com.example.sustentaree.domain.usuario.Usuario;
-import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
-import com.example.sustentaree.dtos.usuario.UsuarioDTO;
-import com.example.sustentaree.dtos.usuario.UsuarioImagemByteDTO;
-import com.example.sustentaree.dtos.usuario.UsuarioSemImagemDTO;
+import com.example.sustentaree.dtos.usuario.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -25,6 +22,8 @@ public abstract class UsuarioMapper {
   public abstract List<UsuarioImagemByteDTO> toUsuarioImagemByteListDTO(List<Usuario> usuarios);
   public abstract UsuarioSemImagemDTO toUsuarioSemImagemDTO(Usuario usuario);
   public abstract List<UsuarioSemImagemDTO> toUsuarioSemImagemDTOList(List<Usuario> usuarios);
+  public abstract Usuario toUsuario(AtualizarUsuarioDto atualizarUsuarioDto);
+  public  abstract AtualizarUsuarioDto toAtualizarUsuarioDto(Usuario usuario);
 
   public static UsuarioTokenDto of(Usuario usuario, String token){
     UsuarioTokenDto usuarioTokenDto = new UsuarioTokenDto();

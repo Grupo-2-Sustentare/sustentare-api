@@ -2,6 +2,8 @@ package com.example.sustentaree.controllers;
 
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioLoginDto;
 import com.example.sustentaree.controllers.autenticacao.dto.UsuarioTokenDto;
+import com.example.sustentaree.dtos.EnvioImagemS3DTO;
+import com.example.sustentaree.dtos.usuario.AtualizarUsuarioDto;
 import com.example.sustentaree.dtos.usuario.UsuarioSemImagemDTO;
 import com.example.sustentaree.repositories.ItemRepository;
 import com.example.sustentaree.services.FileService;
@@ -12,6 +14,12 @@ import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.dtos.usuario.AlterarUsuarioDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.UsuarioMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +34,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Base64;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -57,10 +64,8 @@ public class UsuarioController {
     if (dto.getImagem() != null){
         CompletableFuture.runAsync(() ->
                 {
-                    byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
-                    Integer idUsuario = service.getUltimoId() + 1;
-                    String nomeArquivo = "/usuarios/imagens/"+idUsuario.toString();
-                    lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                    EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarImagemUsuario(dto.getImagem());
+                    lambdaService.enviarImagemS3(envioImagemS3DTO);
                 }
                 );
     }
@@ -110,41 +115,37 @@ public class UsuarioController {
         return ResponseEntity.ok(response);
     }
 
-    private String convertToJPEG(byte[] imageBytes, float quality) throws IOException {
-        // Converte o byte array para BufferedImage
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
-        if (image == null) {
-            throw new IOException("Image could not be decoded");
-        }
+  @Operation(summary = "Buscar um usuário por ID", description = "Retorna um usuário com base no ID fornecido")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "Usuário retornado com sucesso", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = UsuarioDTO.class)
+      )),
+      @ApiResponse(responseCode = "404", description = "Usuário não encontrado", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = UsuarioDTO.class),
+          examples = @ExampleObject(
+              value = "{\n  \"nome\": \"TESTE FODA Exemplo\",\n  \"senha\": \"123456\",\n  \"acesso\": 1\n}"
+          )
+      )),
+      @ApiResponse(responseCode = "500", description = "Erro interno no servidor", content = @Content(
+          mediaType = "application/json",
+          schema = @Schema(implementation = UsuarioDTO.class)
+      ))
+  })
 
-        // Cria uma nova imagem em RGB para garantir o formato JPEG
-        BufferedImage rgbImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_RGB);
-        rgbImage.getGraphics().drawImage(image, 0, 0, null);
-
-        // Prepara o fluxo de saída para a imagem comprimida
-        ByteArrayOutputStream compressedOutput = new ByteArrayOutputStream();
-
-        // Obtém o ImageWriter para o formato JPEG
-        Iterator<ImageWriter> writers = ImageIO.getImageWritersByFormatName("jpg");
-        if (!writers.hasNext()) {
-            throw new IOException("No writers found for JPEG format");
-        }
-
-        ImageWriter writer = writers.next();
-        ImageWriteParam param = writer.getDefaultWriteParam();
-        param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        param.setCompressionQuality(quality); // Define a qualidade (0 a 1)
-
-        try (ImageOutputStream ios = ImageIO.createImageOutputStream(compressedOutput)) {
-            writer.setOutput(ios);
-            writer.write(null, new javax.imageio.IIOImage(rgbImage, null, null), param);
-        } finally {
-            writer.dispose();
-        }
-
-        // Converte a imagem comprimida de volta para base64
-        return Base64.getEncoder().encodeToString(compressedOutput.toByteArray());
-    }
+//  @GetMapping("/{id}")
+//  public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
+//    Usuario usuario = this.service.porId(id);
+//
+//    byte[] imagem = lambdaService.downloadFile("sustentaree-s3", "/usuarios/imagens/"+id.toString());
+//
+//    UsuarioMapper mapper = UsuarioMapper.INSTANCE;
+//    UsuarioDTO response = mapper.toUsuarioDTO(usuario);
+//    response.setImagem(Base64.getEncoder().encodeToString(imagem));
+//
+//    return ResponseEntity.ok(response);
+//  }
 
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioDTO> buscarPorId(@PathVariable Integer id) {
@@ -157,14 +158,13 @@ public class UsuarioController {
     }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AlterarUsuarioDTO dto, @RequestParam int idResponsavel) {
+  public ResponseEntity<UsuarioDTO> atualizar(@PathVariable Integer id, @RequestBody @Valid AtualizarUsuarioDto dto, @RequestParam int idResponsavel) {
 
       if (dto.getImagem() != null){
           CompletableFuture.runAsync(() ->
                   {
-                      byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
-                      String nomeArquivo = "/usuarios/imagens/"+id.toString();
-                      lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                      EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarEditarImagemUsuario(dto.getImagem(), id);
+                      lambdaService.enviarImagemS3(envioImagemS3DTO);
                   }
           );
       }
@@ -172,9 +172,10 @@ public class UsuarioController {
       UsuarioMapper mapper = UsuarioMapper.INSTANCE;
 
     Usuario entity = mapper.toUsuario(dto);
+    entity.setAtivo(true);
     Usuario usuarioAtualizado = this.service.atualizar(entity, id, idResponsavel);
 
-    UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
+      UsuarioDTO response = mapper.toUsuarioDTO(usuarioAtualizado);
     return ResponseEntity.ok(response);
   }
 
@@ -190,9 +191,8 @@ public class UsuarioController {
       if (dto.getImagem() != null){
           CompletableFuture.runAsync(() ->
                   {
-                      byte[] imagemBytes = Base64.getDecoder().decode(dto.getImagem());
-                      String nomeArquivo = "/usuarios/imagens/"+id.toString();
-                      lambdaService.enviarImagemS3(imagemBytes, nomeArquivo, "envioDeImagem");
+                      EnvioImagemS3DTO envioImagemS3DTO = imagemService.tratarImagemUsuario(dto.getImagem());
+                      lambdaService.enviarImagemS3(envioImagemS3DTO);
                   }
           );
       }

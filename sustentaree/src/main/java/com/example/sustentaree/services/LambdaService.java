@@ -26,6 +26,8 @@ import java.util.Map;
 
 @Service
 public class LambdaService {
+    @Value("${nome.lambda}")
+    private String funcao;
 
     private S3Client criarClienteS3() {
         Region region = Region.US_EAST_1;
@@ -36,7 +38,6 @@ public class LambdaService {
 
     public ResponseEntity enviarImagemS3(byte[] imagem, String nomeArquivo, String functionName) {
 
-        String funcao = "envioDeImagem";
         Region region = Region.US_EAST_1;
 
         LambdaClient awsLambda = LambdaClient.builder()

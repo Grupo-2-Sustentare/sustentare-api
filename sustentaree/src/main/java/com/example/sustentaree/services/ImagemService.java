@@ -2,11 +2,14 @@ package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.item.Item;
 import com.example.sustentaree.domain.usuario.Usuario;
+import com.example.sustentaree.dtos.EnvioImagemS3DTO;
 import com.example.sustentaree.dtos.item.ItemListagemDTO;
 import com.example.sustentaree.dtos.usuario.UsuarioDTO;
 import com.example.sustentaree.mapper.ItemMapper;
 import com.example.sustentaree.mapper.UsuarioMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -23,12 +26,50 @@ import java.util.List;
 
 @Service
 public class ImagemService {
-    String bucketName = "sustentare-bucket-test";
-    String usuarioPath = "/usuarios/imagens/";
-    String itemPath = "/itens/imagens/";
-
     @Autowired
     private LambdaService lambdaService;
+    @Autowired
+    @Lazy
+    private ItemService itemService;
+    @Autowired
+    @Lazy
+    private UsuarioService usuarioService;
+
+    @Value("${nome.bucket}")
+    private String bucketName;
+    @Value("${metodo.Lambda.aws.enviar.imagem.publica}")
+    private String publicFunctionName;
+    @Value("${metodo.Lambda.aws.enviar.imagem.privada}")
+    private String privateFunctionName;
+    private String usuarioPath = "/usuarios/imagens/";
+    private String itemPath = "/itens/imagens/";
+
+
+    public EnvioImagemS3DTO tratarImagemItem(String imagem){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        Integer idItem = itemService.getUltimoId() + 1;
+        String nomeArquivo = itemPath + idItem.toString();
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, publicFunctionName);
+    }
+
+    public EnvioImagemS3DTO tratarEditarImagemItem(String imagem, int id){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        String nomeArquivo = itemPath + id;
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, publicFunctionName);
+    }
+
+    public EnvioImagemS3DTO tratarImagemUsuario(String imagem){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        Integer idUsuario = usuarioService.getUltimoId() + 1;
+        String nomeArquivo = usuarioPath + idUsuario.toString();
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, privateFunctionName);
+    }
+
+    public EnvioImagemS3DTO tratarEditarImagemUsuario(String imagem, int id){
+        byte[] imagemBytes = Base64.getDecoder().decode(imagem);
+        String nomeArquivo = usuarioPath + id;
+        return new EnvioImagemS3DTO(imagemBytes, nomeArquivo, privateFunctionName);
+    }
 
     public UsuarioDTO addImagemS3Usuario(Usuario usuario){
         UsuarioMapper mapper = UsuarioMapper.INSTANCE;
