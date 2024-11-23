@@ -51,32 +51,41 @@ jobs:
           name: deploy-scripts
           path: ./
 
-      - name: Criar arquivo .pem
+      - name: Criar arquivo .pem para EC2 pública
         run: |
-          echo "${{ secrets.DEPLOY_KEY }}" >> $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
-          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
+          echo "${{ secrets.DEPLOY_PUBLIC_KEY }}" >> $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICO }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICO }}
 
-      - name: Enviar arquivos para EC2
+      - name: Criar arquivo .pem para EC2 privada
+        run: |
+          echo "${{ secrets.DEPLOY_PRIVATE_KEY }}" >> $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADO }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADO }}
+
+      - name: Enviar arquivos para EC2 pública
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ubuntu
-          key: ${{ secrets.DEPLOY_KEY }}
+          key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
           source: ./*.jar
           target: /home/ubuntu/deploy-api/
 
-      - name: Enviar scripts para EC2
+      - name: Enviar scripts para EC2 pública
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ubuntu
-          key: ${{ secrets.DEPLOY_KEY }}
+          key: ${{ secrets.DEPLOY_PUBLIC_KEY }}
           source: ./*.sh
           target: /home/ubuntu/deploy-api/
 
-      - name: Reiniciar aplicação na EC2
+      - name: Conectar via SSH à EC2 pública e acessar a EC2 privada para deploy
         run: |
-          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.DEPLOY_HOST }} "
-            chmod +x /home/ubuntu/deploy-api/api-restart.sh
-            sh /home/ubuntu/deploy-api/api-restart.sh
+          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICO }} ubuntu@${{ secrets.DEPLOY_HOST }} "
+            # Passar o arquivo JAR para a EC2 privada
+            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADO }} /home/ubuntu/deploy-api/*.jar ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api/
+            # Passar os scripts para a EC2 privada
+            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADO }} /home/ubuntu/deploy-api/*.sh ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api/
+            # Reiniciar a aplicação na EC2 privada
+            ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADO }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }} 'sh /home/ubuntu/deploy-api/api-restart.sh'
           "
