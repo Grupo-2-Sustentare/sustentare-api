@@ -1,0 +1,82 @@
+name: CI/CD para Spring Boot com Maven e EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v2
+
+      - name: Configurar JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Build com Maven
+        run: mvn clean package
+
+      - name: Upload do JAR gerado
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
+
+      - name: Upload dos scripts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-scripts
+          path: .github/scripts/*.sh
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar o JAR gerado
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: ./
+
+      - name: Baixar os scripts de deploy
+        uses: actions/download-artifact@v4
+        with:
+          name: deploy-scripts
+          path: ./
+
+      - name: Criar arquivo .pem
+        run: |
+          echo "${{ secrets.DEPLOY_KEY }}" >> $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
+
+      - name: Enviar arquivos para EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ubuntu
+          key: ${{ secrets.DEPLOY_KEY }}
+          source: ./*.jar
+          target: /home/ubuntu/deploy-api/
+
+      - name: Enviar scripts para EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ubuntu
+          key: ${{ secrets.DEPLOY_KEY }}
+          source: ./*.sh
+          target: /home/ubuntu/deploy-api/
+
+      - name: Reiniciar aplicação na EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.DEPLOY_HOST }} "
+            chmod +x /home/ubuntu/deploy-api/api-restart.sh
+            sh /home/ubuntu/deploy-api/api-restart.sh
+          "
