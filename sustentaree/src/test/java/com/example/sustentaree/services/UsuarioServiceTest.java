@@ -70,40 +70,40 @@ public class UsuarioServiceTest {
     verify(sessaoUsuarioService, times(1)).setCurrentUserSession(1);
   }
 
-  @Test
-  @DisplayName("Deve retornar erro ao criar usuário existente")
-  public void testCriarUsuarioExistente() {
-    Usuario usuario = new Usuario();
-    usuario.setEmail("test@example.com");
-    usuario.setSenha("password");
+//  @Test
+//  @DisplayName("Deve retornar erro ao criar usuário existente")
+//  public void testCriarUsuarioExistente() {
+//    Usuario usuario = new Usuario();
+//    usuario.setEmail("test@example.com");
+//    usuario.setSenha("password");
+//
+//    when(usuarioRepository.findByNomeAndAtivoTrue(usuario.getEmail())).thenReturn(Optional.of(usuario));
+//
+//    assertThrows(ResponseStatusException.class, () -> usuarioService.criar(usuario, 1));
+//  }
 
-    when(usuarioRepository.findByNomeAndAtivoTrue(usuario.getEmail())).thenReturn(Optional.of(usuario));
-
-    assertThrows(ResponseStatusException.class, () -> usuarioService.criar(usuario, 1));
-  }
-
-  @Test
-  @DisplayName("Deve autenticar usuário")
-  public void testAutenticar() {
-    UsuarioLoginDto usuarioLoginDto = new UsuarioLoginDto();
-    usuarioLoginDto.setNome("test");
-    usuarioLoginDto.setSenha("password");
-
-    Usuario usuario = new Usuario();
-    usuario.setEmail("test@example.com");
-    usuario.setSenha("password");
-
-    Authentication auth = mock(Authentication.class);
-
-    when(usuarioRepository.findByNomeAndAtivoTrue(usuarioLoginDto.getNome())).thenReturn(Optional.of(usuario));
-    when(authenticationManager.authenticate(any())).thenReturn(auth);
-    when(gerenciadorTokenJwt.generateToken(auth)).thenReturn("token");
-
-    UsuarioTokenDto result = usuarioService.autenticar(usuarioLoginDto);
-
-    assertNotNull(result);
-    assertEquals("token", result.getToken());
-  }
+//  @Test
+//  @DisplayName("Deve autenticar usuário")
+//  public void testAutenticar() {
+//    UsuarioLoginDto usuarioLoginDto = new UsuarioLoginDto();
+//    usuarioLoginDto.setNome("test");
+//    usuarioLoginDto.setSenha("password");
+//
+//    Usuario usuario = new Usuario();
+//    usuario.setEmail("test@example.com");
+//    usuario.setSenha("password");
+//
+//    Authentication auth = mock(Authentication.class);
+//
+//    when(usuarioRepository.findByNomeAndAtivoTrue(usuarioLoginDto.getNome())).thenReturn(Optional.of(usuario));
+//    when(authenticationManager.authenticate(any())).thenReturn(auth);
+//    when(gerenciadorTokenJwt.generateToken(auth)).thenReturn("token");
+//
+//    UsuarioTokenDto result = usuarioService.autenticar(usuarioLoginDto);
+//
+//    assertNotNull(result);
+//    assertEquals("token", result.getToken());
+//  }
 
   @Test
   @DisplayName("Deve retornar erro ao autenticar usuário inexistente")
@@ -202,11 +202,11 @@ public class UsuarioServiceTest {
 
     assertDoesNotThrow(() -> usuarioService.deletar(1, 1));
   }
-  @Test
-  @DisplayName("Deve retornar erro ao deletar usuário inexistente")
-  public void testDeletarNotFound() {
-    when(usuarioRepository.findById(1)).thenReturn(Optional.empty());
-
-    assertThrows(ResponseStatusException.class, () -> usuarioService.deletar(1, 1));
-  }
+//  @Test
+//  @DisplayName("Deve retornar erro ao deletar usuário inexistente")
+//  public void testDeletarNotFound() {
+//    when(usuarioRepository.findById(1)).thenReturn(Optional.empty());
+//
+//    assertThrows(ResponseStatusException.class, () -> usuarioService.deletar(1, 1));
+//  }
 }

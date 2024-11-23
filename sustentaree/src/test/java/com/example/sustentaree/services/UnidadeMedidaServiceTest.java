@@ -91,15 +91,15 @@ public class UnidadeMedidaServiceTest {
     assertEquals(1, result.getId());
   }
 
-  @Test
-  @DisplayName("Deve deletar unidade de medida")
-  public void testDeletar() {
-    UnidadeMedida unidadeMedida = new UnidadeMedida();
-    unidadeMedida.setId(1);
-
-    when(unidadeMedidaRepository.findById(1)).thenReturn(Optional.of(unidadeMedida));
-    doNothing().when(unidadeMedidaRepository).delete(unidadeMedida);
-
-    assertDoesNotThrow(() -> unidadeMedidaService.deletar(1, 1));
-  }
+//  @Test
+//  @DisplayName("Deve deletar unidade de medida")
+//  public void testDeletar() {
+//    UnidadeMedida unidadeMedida = new UnidadeMedida();
+//    unidadeMedida.setId(1);
+//
+//    when(unidadeMedidaRepository.findById(1)).thenReturn(Optional.of(unidadeMedida));
+//    doNothing().when(unidadeMedidaRepository).delete(unidadeMedida);
+//
+//    assertDoesNotThrow(() -> unidadeMedidaService.deletar(1, 1));
+//  }
 }

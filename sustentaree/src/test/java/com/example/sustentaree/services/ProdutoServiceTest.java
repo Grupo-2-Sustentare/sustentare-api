@@ -70,7 +70,6 @@ class ProdutoServiceTest {
         Integer fkItem = 1;
         int idResponsavel = 100;
         Produto produto = new Produto();
-        produto.setNome("Camil");
         produto.setQtdProduto(3);
         produto.setPreco(3.50);
         produto.setQtdMedida(3.0);
