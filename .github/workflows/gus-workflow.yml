@@ -1,0 +1,21 @@
+name: Gus Worklow
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar o projeto
+        uses: actions/checkout@v4
+
+      - name: Carregar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Carregar build do Maven
+        run: mvn -B package -DskipTests
