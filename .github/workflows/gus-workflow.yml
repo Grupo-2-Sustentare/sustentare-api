@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: "17"
+          java-version: "11"
 
       - name: Carregar build do Maven
-        run: mvn clean install
+        run: mvn -f sustentaree/pom.xml clean install
