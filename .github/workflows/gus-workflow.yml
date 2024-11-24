@@ -1,7 +1,7 @@
 name: Gus Worklow
 
 on:
-  push:
+  pull_request:
     branches: [ main ]
 
 jobs:
@@ -18,4 +18,4 @@ jobs:
           java-version: "17"
 
       - name: Carregar build do Maven
-        run: mvn -B package -DskipTests
+        run: mvn clean install
