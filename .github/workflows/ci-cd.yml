@@ -13,6 +13,9 @@ jobs:
       - name: Atualização do código
         uses: actions/checkout@v2
 
+      - name: Verificar arquivos na pasta sustentare-api
+        run: ls -l sustentare-api/sustentaree
+
       - name: Definindo a versão da JDK
         uses: actions/setup-java@v2
         with:
@@ -20,17 +23,16 @@ jobs:
           java-version: '11'
 
       - name: Limpar o workspace
-        run: rm -rf *
+        run: rm -rf ./*
 
       - name: Build com Maven (aumentar nível de log)
-        run: mvn -f sustentaree/pom.xml clean package -e -X -Dfile.encoding=UTF-8
-        # Usando as flags -e (exceções) e -X (debug) para obter mais informações
+        run: mvn -f sustentare-api/sustentaree/pom.xml clean package -e -X -Dfile.encoding=UTF-8
 
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
           name: aplicacao
-          path: sustentaree/target/*.jar  # Caminho atualizado para o diretório correto
+          path: sustentare-api/sustentaree/target/*.jar
 
       - name: Gerar artefato Github com os arquivos .sh
         uses: actions/upload-artifact@v4
@@ -85,4 +87,4 @@ jobs:
             scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/${{ secrets.NOME_ARQUIVO_JAR }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
             scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/*.sh ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
             ssh -i ${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }} "sh /home/ubuntu/deploy-api/api-restart.sh"
-          ' 
+          '
