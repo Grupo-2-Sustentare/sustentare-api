@@ -21,7 +21,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
@@ -39,7 +38,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>com.mysql</groupId>
@@ -108,8 +106,6 @@
             <artifactId>s3</artifactId>
             <version>2.27.4</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -131,18 +127,29 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source> <!-- depending on your project -->
-                    <target>1.8</target> <!-- depending on your project -->
+                    <source>1.8</source> <!-- dependendo do seu projeto -->
+                    <target>1.8</target> <!-- dependendo do seu projeto -->
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
                             <version>${org.mapstruct.version}</version>
                         </path>
-                        <!-- other annotation processors -->
+                        <!-- outros processadores de anotação -->
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <!-- Plugin de recursos para garantir a codificação UTF-8 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
