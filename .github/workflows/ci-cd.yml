@@ -24,8 +24,8 @@ jobs:
           cache: maven
 
       - name: Build com Maven
-        run: mvn -f sustentaree/pom.xml clean install
-             mvn -f sustentaree/pom.xml test
+        run: mvn -f sustentaree/pom.xml mvn clean install
+             mvn -f sustentaree/pom.xml mvn test
         # Alterado o caminho para a pasta 'sustentaree' onde o 'pom.xml' está localizado
 
       - name: Gerar artefato Github com o .jar gerado
