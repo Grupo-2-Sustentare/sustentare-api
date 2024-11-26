@@ -25,7 +25,7 @@ jobs:
 
       - name: Build e Testes com Maven
         run: |
-          mvn -f sustentaree/pom.xml -X clean install
+          mvn -f ./sustentaree/pom.xml -X clean install
 
       - name: Capturar Logs de Teste
         if: failure()
