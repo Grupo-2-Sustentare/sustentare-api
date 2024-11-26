@@ -25,8 +25,8 @@ jobs:
 
       - name: Build e Testes com Maven
         run: |
-          mvn -f sustentaree/pom.xml clean install
-          mvn -f sustentaree/pom.xml test
+          mvn -e sustentaree/pom.xml clean install
+          mvn -x sustentaree/pom.xml test
         # Alterado o caminho para a pasta 'sustentaree' onde o 'pom.xml' está localizado
 
       - name: Gerar artefato Github com o .jar gerado
