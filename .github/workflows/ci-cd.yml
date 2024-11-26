@@ -25,14 +25,17 @@ jobs:
 
       - name: Build e Testes com Maven
         run: |
-            mvn -f sustentaree/pom.xml -X clean install
-        # Alterado o caminho para a pasta 'sustentaree' onde o 'pom.xml' está localizado
+          mvn -f sustentaree/pom.xml -X clean install
+
+      - name: Capturar Logs de Teste
+        if: failure()
+        run: cat sustentaree/target/surefire-reports/*.txt
 
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
           name: aplicacao
-          path: sustentaree/target/*.jar  # Caminho atualizado para o diretório correto
+          path: sustentaree/target/*.jar
 
       - name: Gerar artefato Github com os arquivos .sh
         uses: actions/upload-artifact@v4
@@ -49,13 +52,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: aplicacao
-          path: ./ 
+          path: ./
 
       - name: Recuperar scripts
         uses: actions/download-artifact@v4
         with:
           name: scripts
-          path: ./       
+          path: ./
 
       - name: Criar arquivo .pem a partir da variável DEPLOY_KEY e fazer o chmod 400 nele
         id: geracao-arquivo-pem
@@ -86,6 +89,5 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.DEPLOY_HOST }} '
             scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/${{ secrets.NOME_ARQUIVO_JAR }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
             scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/*.sh ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
-            ssh -i ${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }} "sh /home/ubuntu/deploy-api/api-restart.sh"    
-                  
+            ssh -i ${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }} "sh /home/ubuntu/deploy-api/api-restart.sh"
           '
