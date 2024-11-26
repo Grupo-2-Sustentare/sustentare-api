@@ -22,6 +22,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: maven
+          
+      - name: Build com Maven (ignorando testes)
+        run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
 
       - name: Build e Testes com Maven
         run: |
@@ -60,34 +63,4 @@ jobs:
           name: scripts
           path: ./
 
-      - name: Criar arquivo .pem a partir da variável DEPLOY_KEY e fazer o chmod 400 nele
-        id: geracao-arquivo-pem
-        run: |
-          echo "${{ secrets.DEPLOY_KEY }}" >> $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
-          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
-
-      - name: Enviar o JAR p/ a EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ubuntu
-          key: ${{ secrets.DEPLOY_KEY }}
-          source: "./*.jar"
-          target: "/home/ubuntu/deploy-api/"
-
-      - name: Enviar os Scripts p/ a EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ubuntu
-          key: ${{ secrets.DEPLOY_KEY }}
-          source: "./*.sh"
-          target: "/home/ubuntu/deploy-api/"
-
-      - name: Conectar via SSH à EC2 privada para implantar e reiniciar a API
-        run: |
-          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.DEPLOY_HOST }} '
-            scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/${{ secrets.NOME_ARQUIVO_JAR }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
-            scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/*.sh ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
-            ssh -i ${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }} "sh /home/ubuntu/deploy-api/api-restart.sh"
-          '
+      - name: Criar arquivo 
