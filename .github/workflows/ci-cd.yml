@@ -11,16 +11,22 @@ jobs:
 
     steps:
       - name: Atualização do código
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+
+      - name: Desligar avisos de build
+        run: echo "CI=false" >> $GITHUB_ENV
 
       - name: Definindo a versão da JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'
+          cache: maven
 
-      - name: Build com Maven
-        run: mvn -f sustentaree/pom.xml clean package
+      - name: Build e Testes com Maven
+        run: |
+          mvn -f sustentaree/pom.xml clean install
+          mvn -f sustentaree/pom.xml test
         # Alterado o caminho para a pasta 'sustentaree' onde o 'pom.xml' está localizado
 
       - name: Gerar artefato Github com o .jar gerado
