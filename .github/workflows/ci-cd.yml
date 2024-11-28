@@ -29,8 +29,8 @@ jobs:
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
-          name: sustantare-api  # Nome correto do artefato
-          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho correto para o arquivo .jar gerado
+          name: sustantare-api  # Nome do artefato
+          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do arquivo .jar gerado
 
   deploy:
     needs: build
@@ -41,13 +41,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sustantare-api  # Nome do artefato
-          path: ./sustentaree/target  # Caminho para onde o artefato será baixado
+          path: ./sustentaree/target  # Caminho onde o artefato será baixado
 
       - name: Recuperar scripts
         uses: actions/download-artifact@v4
         with:
           name: scripts
-          path: ./sustentaree  # Caminho para onde os scripts serão baixados
+          path: ./sustentaree/scripts
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
@@ -56,18 +56,18 @@ jobs:
 
       - name: Enviar arquivos para a instância pública
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r sustentaree/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentaree/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r sustentaree/target/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentaree/target/
 
       - name: Transferir arquivos da instância pública para a privada
         run: |
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
-            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentaree/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentaree/
+            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentaree/target/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentaree/target/
           EOF
 
       - name: Conectar à instância privada e reiniciar a aplicação
         run: |
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
-            cd /home/ubuntu/sustentaree
+            cd /home/ubuntu/sustentaree/target
             if [ -f "api.pid" ]; then
               echo "Parando aplicação..."
               kill -9 $(cat api.pid) || true
