@@ -26,20 +26,11 @@ jobs:
       - name: Build com Maven (ignorando testes)
         run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
 
-      - name: Verificar conteúdo da pasta target
-        run: ls -l sustentaree/target/
-
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
-          name: aplicacao
-          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar
-
-      - name: Gerar artefato Github com os arquivos .sh
-        uses: actions/upload-artifact@v4
-        with:
-          name: scripts
-          path: .github/scripts/*.sh
+          name: sustantare-api  # Nome do artefato a ser carregado
+          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do .jar gerado
 
   deploy:
     needs: build
@@ -49,14 +40,14 @@ jobs:
       - name: Recuperar artefatos
         uses: actions/download-artifact@v4
         with:
-          name: aplicacao
-          path: ./sustentare-api
+          name: sustantare-api  # Nome do artefato que foi carregado
+          path: ./sustentare-api  # Caminho onde será baixado o artefato
 
       - name: Recuperar scripts
         uses: actions/download-artifact@v4
         with:
           name: scripts
-          path: ./sustentare-api
+          path: ./sustentare-api  # Garantir que os scripts vão para o lugar certo
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
@@ -88,6 +79,6 @@ jobs:
 
             # Iniciar a aplicação
             echo "Iniciando aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod *.jar > application.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
