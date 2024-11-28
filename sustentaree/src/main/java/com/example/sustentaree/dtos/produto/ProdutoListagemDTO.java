@@ -10,16 +10,24 @@ public class ProdutoListagemDTO {
   // @ManyToOne -> trazer o id do Item correspondente ao produto
 
   private Double preco;
-  private Integer qtdProduto;
-  private Integer qtdProdutoTotal;
+  private Double qtdProduto;
+  private Double qtdProdutoTotal;
   private Double qtdMedida;
   private Item item;
 
-  public Integer getQtdProdutoTotal() {
+  public Double getQtdProduto() {
+    return qtdProduto;
+  }
+
+  public void setQtdProduto(Double qtdProduto) {
+    this.qtdProduto = qtdProduto;
+  }
+
+  public Double getQtdProdutoTotal() {
     return qtdProdutoTotal;
   }
 
-  public void setQtdProdutoTotal(Integer qtdProdutoTotal) {
+  public void setQtdProdutoTotal(Double qtdProdutoTotal) {
     this.qtdProdutoTotal = qtdProdutoTotal;
   }
 
@@ -45,14 +53,6 @@ public class ProdutoListagemDTO {
 
   public void setPreco(Double preco) {
     this.preco = preco;
-  }
-
-  public Integer getQtdProduto() {
-    return qtdProduto;
-  }
-
-  public void setQtdProduto(Integer qtdProduto) {
-    this.qtdProduto = qtdProduto;
   }
 
   public Double getQtdMedida() {

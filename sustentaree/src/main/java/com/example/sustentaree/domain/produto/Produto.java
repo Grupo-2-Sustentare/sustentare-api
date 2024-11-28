@@ -21,18 +21,26 @@ public class Produto {
   private Item item;
   private Double preco;
   @Column(name = "qtd_produto")
-  private Integer qtdProduto;
+  private Double qtdProduto;
   @Column(name = "qtd_produto_total")
-  private Integer qtdProdutoTotal;
+  private Double qtdProdutoTotal;
   @Column(name = "qtd_medida")
   private Double qtdMedida;
   private Boolean ativo;
 
-  public Integer getQtdProdutoTotal() {
+  public Double getQtdProduto() {
+    return qtdProduto;
+  }
+
+  public void setQtdProduto(Double qtdProduto) {
+    this.qtdProduto = qtdProduto;
+  }
+
+  public Double getQtdProdutoTotal() {
     return qtdProdutoTotal;
   }
 
-  public void setQtdProdutoTotal(Integer qtdProdutoTotal) {
+  public void setQtdProdutoTotal(Double qtdProdutoTotal) {
     this.qtdProdutoTotal = qtdProdutoTotal;
   }
 
@@ -66,14 +74,6 @@ public class Produto {
 
   public void setPreco(Double preco) {
     this.preco = preco;
-  }
-
-  public Integer getQtdProduto() {
-    return qtdProduto;
-  }
-
-  public void setQtdProduto(Integer qtdProduto) {
-    this.qtdProduto = qtdProduto;
   }
 
   public Double getQtdMedida() {

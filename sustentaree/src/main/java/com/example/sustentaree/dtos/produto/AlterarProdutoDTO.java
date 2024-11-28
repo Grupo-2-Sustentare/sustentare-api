@@ -15,7 +15,7 @@ public class AlterarProdutoDTO {
   private Double preco;
   @NotNull
   @PositiveOrZero
-  private Integer qtdProduto;
+  private Double qtdProduto;
   @NotNull
   @Positive
   private Double qtdMedida;
@@ -37,11 +37,11 @@ public class AlterarProdutoDTO {
     this.preco = preco;
   }
 
-  public Integer getQtdProduto() {
+  public @NotNull @PositiveOrZero Double getQtdProduto() {
     return qtdProduto;
   }
 
-  public void setQtdProduto(Integer qtdProduto) {
+  public void setQtdProduto(@NotNull @PositiveOrZero Double qtdProduto) {
     this.qtdProduto = qtdProduto;
   }
 

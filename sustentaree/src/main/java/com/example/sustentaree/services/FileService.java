@@ -227,10 +227,10 @@ public class FileService {
                             Item itemCriado = itemService.criar(item, unidadeMedidaItem.getId(), categoriaItem.getId(), idResponsavel);
                             Produto produto = new Produto();
                             produto.setAtivo(true);
-                            produto.setQtdProduto(0);
+                            produto.setQtdProduto(0.0);
                             produto.setItem(itemCriado);
                             produto.setPreco(0.0);
-                            produto.setQtdProdutoTotal(0);
+                            produto.setQtdProdutoTotal(0.0);
                             produto.setQtdMedida(0.0);
                             produtoService.criar(produto, itemCriado.getId(), idResponsavel);
                         }

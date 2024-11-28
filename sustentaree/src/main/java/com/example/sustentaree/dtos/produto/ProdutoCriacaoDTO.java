@@ -11,9 +11,9 @@ public class ProdutoCriacaoDTO {
   private Double preco;
   @NotNull
   @PositiveOrZero
-  private Integer qtdProduto;
+  private Double qtdProduto;
   @PositiveOrZero
-  private Integer qtdProdutoTotal;
+  private Double qtdProdutoTotal;
   @NotNull
   @PositiveOrZero
   private Double qtdMedida;
@@ -23,11 +23,19 @@ public class ProdutoCriacaoDTO {
   @AssertTrue
   private Boolean ativo;
 
-  public Integer getQtdProdutoTotal() {
+  public @NotNull @PositiveOrZero Double getQtdProduto() {
+    return qtdProduto;
+  }
+
+  public void setQtdProduto(@NotNull @PositiveOrZero Double qtdProduto) {
+    this.qtdProduto = qtdProduto;
+  }
+
+  public @PositiveOrZero Double getQtdProdutoTotal() {
     return qtdProdutoTotal;
   }
 
-  public void setQtdProdutoTotal(Integer qtdProdutoTotal) {
+  public void setQtdProdutoTotal(@PositiveOrZero Double qtdProdutoTotal) {
     this.qtdProdutoTotal = qtdProdutoTotal;
   }
 
@@ -46,14 +54,6 @@ public class ProdutoCriacaoDTO {
 
   public void setPreco(Double preco) {
     this.preco = preco;
-  }
-
-  public Integer getQtdProduto() {
-    return qtdProduto;
-  }
-
-  public void setQtdProduto(Integer qtdProduto) {
-    this.qtdProduto = qtdProduto;
   }
 
   public Double getQtdMedida() {
