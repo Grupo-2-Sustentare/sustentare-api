@@ -26,6 +26,9 @@ jobs:
       - name: Build com Maven (ignorando testes)
         run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
 
+      - name: Verificar conteúdo da pasta target
+        run: ls -l sustentaree/target/
+
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
