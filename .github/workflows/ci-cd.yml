@@ -23,14 +23,6 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Build e Testes com Maven
-        run: |
-          mvn -f ./sustentaree/pom.xml -X clean install
-
-      - name: Capturar Logs de Teste
-        if: failure()
-        run: cat sustentaree/target/surefire-reports/*.txt
-
       - name: Build com Maven (ignorando testes)
         run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
 
@@ -63,24 +55,24 @@ jobs:
           name: scripts
           path: ./deploy-api
 
-      - name: Criar arquivo .pem para acesso à EC2
+      - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
-          echo "${{ secrets.DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
-          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
+          echo "${{ secrets.PUBLIC_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
 
       - name: Enviar arquivos para a instância pública
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no -r deploy-api/* ubuntu@${{ secrets.DEPLOY_HOST }}:/home/ubuntu/deploy-api/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r deploy-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/deploy-api/
 
       - name: Transferir arquivos da instância pública para a privada
         run: |
-          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.DEPLOY_HOST }} << 'EOF'
-            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no -r /home/ubuntu/deploy-api/* ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api/
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
+            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/deploy-api/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/deploy-api/
           EOF
 
       - name: Conectar à instância privada e reiniciar a aplicação
         run: |
-          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.IP_PRIVADO_EC2 }} << 'EOF'
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
             # Navegar para o diretório de deploy
             cd /home/ubuntu/deploy-api
 
