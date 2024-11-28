@@ -51,46 +51,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Recuperar jars
+      - name: Recuperar artefatos
         uses: actions/download-artifact@v4
         with:
           name: aplicacao
-          path: ./
+          path: ./deploy-api
 
       - name: Recuperar scripts
         uses: actions/download-artifact@v4
         with:
           name: scripts
-          path: ./
+          path: ./deploy-api
 
-      - name: Criar arquivo .pem a partir da variável DEPLOY_KEY e fazer o chmod 400 nele
-        id: geracao-arquivo-pem
+      - name: Criar arquivo .pem para acesso à EC2
         run: |
-          echo "${{ secrets.DEPLOY_KEY }}" >> $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
+          echo "${{ secrets.DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
           chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM }}
 
-      - name: Enviar o JAR p/ a EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ubuntu
-          key: ${{ secrets.DEPLOY_KEY }}
-          source: "./*.jar"
-          target: "/home/ubuntu/deploy-api/"
-
-      - name: Enviar os Scripts p/ a EC2
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ubuntu
-          key: ${{ secrets.DEPLOY_KEY }}
-          source: "./*.sh"
-          target: "/home/ubuntu/deploy-api/"
-
-      - name: Conectar via SSH à EC2 privada para implantar e reiniciar a API
+      - name: Enviar arquivos para a instância pública
         run: |
-          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.DEPLOY_HOST }} '
-            scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/${{ secrets.NOME_ARQUIVO_JAR }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
-            scp -i ${{ secrets.NOME_ARQUIVO_PEM }} deploy-api/*.sh ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api
-            ssh -i ${{ secrets.NOME_ARQUIVO_PEM }} ubuntu@${{ secrets.IP_PRIVADO_EC2 }} "sh /home/ubuntu/deploy-api/api-restart.sh"
-          '
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no -r deploy-api/* ubuntu@${{ secrets.DEPLOY_HOST }}:/home/ubuntu/deploy-api/
+
+      - name: Transferir arquivos da instância pública para a privada
+        run: |
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.DEPLOY_HOST }} << 'EOF'
+            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no -r /home/ubuntu/deploy-api/* ubuntu@${{ secrets.IP_PRIVADO_EC2 }}:/home/ubuntu/deploy-api/
+          EOF
+
+      - name: Conectar à instância privada e reiniciar a aplicação
+        run: |
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.IP_PRIVADO_EC2 }} << 'EOF'
+            # Navegar para o diretório de deploy
+            cd /home/ubuntu/deploy-api
+
+            # Parar a aplicação se estiver rodando
+            if [ -f "api.pid" ]; then
+              echo "Parando aplicação..."
+              kill -9 $(cat api.pid) || true
+              rm api.pid
+            fi
+
+            # Iniciar a aplicação
+            echo "Iniciando aplicação..."
+            nohup java -jar -Dspring.profiles.active=prod *.jar > application.log 2>&1 &
+            echo $! > api.pid
+          EOF
