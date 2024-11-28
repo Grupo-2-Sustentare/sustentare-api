@@ -29,8 +29,8 @@ jobs:
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
-          name: sustentare-api  # Nome do artefato
-          path: sustentaree/target  # Caminho do .jar gerado
+          name: sustentare-api  # Nome correto do artefato
+          path: sustentaree/target  # Caminho do diretório onde o JAR será gerado
 
   deploy:
     needs: build
@@ -40,8 +40,8 @@ jobs:
       - name: Recuperar artefatos
         uses: actions/download-artifact@v4
         with:
-          name: sustentare-api  # Nome do artefato
-          path: ./sustentaree/target  # Caminho onde o artefato será baixado
+          name: sustentare-api  # Nome correto do artefato
+          path: ./sustentare-api  # Caminho onde o artefato será baixado
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
@@ -50,7 +50,7 @@ jobs:
 
       - name: Enviar arquivos para a instância pública
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
 
       - name: Transferir arquivos da instância pública para a privada
         run: |
@@ -68,6 +68,6 @@ jobs:
               rm api.pid
             fi
             echo "Iniciando aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
