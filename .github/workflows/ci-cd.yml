@@ -50,13 +50,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: aplicacao
-          path: ./deploy-api
+          path: ./sustentare-api
 
       - name: Recuperar scripts
         uses: actions/download-artifact@v4
         with:
           name: scripts
-          path: ./deploy-api
+          path: ./sustentare-api
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
@@ -65,7 +65,7 @@ jobs:
 
       - name: Enviar arquivos para a instância pública
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r deploy-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
 
       - name: Transferir arquivos da instância pública para a privada
         run: |
