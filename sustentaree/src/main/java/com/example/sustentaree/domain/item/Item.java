@@ -4,6 +4,8 @@ import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,6 +21,8 @@ public class Item {
   private Boolean perecivel;
   @Schema(description = "Quantos dias até o vencimento do item", example = "30")
   private Integer dias_vencimento;
+  @Schema(description = "Quantidade minima do item para que o adm receba alerta", example = "2.0")
+  private Double qtd_min_item;
   @ManyToOne
   @JoinColumn(name = "fk_unidade_medida")
   private UnidadeMedida unidade_medida;
@@ -83,17 +87,25 @@ public class Item {
     this.categoria = categoria;
   }
 
+  public Double getQtd_min_item() {
+    return qtd_min_item;
+  }
+
+  public void setQtd_min_item(Double qtd_min_item) {
+    this.qtd_min_item = qtd_min_item;
+  }
+
   @Override
   public String toString() {
-    final StringBuffer sb = new StringBuffer("Item{");
-    sb.append("id=").append(id);
-    sb.append(", nome='").append(nome).append('\'');
-    sb.append(", perecivel=").append(perecivel);
-    sb.append(", dias_vencimento=").append(dias_vencimento);
-    sb.append(", unidade_medida=").append(unidade_medida);
-    sb.append(", categoria=").append(categoria);
-    sb.append(", ativo=").append(ativo);
-    sb.append('}');
-    return sb.toString();
+    return "Item{" +
+            "id=" + id +
+            ", nome='" + nome + '\'' +
+            ", perecivel=" + perecivel +
+            ", dias_vencimento=" + dias_vencimento +
+            ", qtd_min_item=" + qtd_min_item +
+            ", unidade_medida=" + unidade_medida +
+            ", categoria=" + categoria +
+            ", ativo=" + ativo +
+            '}';
   }
 }

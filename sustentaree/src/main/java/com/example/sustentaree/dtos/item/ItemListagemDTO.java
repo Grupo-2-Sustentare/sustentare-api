@@ -14,6 +14,7 @@ public class ItemListagemDTO {
   private String nome;
   private Boolean perecivel;
   private Integer dias_vencimento;
+  private Double qtd_min_item;
   private String imagem;
   private Boolean ativo;
 
@@ -65,4 +66,11 @@ public class ItemListagemDTO {
     this.id = id;
   }
 
+  public Double getQtd_min_item() {
+    return qtd_min_item;
+  }
+
+  public void setQtd_min_item(Double qtd_min_item) {
+    this.qtd_min_item = qtd_min_item;
+  }
 }

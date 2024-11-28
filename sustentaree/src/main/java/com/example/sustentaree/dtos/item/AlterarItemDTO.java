@@ -4,6 +4,7 @@ import com.example.sustentaree.domain.categoria.CategoriaItem;
 import com.example.sustentaree.domain.unidade_medida.UnidadeMedida;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,8 @@ public class AlterarItemDTO {
   @NotNull
   private Boolean perecivel;
   private Integer dias_vencimento;
+  @PositiveOrZero
+  private Double qtd_min_item;
   private UnidadeMedida unidade_medida;
   private CategoriaItem categoria;
   private String imagem;
@@ -73,5 +76,13 @@ public class AlterarItemDTO {
 
   public void setCategoria(CategoriaItem categoria) {
     this.categoria = categoria;
+  }
+
+  public @NotNull @PositiveOrZero Double getQtd_min_item() {
+    return qtd_min_item;
+  }
+
+  public void setQtd_min_item(@NotNull @PositiveOrZero Double qtd_min_item) {
+    this.qtd_min_item = qtd_min_item;
   }
 }
