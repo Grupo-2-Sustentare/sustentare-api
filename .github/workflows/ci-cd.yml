@@ -41,13 +41,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sustantare-api
-          path: ./sustentare-api
+          path: ./sustentaree/target  # Caminho ajustado para garantir que o arquivo .jar seja recuperado
 
       - name: Recuperar scripts
         uses: actions/download-artifact@v4
         with:
           name: scripts
-          path: ./sustentare-api
+          path: ./sustentaree  # Verifique o caminho correto para os scripts
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
@@ -56,18 +56,18 @@ jobs:
 
       - name: Enviar arquivos para a instância pública
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r sustentaree/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentaree/
 
       - name: Transferir arquivos da instância pública para a privada
         run: |
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
-            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentare-api/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentare-api/
+            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentaree/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentaree/
           EOF
 
       - name: Conectar à instância privada e reiniciar a aplicação
         run: |
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
-            cd /home/ubuntu/sustentare-api
+            cd /home/ubuntu/sustentaree
             if [ -f "api.pid" ]; then
               echo "Parando aplicação..."
               kill -9 $(cat api.pid) || true
