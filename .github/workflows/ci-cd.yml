@@ -60,6 +60,11 @@ jobs:
 
       - name: Conectar à instância privada e reiniciar a aplicação
         run: |
+          # Verificando se o arquivo PEM existe
+          echo "Verificando se o arquivo PEM existe: $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}"
+          ls -l $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
+
+          # Conectando à instância privada e reiniciando a aplicação
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
