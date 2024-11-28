@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api  # Nome correto do artefato
-          path: sustentaree/target  # Caminho do diretório onde o JAR será gerado
+          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do JAR gerado
 
   deploy:
     needs: build
@@ -50,21 +50,23 @@ jobs:
 
       - name: Enviar arquivos para a instância pública
         run: |
+          echo "Verificando se o arquivo PEM público existe: $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}"
+          ls -l $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
           scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
 
       - name: Transferir arquivos da instância pública para a privada
         run: |
+          echo "Verificando se o arquivo PEM público existe: $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}"
+          ls -l $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
             scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentare-api/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentare-api/
           EOF
 
       - name: Conectar à instância privada e reiniciar a aplicação
         run: |
-          # Verificando se o arquivo PEM existe
-          echo "Verificando se o arquivo PEM existe: $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}"
+          echo "Verificando se o arquivo PEM privado existe: $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}"
           ls -l $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
 
-          # Conectando à instância privada e reiniciando a aplicação
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
