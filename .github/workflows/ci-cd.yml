@@ -30,7 +30,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: aplicacao
-          path: sustentaree/target/*.jar
+          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho completo do JAR
 
       - name: Gerar artefato Github com os arquivos .sh
         uses: actions/upload-artifact@v4
@@ -83,8 +83,8 @@ jobs:
               rm api.pid
             fi
 
-            # Iniciar a aplicação
+            # Iniciar a aplicação com o JAR correto
             echo "Iniciando aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod *.jar > application.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
