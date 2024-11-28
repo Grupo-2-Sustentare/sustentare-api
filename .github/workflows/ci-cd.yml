@@ -29,8 +29,8 @@ jobs:
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
-          name: sustentare-api  # Nome correto do artefato
-          path: sustentaree/target  # Caminho correto do .jar
+          name: sustentare-api  # Nome do artefato
+          path: sustentaree/target  # Caminho do .jar gerado
 
   deploy:
     needs: build
@@ -40,14 +40,8 @@ jobs:
       - name: Recuperar artefatos
         uses: actions/download-artifact@v4
         with:
-          name: sustentare-api  # Nome correto do artefato
+          name: sustentare-api  # Nome do artefato
           path: ./sustentaree/target  # Caminho onde o artefato será baixado
-
-      - name: Recuperar scripts
-        uses: actions/download-artifact@v4
-        with:
-          name: scripts
-          path: ./sustentare-api
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
