@@ -1,4 +1,4 @@
-name: CI/CD para Spring Boot com Maven e publicação em EC2
+name: CI/CD Workflow
 
 on:
   push:
@@ -7,77 +7,74 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-22.04
     steps:
-      - name: Atualizar o código
-        uses: actions/checkout@v4
+      # Checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Desligar avisos de build
-        run: echo "CI=false" >> $GITHUB_ENV
-
-      - name: Definir versão da JDK
+      # Configuração do Java
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '17'
-          cache: maven
+          distribution: 'temurin'
 
-      - name: Build com Maven (ignorando testes)
-        run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
+      # Instalar dependências e gerar o JAR
+      - name: Build with Maven
+        run: |
+          mvn clean install -DskipTests
 
-      - name: Verificar arquivos gerados
-        run: ls -l ./sustentaree/target  # Verificando se o JAR foi gerado
-
-      - name: Upload do artefato .jar para o GitHub
+      # Gerar artefato com o arquivo JAR
+      - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api  # Nome do artefato
-          path: ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do arquivo gerado
+          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho correto do JAR gerado
 
   deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
+    runs-on: ubuntu-22.04
+    needs: build  # Esse job depende do job de build
     steps:
-      - name: Recuperar artefatos
+      # Checkout do código
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Baixar artefato gerado do job anterior
+      - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
-          name: sustentare-api  # Nome do artefato que foi enviado
-          path: /sustentaree/target  # Caminho para armazenar o artefato baixado
+          name: sustentare-api  # Nome do artefato
+          path: ./sustentaree/target  # Caminho para armazenar o artefato baixado
 
-      - name: Criar arquivo .pem para acesso à EC2 (Pública)
+      # Verificar se o arquivo foi baixado corretamente
+      - name: Verificar se o arquivo JAR foi baixado
         run: |
-          echo "${{ secrets.PUBLIC_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
-          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
+          ls -l ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar
 
-      - name: Enviar arquivos para a instância pública
+      # Preparação do ambiente de SSH
+      - name: Preparar ambiente SSH
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+          echo "Configurando chaves SSH..."
+          chmod 400 /home/runner/ubuntu/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add /home/runner/ubuntu/.ssh/id_rsa
 
-      - name: Transferir arquivos da instância pública para a privada
+      # Conectar via SSH e reiniciar a aplicação
+      - name: Deploy na instância EC2
         run: |
-          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
-            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentare-api/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentare-api/
-          EOF
+          echo "Verificando conexão SSH..."
+          ssh -i /home/runner/ubuntu/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} "echo 'Conexão bem-sucedida'"
 
-      - name: Conectar à instância privada e reiniciar a aplicação
-        run: |
-          # Verificando se o arquivo PEM existe
-          echo "Verificando se o arquivo PEM existe: $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}"
-          ls -l $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
-
-          # Verificando a conexão SSH à EC2
-          echo "Testando a conexão SSH com a instância privada..."
-          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -T ubuntu@${{ secrets.PRIVATE_EC2_IP }} "echo 'Conexão bem-sucedida'"
-
-          # Conectando à instância privada e reiniciando a aplicação
-          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
+          echo "Reiniciando a aplicação na EC2..."
+          ssh -i /home/runner/ubuntu/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
-              echo "Parando aplicação..."
+              echo "Parando a aplicação..."
               kill -9 $(cat api.pid) || true
               rm api.pid
             fi
-            echo "Iniciando aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > 
+            echo "Iniciando a aplicação..."
+            nohup java -jar -Dspring.profiles.active=prod sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
+            echo $! > api.pid
+          EOF
