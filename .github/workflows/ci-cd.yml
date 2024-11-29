@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Atualização do código
+      - name: Atualizar o código
         uses: actions/checkout@v4
 
       - name: Desligar avisos de build
         run: echo "CI=false" >> $GITHUB_ENV
 
-      - name: Definindo a versão da JDK
+      - name: Definir versão da JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
@@ -27,12 +27,12 @@ jobs:
         run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
 
       - name: Verificar arquivos gerados
-        run: ls -l ./sustentaree/target  # Adicionando essa etapa para listar os arquivos gerados
+        run: ls -l ./sustentaree/target  # Verificando se o JAR foi gerado
 
-      - name: Gerar artefato Github com o .jar gerado
+      - name: Upload do artefato .jar para o GitHub
         uses: actions/upload-artifact@v4
         with:
-          name: sustentare-api  # Nome correto do artefato
+          name: sustentare-api  # Nome do artefato
           path: ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do arquivo gerado
 
   deploy:
@@ -43,8 +43,8 @@ jobs:
       - name: Recuperar artefatos
         uses: actions/download-artifact@v4
         with:
-          name: sustentare-api
-          path: ./sustentare-api
+          name: sustentare-api  # Nome do artefato que foi enviado
+          path: ./sustentare-api  # Caminho para armazenar o artefato baixado
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
@@ -80,6 +80,4 @@ jobs:
               rm api.pid
             fi
             echo "Iniciando aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
-            echo $! > api.pid
-          EOF
+            nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > 
