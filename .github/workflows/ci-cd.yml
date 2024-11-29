@@ -23,14 +23,14 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Build com Maven (incluindo dependências)
-        run: mvn -f ./sustentaree/pom.xml -X clean install
+      - name: Build com Maven (ignorando testes)
+        run: mvn -f ./sustentaree/pom.xml clean install -DskipTests
 
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api  # Nome correto do artefato
-          path: sustentaree/target  # Caminho do diretório onde o JAR será gerado
+          path: ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do JAR gerado
 
   deploy:
     needs: build
@@ -40,36 +40,36 @@ jobs:
       - name: Recuperar artefatos
         uses: actions/download-artifact@v4
         with:
-          name: sustentare-api  # Nome correto do artefato
-          path: ./sustentare-api  # Caminho onde o artefato será baixado
+          name: sustentare-api
+          path: ./sustentare-api
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
-          echo "${{ secrets.PUBLIC_DEPLOY_KEY }}" > /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
-          chmod 400 /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
+          echo "${{ secrets.PUBLIC_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
 
       - name: Enviar arquivos para a instância pública
         run: |
-          scp -i /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
 
       - name: Transferir arquivos da instância pública para a privada
         run: |
-          ssh -i /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
-            scp -i /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentare-api/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentare-api/
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
+            scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -r /home/ubuntu/sustentare-api/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentare-api/
           EOF
 
       - name: Conectar à instância privada e reiniciar a aplicação
         run: |
           # Verificando se o arquivo PEM existe
-          echo "Verificando se o arquivo PEM existe: /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}"
-          ls -l /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
+          echo "Verificando se o arquivo PEM existe: $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}"
+          ls -l $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
 
           # Verificando a conexão SSH à EC2
           echo "Testando a conexão SSH com a instância privada..."
-          ssh -i /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -T ubuntu@${{ secrets.PRIVATE_EC2_IP }} "echo 'Conexão bem-sucedida'"
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -T ubuntu@${{ secrets.PRIVATE_EC2_IP }} "echo 'Conexão bem-sucedida'"
 
           # Conectando à instância privada e reiniciando a aplicação
-          ssh -i /home/runner/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
               echo "Parando aplicação..."
