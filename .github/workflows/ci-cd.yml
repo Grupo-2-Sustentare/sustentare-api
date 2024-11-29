@@ -44,7 +44,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: sustentare-api  # Nome do artefato que foi enviado
-          path: ./sustentare-api  # Caminho para armazenar o artefato baixado
+          path: /sustentaree/target  # Caminho para armazenar o artefato baixado
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
