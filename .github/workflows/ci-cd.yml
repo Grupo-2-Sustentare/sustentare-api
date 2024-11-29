@@ -24,7 +24,9 @@ jobs:
           cache: maven
 
       - name: Rodar ciclo de vida do Maven completo (install)
-        run: mvn clean install -X -DskipTests  # Adiciona o install para baixar todas as dependências
+        run: |
+          cd sustentaree  # Muda para o diretório onde o pom.xml está localizado
+          mvn clean install -X -DskipTests  # Agora o comando será executado no diretório correto
 
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
