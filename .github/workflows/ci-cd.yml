@@ -24,13 +24,16 @@ jobs:
           cache: maven
 
       - name: Build com Maven (ignorando testes)
-        run: mvn -f ./sustentaree/pom.xml clean install -DskipTests
+        run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
+
+      - name: Verificar arquivos gerados
+        run: ls -l ./sustentaree/target  # Adicionando essa etapa para listar os arquivos gerados
 
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api  # Nome correto do artefato
-          path: ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do JAR gerado
+          path: ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho do arquivo gerado
 
   deploy:
     needs: build
