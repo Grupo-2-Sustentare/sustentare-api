@@ -29,7 +29,7 @@ jobs:
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
-          name: sustentare-api  # Nome correto do artefato
+          name: sustentare-api
           path: sustentaree/target  # Caminho do diretório onde o JAR será gerado
 
   deploy:
@@ -40,13 +40,18 @@ jobs:
       - name: Recuperar artefatos
         uses: actions/download-artifact@v4
         with:
-          name: sustentare-api  # Nome correto do artefato
+          name: sustentare-api
           path: ./sustentare-api  # Caminho onde o artefato será baixado
 
       - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
           echo "${{ secrets.PUBLIC_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
           chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
+
+      - name: Criar arquivo .pem para acesso à EC2 (Privada)
+        run: |
+          echo "${{ secrets.PRIVATE_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
 
       - name: Enviar arquivos para a instância pública
         run: |
@@ -72,11 +77,11 @@ jobs:
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
-              echo "Parando aplicação..."
+              echo "Parando aplicação existente..."
               kill -9 $(cat api.pid) || true
               rm api.pid
             fi
-            echo "Iniciando aplicação..."
+            echo "Iniciando nova aplicação..."
             nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
