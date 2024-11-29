@@ -24,13 +24,20 @@ jobs:
           cache: maven
 
       - name: Build com Maven (ignorando testes)
-        run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
+        run: mvn -f ./sustentaree/pom.xml clean install -DskipTests
+
+      - name: Checar se o arquivo JAR esperado foi gerado
+        run: |
+          if [ ! -f "./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar" ]; then
+            echo "Erro: O arquivo sustentaree-0.0.1-SNAPSHOT-shaded.jar não foi gerado!"
+            exit 1
+          fi
 
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api
-          path: sustentaree/target  # Diretório onde o JAR será gerado
+          path: ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar
 
   deploy:
     needs: build
@@ -55,7 +62,7 @@ jobs:
 
       - name: Enviar arquivos para a instância pública
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no ./sustentare-api/sustentaree-0.0.1-SNAPSHOT-shaded.jar ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
 
       - name: Configurar túnel SSH para acessar a EC2 privada
         run: |
@@ -81,6 +88,6 @@ jobs:
               rm api.pid
             fi
             echo "Iniciando nova aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
