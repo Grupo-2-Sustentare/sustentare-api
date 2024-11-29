@@ -20,6 +20,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # Navegar até o diretório correto (se necessário)
+      - name: Navegar até o diretório do projeto
+        run: cd sustentaree
+
       # Instalar dependências e gerar o JAR
       - name: Build with Maven
         run: |
