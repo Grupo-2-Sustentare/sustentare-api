@@ -23,25 +23,14 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Build com Maven (ignorando testes)
-        run: mvn -f ./sustentaree/pom.xml -X clean install -DskipTests
-
-      - name: Listar arquivos no diretório target
-        run: |
-          ls -l ./sustentaree/target
-
-      - name: Verificar se o arquivo JAR foi gerado
-        run: |
-          if [ ! -f "./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar" ]; then
-            echo "Erro: O arquivo sustentaree-0.0.1-SNAPSHOT-shaded.jar não foi gerado!"
-            exit 1
-          fi
+      - name: Rodar ciclo de vida do Maven completo (install)
+        run: mvn clean install -X -DskipTests  # Adiciona o install para baixar todas as dependências
 
       - name: Gerar artefato Github com o .jar gerado
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api  # Nome correto do artefato
-          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar  # Caminho correto do JAR gerado
+          path: sustentaree/target  # Caminho do diretório onde o JAR será gerado
 
   deploy:
     needs: build
