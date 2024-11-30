@@ -123,10 +123,13 @@ public class ItemService {
   }
   public List<Item> listByUnidadeMedida(int id) {
     UnidadeMedida unidadeMedida = this.unidadeMedidaService.porId(id);
-    return this.repository.findByUnidade_medida(unidadeMedida);
+//    return this.repository.findByUnidade_medida(unidadeMedida);
+    return repository.findActiveItemsByUnidade_medida(unidadeMedida);
   }
   public List<Item> listByCategoriaItem (int id){
-    CategoriaItem categoriaItem = this.categoriaItemService.porId(id);
-    return this.repository.findByCategoria(categoriaItem);
+//    CategoriaItem categoriaItem = this.categoriaItemService.porId(id);
+//    return this.repository.findByCategoria(categoriaItem);
+    // Usa o ID diretamente para buscar itens ativos
+    return repository.findActiveItemsByCategoriaId(id);
   }
 }

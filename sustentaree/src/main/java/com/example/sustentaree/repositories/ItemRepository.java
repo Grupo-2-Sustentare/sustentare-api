@@ -19,10 +19,12 @@ public interface ItemRepository extends JpaRepository<Item, Integer> {
 
     @Query(value = "select * from item_vencimento;",nativeQuery = true)
     List<Item> getItemVencimento();
-    @Query("SELECT i FROM Item i WHERE i.unidade_medida = :unidadeMedida")
-    List<Item> findByUnidade_medida(UnidadeMedida unidadeMedida);
-    @Query("SELECT i FROM Item i WHERE i.categoria = :categoriaItem")
-    List<Item> findByCategoria(CategoriaItem categoriaItem);
+    @Query("SELECT i FROM Item i WHERE i.unidade_medida = :unidadeMedida AND i.ativo = true")
+    List<Item> findActiveItemsByUnidade_medida(UnidadeMedida unidadeMedida);
+    //    @Query("SELECT i FROM Item i WHERE i.unidade_medida = :unidadeMedida")
+//    List<Item> findByUnidade_medida(UnidadeMedida unidadeMedida);
+    @Query("SELECT i FROM Item i WHERE i.categoria.id = :categoriaId AND i.ativo = true")
+    List<Item> findActiveItemsByCategoriaId(@Param("categoriaId") Integer categoriaId);
     List<Item> findByAtivoTrue();
 
     @Modifying

@@ -56,14 +56,18 @@ public class CategoriaItemService {
   @Transactional
   public List<Item> deletar(Integer id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
-    List<Item> itens = this.itemValidationService.listByCategoriaItem(id, this);
+    List<Item> itens = this.itemValidationService.listByCategoriaItemAtivos(id, this);
+
     if (!itens.isEmpty()) {
-      System.out.println("CategoriaItem não pode ser deletada pois está associada a um ou mais itens");
+      System.out.println("CategoriaItem não pode ser deletada pois está associada a um ou mais itens ativos");
       return itens;
     }
+
+    // Atualiza a categoria para inativa
     this.repository.updateAtivoById(false, id);
     return itens;
   }
+
 
 
 

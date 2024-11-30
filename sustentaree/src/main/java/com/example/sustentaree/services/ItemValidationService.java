@@ -14,13 +14,17 @@ public class ItemValidationService {
   @Autowired
   private ItemRepository itemRepository;
 
-  public List<Item> listByUnidadeMedida(int id, UnidadeMedidaService unidadeMedidaService) {
+  public List<Item> listByUnidadeMedidaAtivos(int id, UnidadeMedidaService unidadeMedidaService) {
     UnidadeMedida unidadeMedida = unidadeMedidaService.porId(id);
-    return itemRepository.findByUnidade_medida(unidadeMedida);
+//    return itemRepository.findByUnidade_medida(unidadeMedida);
+    // Busca apenas itens ativos associados à unidade de medida pelo ID
+    return itemRepository.findActiveItemsByUnidade_medida(unidadeMedida);
   }
 
-  public List<Item> listByCategoriaItem(int id, CategoriaItemService categoriaItemService) {
-    CategoriaItem categoriaItem = categoriaItemService.porId(id);
-    return itemRepository.findByCategoria(categoriaItem);
+  public List<Item> listByCategoriaItemAtivos(int id, CategoriaItemService categoriaItemService) {
+//    CategoriaItem categoriaItem = categoriaItemService.porId(id);
+//    return itemRepository.findByCategoria(categoriaItem);
+    // Usa o ID diretamente para buscar itens ativos
+    return itemRepository.findActiveItemsByCategoriaId(id);
   }
 }
