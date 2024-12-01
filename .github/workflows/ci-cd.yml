@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-22.04
     steps:
       # Checkout do código
@@ -32,8 +32,8 @@ jobs:
           name: sustentare-api
           path: sustentaree/target/
 
-  deploy:
-    needs: build
+  Deploy:
+    needs: Build
     runs-on: ubuntu-22.04
     steps:
       # Baixar artefato gerado do job anterior
