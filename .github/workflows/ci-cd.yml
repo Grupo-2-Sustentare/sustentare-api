@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  Build:
+  build:
     runs-on: ubuntu-22.04
     steps:
       # Checkout do código
@@ -20,23 +20,23 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Build com Maven (diretório correto)
+      # Construção do projeto com Maven, incluindo o Maven Shade Plugin
       - name: Build with Maven
         run: |
           mvn -f sustentaree/pom.xml clean install -DskipTests
 
-      # Gerar artefato com o arquivo JAR
+      # Upload do artefato JAR gerado
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api
           path: sustentaree/target/
 
-  Deploy:
-    needs: Build
+  deploy:
+    needs: build
     runs-on: ubuntu-22.04
     steps:
-      # Baixar artefato gerado do job anterior
+      # Baixar o artefato JAR do job anterior
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
@@ -54,19 +54,26 @@ jobs:
           echo "${{ secrets.PRIVATE_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
           chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
 
-      # Enviar arquivos para a instância pública
-      - name: Enviar arquivos para a instância pública
-        run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
-
       # Configurar túnel SSH para acessar a EC2 privada
       - name: Configurar túnel SSH para acessar a EC2 privada
         run: |
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -f -N -L 2222:${{ secrets.PRIVATE_EC2_IP }}:22 ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}
           echo "Túnel SSH configurado: localhost:2222 -> ${{ secrets.PRIVATE_EC2_IP }}:22"
 
-      # Conectar à instância privada e reiniciar a aplicação
-      - name: Conectar à instância privada e reiniciar a aplicação
+      # Garantir que a pasta target exista na EC2 privada
+      - name: Criar pasta target na instância EC2 privada
+        run: |
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -p 2222 ubuntu@localhost << 'EOF'
+            mkdir -p /home/ubuntu/sustentare-api/target
+          EOF
+
+      # Transferência do JAR para a pasta target na instância EC2 privada
+      - name: Transferir JAR para a pasta target na instância EC2 privada
+        run: |
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -P 2222 ./sustentare-api/sustentare-api-0.0.1-SNAPSHOT-shaded.jar ubuntu@localhost:/home/ubuntu/sustentare-api/target/
+
+      # Reinício da aplicação na instância EC2 privada
+      - name: Reiniciar aplicação na instância EC2 privada
         run: |
           ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -p 2222 ubuntu@localhost << 'EOF'
             cd /home/ubuntu/sustentare-api
@@ -76,6 +83,6 @@ jobs:
               rm api.pid
             fi
             echo "Iniciando nova aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod target/sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
