@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.math.BigDecimal;
 import java.sql.CallableStatement;
 import java.sql.Types;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,15 +39,15 @@ public class KpisService {
         List<ViewItemParado> itens = itemParadoRepository.findAll();
         return itens;
     }
-    public KpiPerdasDto getKpiPerdas(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
+    public KpiPerdasDto getKpiPerdas(LocalDate dataInicio, LocalDate dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_kpi_perdas(?, ?, ?, ?, ?, ?)}";  // Query para chamar a procedure
 
         try (Connection connection = dataSource.getConnection();
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
             // Definir parâmetros de entrada
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));;
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, java.sql.Date.valueOf(dataInicio));
+            callableStatement.setDate(2, java.sql.Date.valueOf(dataFim));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -66,7 +67,7 @@ public class KpisService {
         }
     }
 
-    public KpiComprasNaoPlanejadasDTO getKpiComprasNaoPlanejadas(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
+    public KpiComprasNaoPlanejadasDTO getKpiComprasNaoPlanejadas(LocalDate dataInicio, LocalDate dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_kpi_compras_nao_planejadas(?, ?, ?, ?, ?, ?)}";  // Query para chamar a procedure
 
         KpiComprasNaoPlanejadasDTO resultado = null;
@@ -75,8 +76,8 @@ public class KpisService {
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
             // Definir parâmetros de entrada
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));;
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, java.sql.Date.valueOf(dataInicio));
+            callableStatement.setDate(2, java.sql.Date.valueOf(dataFim));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -98,7 +99,7 @@ public class KpisService {
         return resultado;
     }
 
-    public KpiValorTotalEntradasDTO getKpiValorTotalEntradas(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
+    public KpiValorTotalEntradasDTO getKpiValorTotalEntradas(LocalDate dataInicio, LocalDate dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_kpi_valor_total_entradas(?, ?, ?, ?, ?)}";  // Query para chamar a procedure
 
         KpiValorTotalEntradasDTO resultado = null;
@@ -107,8 +108,8 @@ public class KpisService {
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
             // Definir parâmetros de entrada
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));;
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, java.sql.Date.valueOf(dataInicio));
+            callableStatement.setDate(2, java.sql.Date.valueOf(dataFim));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 
@@ -128,7 +129,7 @@ public class KpisService {
         return resultado;
     }
 
-    public KpiValorTotalSaidasDTO getKpiValorTotalSaidas(Date dataInicio, Date dataFim, String categorias, String itens) throws Exception {
+    public KpiValorTotalSaidasDTO getKpiValorTotalSaidas(LocalDate dataInicio, LocalDate dataFim, String categorias, String itens) throws Exception {
         String query = "{CALL sp_kpi_valor_total_saidas(?, ?, ?, ?, ?)}";  // Query para chamar a procedure
 
         KpiValorTotalSaidasDTO resultado = null;
@@ -137,8 +138,8 @@ public class KpisService {
              CallableStatement callableStatement = connection.prepareCall(query)) {
 
             // Definir parâmetros de entrada
-            callableStatement.setDate(1, new java.sql.Date(dataInicio.getTime()));;
-            callableStatement.setDate(2, new java.sql.Date(dataFim.getTime()));
+            callableStatement.setDate(1, java.sql.Date.valueOf(dataInicio));
+            callableStatement.setDate(2, java.sql.Date.valueOf(dataFim));
             callableStatement.setString(3, categorias);
             callableStatement.setString(4, itens);
 

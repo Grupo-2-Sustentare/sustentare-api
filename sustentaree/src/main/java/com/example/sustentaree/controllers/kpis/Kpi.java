@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -75,10 +76,11 @@ public class Kpi {
 
     @GetMapping("/perdas")
     public ResponseEntity<KpiPerdasDto> getKpiPerdas(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
-        @RequestParam(required = false) String categorias,
-        @RequestParam(required = false) String itens) {
+            @RequestParam("dataInicio") LocalDate dataInicio,
+            @RequestParam("dataFim") LocalDate dataFim,
+            @RequestParam(required = false) String categorias,
+            @RequestParam(required = false) String itens
+    ) {
 
         try {
             KpiPerdasDto resultado = kpisService.getKpiPerdas(dataInicio, dataFim, categorias, itens);
@@ -90,8 +92,8 @@ public class Kpi {
 
     @GetMapping("/compras-nao-planejadas")
     public ResponseEntity<KpiComprasNaoPlanejadasDTO> getKpiComprasNaoPlanejadas(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam("dataInicio") LocalDate dataInicio,
+        @RequestParam("dataFim") LocalDate dataFim,
         @RequestParam(required = false) String categorias,
         @RequestParam(required = false) String itens) {
 
@@ -105,8 +107,8 @@ public class Kpi {
 
     @GetMapping("/valor-total-entradas")
     public ResponseEntity<KpiValorTotalEntradasDTO> getKpiValorTotalEntradas(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam("dataInicio") LocalDate dataInicio,
+        @RequestParam("dataFim") LocalDate dataFim,
         @RequestParam(required = false) String categorias,
         @RequestParam(required = false) String itens) {
 
@@ -120,8 +122,8 @@ public class Kpi {
 
     @GetMapping("/valor-total-saidas")
     public ResponseEntity<KpiValorTotalSaidasDTO> getKpiValorTotalSaidas(
-        @RequestParam("dataInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-        @RequestParam("dataFim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim,
+        @RequestParam("dataInicio") LocalDate dataInicio,
+        @RequestParam("dataFim") LocalDate dataFim,
         @RequestParam(required = false) String categorias,
         @RequestParam(required = false) String itens) {
 
