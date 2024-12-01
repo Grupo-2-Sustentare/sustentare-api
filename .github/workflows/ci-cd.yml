@@ -20,7 +20,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Build com Maven
+      # Build com Maven (diretório correto)
       - name: Build with Maven
         run: |
           mvn -f sustentaree/pom.xml clean install -DskipTests
@@ -29,38 +29,53 @@ jobs:
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sustentare-api  # Nome do artefato
-          path: sustentaree/target/  # Caminho correto do JAR gerado
+          name: sustentare-api
+          path: sustentaree/target/
 
   deploy:
-    needs: build  # Esse job depende do job de build
+    needs: build
     runs-on: ubuntu-22.04
     steps:
       # Baixar artefato gerado do job anterior
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
-          name: sustentare-api  # Nome do artefato
-          path: ./sustentaree/target/  # Caminho para armazenar o artefato baixado
+          name: sustentare-api
+          path: ./sustentare-api/
 
       # Preparação do ambiente SSH
-      - name: Preparar ambiente SSH
+      - name: Criar arquivo .pem para acesso à EC2 (Pública)
         run: |
-          chmod 400 /home/runner/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add /home/runner/.ssh/id_rsa
+          echo "${{ secrets.PUBLIC_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }}
 
-      # Conectar via SSH e reiniciar a aplicação
-      - name: Deploy na instância EC2
+      - name: Criar arquivo .pem para acesso à EC2 (Privada)
         run: |
-          ssh -i /home/runner/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
+          echo "${{ secrets.PRIVATE_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
+          chmod 400 $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
+
+      # Enviar arquivos para a instância pública
+      - name: Enviar arquivos para a instância pública
+        run: |
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -r ./sustentare-api/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+
+      # Configurar túnel SSH para acessar a EC2 privada
+      - name: Configurar túnel SSH para acessar a EC2 privada
+        run: |
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PUBLICA }} -o StrictHostKeyChecking=no -f -N -L 2222:${{ secrets.PRIVATE_EC2_IP }}:22 ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}
+          echo "Túnel SSH configurado: localhost:2222 -> ${{ secrets.PRIVATE_EC2_IP }}:22"
+
+      # Conectar à instância privada e reiniciar a aplicação
+      - name: Conectar à instância privada e reiniciar a aplicação
+        run: |
+          ssh -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -p 2222 ubuntu@localhost << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
-              echo "Parando a aplicação..."
+              echo "Parando aplicação existente..."
               kill -9 $(cat api.pid) || true
               rm api.pid
             fi
-            echo "Iniciando a aplicação..."
+            echo "Iniciando nova aplicação..."
             nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
