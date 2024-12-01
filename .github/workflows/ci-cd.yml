@@ -20,17 +20,18 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Construção do projeto com Maven, incluindo o Maven Shade Plugin
+      # Construção do projeto com Maven
       - name: Build with Maven
         run: |
           mvn -f sustentaree/pom.xml clean install -DskipTests
+          ls sustentaree/target/
 
       # Upload do artefato JAR gerado
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: sustentare-api
-          path: sustentaree/target/
+          path: sustentaree/target/*.jar
 
   deploy:
     needs: build
@@ -70,7 +71,7 @@ jobs:
       # Transferência do JAR para a pasta target na instância EC2 privada
       - name: Transferir JAR para a pasta target na instância EC2 privada
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -P 2222 ./sustentare-api/sustentare-api-0.0.1-SNAPSHOT-shaded.jar ubuntu@localhost:/home/ubuntu/sustentare-api/target/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -P 2222 ./sustentare-api/*.jar ubuntu@localhost:/home/ubuntu/sustentare-api/target/
 
       # Reinício da aplicação na instância EC2 privada
       - name: Reiniciar aplicação na instância EC2 privada
@@ -83,6 +84,6 @@ jobs:
               rm api.pid
             fi
             echo "Iniciando nova aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod target/sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod target/$(ls target | grep .jar) > application.log 2>&1 &
             echo $! > api.pid
           EOF
