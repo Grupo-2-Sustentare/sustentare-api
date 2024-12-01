@@ -20,14 +20,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Navegar até o diretório correto (se necessário)
-      - name: Navegar até o diretório do projeto
-        run: cd sustentaree
-
-      # Instalar dependências e gerar o JAR
+      # Build com Maven
       - name: Build with Maven
         run: |
-          mvn clean install -DskipTests
+          mvn -f sustentaree/pom.xml clean install -DskipTests
 
       # Gerar artefato com o arquivo JAR
       - name: Upload JAR artifact
@@ -37,41 +33,27 @@ jobs:
           path: sustentaree/target/  # Caminho correto do JAR gerado
 
   deploy:
-    runs-on: ubuntu-22.04
     needs: build  # Esse job depende do job de build
+    runs-on: ubuntu-22.04
     steps:
-      # Checkout do código
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
       # Baixar artefato gerado do job anterior
       - name: Download JAR artifact
         uses: actions/download-artifact@v4
         with:
           name: sustentare-api  # Nome do artefato
-          path: ./sustentaree/target  # Caminho para armazenar o artefato baixado
+          path: ./sustentaree/target/  # Caminho para armazenar o artefato baixado
 
-      # Verificar se o arquivo foi baixado corretamente
-      - name: Verificar se o arquivo JAR foi baixado
-        run: |
-          ls -l ./sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar
-
-      # Preparação do ambiente de SSH
+      # Preparação do ambiente SSH
       - name: Preparar ambiente SSH
         run: |
-          echo "Configurando chaves SSH..."
-          chmod 400 /home/runner/ubuntu/.ssh/id_rsa
+          chmod 400 /home/runner/.ssh/id_rsa
           eval "$(ssh-agent -s)"
-          ssh-add /home/runner/ubuntu/.ssh/id_rsa
+          ssh-add /home/runner/.ssh/id_rsa
 
       # Conectar via SSH e reiniciar a aplicação
       - name: Deploy na instância EC2
         run: |
-          echo "Verificando conexão SSH..."
-          ssh -i /home/runner/ubuntu/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} "echo 'Conexão bem-sucedida'"
-
-          echo "Reiniciando a aplicação na EC2..."
-          ssh -i /home/runner/ubuntu/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
+          ssh -i /home/runner/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
               echo "Parando a aplicação..."
@@ -79,6 +61,6 @@ jobs:
               rm api.pid
             fi
             echo "Iniciando a aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
+            nohup java -jar -Dspring.profiles.active=prod sustentare-api-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
             echo $! > api.pid
           EOF
