@@ -2,6 +2,7 @@ package com.example.sustentaree.services;
 
 import com.example.sustentaree.domain.interacao_estoque.InteracaoEstoque;
 import com.example.sustentaree.domain.produto.Produto;
+import com.example.sustentaree.domain.usuario.Usuario;
 import com.example.sustentaree.exception.EntidadeNaoEncontradaException;
 import com.example.sustentaree.exception.EstoqueInsuficienteException;
 import com.example.sustentaree.repositories.InteracaoRepository;
@@ -23,6 +24,12 @@ public class InteracaoService {
 
   @Autowired
   private SessaoUsuarioService sessaoUsuarioService;
+
+  @Autowired
+  private UsuarioService usuarioService;
+
+  @Autowired
+  private EmailService emailService;
 
   public InteracaoService(InteracaoRepository repository, ProdutoService produtoService) {
     this.repository = repository;
@@ -60,6 +67,10 @@ public class InteracaoService {
 //        Se for saída, verifica se tem estoque suficiente para realizar a subtração
         if (ultimoProduto.getQtdProdutoTotal() < novoProduto.getQtdProduto()) {
           throw new EstoqueInsuficienteException("Estoque insuficiente para realizar a subtração.");
+        }
+        if ((ultimoProduto.getQtdProdutoTotal() - novoProduto.getQtdProduto()) <= ultimoProduto.getItem().getQtd_min_item()) {
+          List<String> emails = usuarioService.listar().stream().map(Usuario::getEmail).toList();
+          emailService.sendEmail(emails, "Estoque baixo", "O estoque do item " + ultimoProduto.getItem().getNome() + " está baixo, com apenas " + (ultimoProduto.getQtdProdutoTotal() - novoProduto.getQtdProduto()) + " unidades.", "Por favor, reponha o estoque.", "Equipe Sustentare", null);
         }
         novoProduto.setQtdProdutoTotal(ultimoProduto.getQtdProdutoTotal() - novoProduto.getQtdProduto());
       }
