@@ -69,10 +69,10 @@ jobs:
             mkdir -p /home/ubuntu/sustentare-api/target
           EOF
 
-      # Transferência de todos os arquivos da pasta target para a instância EC2 privada
-      - name: Transferir todos os arquivos da pasta target para a instância EC2 privada
+      # Transferir toda a pasta target para a instância EC2 privada
+      - name: Transferir toda a pasta target para a instância EC2 privada
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -P 2222 -r ./target/* ubuntu@localhost:/home/ubuntu/sustentare-api/target/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -P 2222 -r ./target ubuntu@localhost:/home/ubuntu/sustentare-api/
 
       # Reinício da aplicação na instância EC2 privada
       - name: Reiniciar aplicação na instância EC2 privada
