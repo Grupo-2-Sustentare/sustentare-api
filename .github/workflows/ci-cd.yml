@@ -25,12 +25,17 @@ jobs:
         run: |
           mvn -f sustentaree/pom.xml clean package -DskipTests
 
+      # Verifique a existência do arquivo JAR gerado
+      - name: List files in target folder
+        run: |
+          ls -l sustentaree/target/*
+
       # Upload do artefato JAR gerado
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: sustentaree-shaded
-          path: sustentaree/target/sustentaree-0.0.1-SNAPSHOT-shaded.jar
+          path: sustentaree/target/*
 
   deploy:
     needs: build
@@ -43,6 +48,11 @@ jobs:
           name: sustentaree-shaded
           path: ./sustentaree-shaded/
 
+      # Verifique se o artefato foi baixado corretamente
+      - name: List files in downloaded folder
+        run: |
+          ls -l ./sustentaree-shaded/
+
       # Preparação do ambiente SSH
       - name: Preparar ambiente SSH
         run: |
@@ -54,7 +64,7 @@ jobs:
       # Transferência de todos os arquivos da pasta target para a instância EC2 privada
       - name: Transferir arquivos da pasta target para a instância EC2 privada
         run: |
-          scp -o StrictHostKeyChecking=no -P 22 ./sustentaree/target/* ubuntu@<EC2-IP>:/home/ubuntu/sustentare-api/
+          scp -o StrictHostKeyChecking=no -P 22 ./sustentaree-shaded/* ubuntu@<EC2-IP>:/home/ubuntu/sustentare-api/
 
       # Reinício da aplicação na instância EC2 privada
       - name: Reiniciar aplicação na instância EC2 privada
