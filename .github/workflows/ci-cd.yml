@@ -25,23 +25,23 @@ jobs:
         run: |
           mvn -f sustentaree/pom.xml clean package -DskipTests
 
-      # Upload do artefato JAR gerado
-      - name: Upload JAR artifact
+      # Upload do conteúdo da pasta target (todos os arquivos)
+      - name: Upload all files from target folder
         uses: actions/upload-artifact@v4
         with:
-          name: sustentaree-shaded
+          name: sustentaree-target-files
           path: sustentaree/target/*
 
   deploy:
     needs: build
     runs-on: ubuntu-22.04
     steps:
-      # Baixar o artefato JAR do job anterior
-      - name: Download JAR artifact
+      # Baixar o conteúdo da pasta target
+      - name: Download all files from target folder
         uses: actions/download-artifact@v4
         with:
-          name: sustentaree-shaded
-          path: ./sustentaree-shaded/
+          name: sustentaree-target-files
+          path: ./target-files/
 
       # Preparação do ambiente SSH
       - name: Preparar ambiente SSH
@@ -51,22 +51,31 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
 
-      # Transferência dos arquivos da pasta target para a instância EC2 privada
-      - name: Transferir todos os arquivos da pasta target para a instância EC2 privada
+      # Transferir arquivos para a instância pública
+      - name: Transferir arquivos para a instância pública
         run: |
-          scp -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -P 22 ./target/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentare-api/
+          scp -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -P 22 ./target-files/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+
+      # Transferir arquivos da instância pública para a instância privada
+      - name: Transferir arquivos para a instância EC2 privada
+        run: |
+          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
+            scp -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -P 22 /home/ubuntu/sustentare-api/* ubuntu@${{ secrets.PRIVATE_EC2_IP }}:/home/ubuntu/sustentare-api/
+          EOF
 
       # Reinício da aplicação na instância EC2 privada
       - name: Reiniciar aplicação na instância EC2 privada
         run: |
-          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'EOF'
-            cd /home/ubuntu/sustentare-api
-            if [ -f "api.pid" ]; then
-              echo "Parando aplicação existente..."
-              kill -9 $(cat api.pid) || true
-              rm api.pid
-            fi
-            echo "Iniciando nova aplicação..."
-            nohup java -jar -Dspring.profiles.active=prod sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
-            echo $! > api.pid
+          ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }} << 'EOF'
+            ssh -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} ubuntu@${{ secrets.PRIVATE_EC2_IP }} << 'END'
+              cd /home/ubuntu/sustentare-api
+              if [ -f "api.pid" ]; then
+                echo "Parando aplicação existente..."
+                kill -9 $(cat api.pid) || true
+                rm api.pid
+              fi
+              echo "Iniciando nova aplicação..."
+              nohup java -jar -Dspring.profiles.active=prod sustentaree-0.0.1-SNAPSHOT-shaded.jar > application.log 2>&1 &
+              echo $! > api.pid
+            END
           EOF
