@@ -1,4 +1,4 @@
-name: CI/CD Workflow
+name: Fluxo de CI/CD
 
 on:
   push:
@@ -10,23 +10,23 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       # Checkout do código
-      - name: Checkout repository
+      - name: Checkout do repositório
         uses: actions/checkout@v3
 
       # Configuração do Java
-      - name: Set up JDK 17
+      - name: Configurar JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
       # Construção do projeto com Maven, incluindo o Maven Shade Plugin
-      - name: Build with Maven
+      - name: Construir com Maven
         run: |
           mvn -f sustentaree/pom.xml clean package -DskipTests
 
-      # Upload do artefato JAR gerado
-      - name: Upload JAR artifact
+      # Fazer upload dos artefatos JAR gerados
+      - name: Fazer upload dos artefatos JAR
         uses: actions/upload-artifact@v4
         with:
           name: sustentaree-shaded
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       # Baixar o artefato JAR do job anterior
-      - name: Download JAR artifact
+      - name: Baixar artefato JAR
         uses: actions/download-artifact@v4
         with:
           name: sustentaree-shaded
@@ -51,15 +51,15 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
 
-      # Transferência de todos os arquivos da pasta target para a instância EC2 privada
-      - name: Transfer all files from target folder to EC2 instance
+      # Transferir todos os arquivos da pasta target para a instância EC2 privada
+      - name: Transferir todos os arquivos da pasta target para a instância EC2
         run: |
-          scp -o StrictHostKeyChecking=no -P 2222 ./target/* ubuntu@${{ secrets.EC2_PUBLIC_OR_PRIVATE_IP }}:/home/ubuntu/sustentare-api/
+          scp -o StrictHostKeyChecking=no -P 22 ./target/* ubuntu@${{ secrets.EC2_PUBLIC_OR_PRIVATE_IP }}:/home/ubuntu/sustentare-api/
 
-      # Reinício da aplicação na instância EC2 privada
-      - name: Reiniciar aplicação na instância EC2 privada
+      # Reiniciar a aplicação na instância EC2 privada
+      - name: Reiniciar aplicação na instância EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -p 2222 ubuntu@${{ secrets.EC2_PUBLIC_OR_PRIVATE_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -p 22 ubuntu@${{ secrets.EC2_PUBLIC_OR_PRIVATE_IP }} << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
               echo "Parando aplicação existente..."
