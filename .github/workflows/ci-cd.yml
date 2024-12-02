@@ -23,7 +23,7 @@ jobs:
       # Construção do projeto com Maven
       - name: Build with Maven
         run: |
-          mvn -f sustentaree/pom.xml clean install -DskipTests
+          mvn -f sustentaree/pom.xml clean install -Dmaven.test.skip
           echo "Listando conteúdo do diretório após o build"
           ls -R sustentaree/target/
 
