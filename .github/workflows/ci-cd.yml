@@ -24,7 +24,8 @@ jobs:
       - name: Build with Maven
         run: |
           mvn -f sustentaree/pom.xml clean install -DskipTests
-          ls -l sustentaree/target/  # Verificando se a pasta target foi criada
+          echo "Verificando a pasta target:"
+          ls -R sustentaree/target/   # Verifica a existência da pasta target após o build
 
       # Upload do artefato JAR gerado
       - name: Upload JAR artifact
