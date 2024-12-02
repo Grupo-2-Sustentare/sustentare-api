@@ -24,8 +24,17 @@ jobs:
       - name: Build with Maven
         run: |
           mvn -f sustentaree/pom.xml clean install -DskipTests
-          echo "Verificando a pasta target:"
-          ls -R sustentaree/target/   # Verifica a existência da pasta target após o build
+          echo "Listando conteúdo do diretório após o build"
+          ls -R sustentaree/target/
+
+      # Verificar se a pasta target foi criada corretamente
+      - name: Verificar pasta target após build
+        run: |
+          if [ ! -d "sustentaree/target" ]; then
+            echo "A pasta target não foi criada! Verifique o comando Maven!"
+            exit 1
+          fi
+          ls -R sustentaree/target/
 
       # Upload do artefato JAR gerado
       - name: Upload JAR artifact
@@ -70,10 +79,10 @@ jobs:
             mkdir -p /home/ubuntu/sustentare-api/target
           EOF
 
-      # Transferir toda a pasta target para a instância EC2 privada
-      - name: Transferir toda a pasta target para a instância EC2 privada
+      # Transferência do JAR para a pasta target na instância EC2 privada
+      - name: Transferir JAR para a pasta target na instância EC2 privada
         run: |
-          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -P 2222 -r sustentaree/target ubuntu@localhost:/home/ubuntu/sustentare-api/
+          scp -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -o StrictHostKeyChecking=no -P 2222 ./sustentare-api/*.jar ubuntu@localhost:/home/ubuntu/sustentare-api/target/
 
       # Reinício da aplicação na instância EC2 privada
       - name: Reiniciar aplicação na instância EC2 privada
