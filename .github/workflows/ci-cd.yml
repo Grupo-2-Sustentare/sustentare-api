@@ -43,7 +43,7 @@ jobs:
           name: sustentaree-shaded
           path: ./target/
 
-      # Preparação do ambiente SSH para instância pública
+      # Preparação do ambiente SSH para EC2 pública
       - name: Preparar ambiente SSH para EC2 pública
         run: |
           echo "${{ secrets.PRIVATE_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
@@ -54,9 +54,9 @@ jobs:
       # Transferir arquivos da pasta target para a instância EC2 pública
       - name: Transferir arquivos para a instância EC2 pública
         run: |
-          scp -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -P 22 ./target-files/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
+          scp -o StrictHostKeyChecking=no -i $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }} -P 22 ./target/* ubuntu@${{ secrets.PUBLIC_DEPLOY_HOST }}:/home/ubuntu/sustentare-api/
 
-      # Preparação do ambiente SSH para instância privada
+      # Preparação do ambiente SSH para EC2 privada
       - name: Preparar ambiente SSH para EC2 privada
         run: |
           echo "${{ secrets.PRIVATE_DEPLOY_KEY }}" > $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
