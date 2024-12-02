@@ -111,19 +111,6 @@
 
     <build>
         <plugins>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <phase>none</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -136,16 +123,13 @@
                     </excludes>
                 </configuration>
             </plugin>
-
-            <!-- Configuração do maven-compiler-plugin com codificação UTF-8 -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>1.8</source> <!-- dependendo do seu projeto -->
-                    <target>1.8</target> <!-- dependendo do seu projeto -->
-                    <encoding>UTF-8</encoding> <!-- Certifique-se de que está usando UTF-8 -->
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -155,36 +139,48 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
-            <!-- Plugin de recursos para garantir a codificação UTF-8 -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.sustentaree.SustentareeApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <executions>
                     <execution>
-                        <id>shade-package</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <createDependencyReducedPom>false</createDependencyReducedPom>
-                </configuration>
             </plugin>
-
-
         </plugins>
     </build>
 
