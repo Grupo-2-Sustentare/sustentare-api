@@ -25,33 +25,23 @@ jobs:
         run: |
           mvn -f sustentaree/pom.xml clean package -DskipTests
 
-      # Verifique a existência do arquivo JAR gerado
-      - name: List files in target folder
-        run: |
-          ls -l sustentaree/target/*
-
-      # Upload do artefato JAR gerado
-      - name: Upload JAR artifact
+      # Upload de todos os arquivos da pasta target
+      - name: Upload all files from target folder
         uses: actions/upload-artifact@v4
         with:
-          name: sustentaree-shaded
+          name: sustentaree-target
           path: sustentaree/target/*
 
   deploy:
     needs: build
     runs-on: ubuntu-22.04
     steps:
-      # Baixar o artefato JAR do job anterior
-      - name: Download JAR artifact
+      # Baixar todos os arquivos da pasta target do job anterior
+      - name: Download all files from target folder
         uses: actions/download-artifact@v4
         with:
-          name: sustentaree-shaded
-          path: ./sustentaree-shaded/
-
-      # Verifique se o artefato foi baixado corretamente
-      - name: List files in downloaded folder
-        run: |
-          ls -l ./sustentaree-shaded/
+          name: sustentaree-target
+          path: ./target/
 
       # Preparação do ambiente SSH
       - name: Preparar ambiente SSH
@@ -62,14 +52,14 @@ jobs:
           ssh-add $HOME/${{ secrets.NOME_ARQUIVO_PEM_PRIVADA }}
 
       # Transferência de todos os arquivos da pasta target para a instância EC2 privada
-      - name: Transferir arquivos da pasta target para a instância EC2 privada
+      - name: Transfer all files from target folder to EC2 instance
         run: |
-          scp -o StrictHostKeyChecking=no -P 22 ./sustentaree-shaded/* ubuntu@<EC2-IP>:/home/ubuntu/sustentare-api/
+          scp -o StrictHostKeyChecking=no -P 2222 ./target/* ubuntu@localhost:/home/ubuntu/sustentare-api/
 
       # Reinício da aplicação na instância EC2 privada
       - name: Reiniciar aplicação na instância EC2 privada
         run: |
-          ssh -o StrictHostKeyChecking=no -p 22 ubuntu@<EC2-IP> << 'EOF'
+          ssh -o StrictHostKeyChecking=no -p 2222 ubuntu@localhost << 'EOF'
             cd /home/ubuntu/sustentare-api
             if [ -f "api.pid" ]; then
               echo "Parando aplicação existente..."
