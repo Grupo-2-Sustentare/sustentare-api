@@ -2,12 +2,16 @@ package com.example.sustentaree.services;
 import com.example.sustentaree.domain.produto.Produto;
 import com.example.sustentaree.repositories.ProdutoRepository;
 import com.example.sustentaree.services.data_structure.HashTable;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Comparator;
 import java.util.List;
-
+import java.sql.*;
+import java.util.Optional;
+import javax.sql.DataSource;
 @Service
 public class ProdutoService {
   @Autowired
@@ -21,6 +25,10 @@ public class ProdutoService {
 
   @Autowired
   private SessaoUsuarioService sessaoUsuarioService;
+
+  @PersistenceContext
+  private EntityManager entityManager;
+
   public ProdutoService(
         ProdutoRepository produtoRepository,
         ItemService itemService,
@@ -62,11 +70,23 @@ public class ProdutoService {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
 
     Produto produtoExistente = this.getByItemIdAndAtivo(fkItem);
-    if (produtoExistente != null) {
-      this.deletar(produtoExistente.getId(), idResponsavel);
-    }
     novoProduto.setItem(itemService.porId(fkItem));
-    return this.produtoRepository.save(novoProduto);
+    Produto produto = this.produtoRepository.save(novoProduto);
+    if (produtoExistente != null) {
+      this.deletar(produtoExistente.getId(), idResponsavel, false);
+    }
+    if (produto.getQtdProdutoTotal() < produtoExistente.getQtdProdutoTotal()){
+      try {
+        String query = "UPDATE produto_audit SET descricao = 'Remoção de produto' WHERE fkProduto = :id AND descricao = :descricao";
+        entityManager.createNativeQuery(query)
+              .setParameter("id", produto.getId())
+              .setParameter("descricao", "Inserção de novo produto")
+              .executeUpdate();
+      } catch (Exception e) {
+        throw new RuntimeException("Erro ao deletar registros da tabela produto_audit", e);
+      }
+    }
+    return produto;
   }
   @Transactional
   public Produto Atualizar(
@@ -82,9 +102,31 @@ public class ProdutoService {
     return this.criar(produto, itemId, idResponsavel);
   }
   @Transactional
-  public void deletar(Integer id, int idResponsavel) {
+  public void deletar(Integer id, int idResponsavel, boolean isDelete) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
     this.produtoRepository.updateAtivoById(false, id);
+    if(!isDelete) {
+      try {
+        entityManager.createNativeQuery(
+                    "DELETE FROM produto_audit WHERE fkProduto = :id AND descricao = :descricao")
+              .setParameter("id", id)
+              .setParameter("descricao", "Atualização de produto")
+              .executeUpdate();
+        return;
+      } catch (Exception e) {
+        throw new RuntimeException("Erro ao deletar registros da tabela produto_audit", e);
+      }
+    }
+    String query = "UPDATE produto_audit SET descricao = 'Remoção de produto' WHERE fkProduto = :id AND descricao = :descricao";
+
+    try {
+      entityManager.createNativeQuery(query)
+            .setParameter("id", id)
+            .setParameter("descricao", "Atualização de produto")
+            .executeUpdate();
+    } catch (Exception e) {
+      throw new RuntimeException("Erro ao atualizar o valor da coluna", e);
+    }
   }
 
 @Transactional
