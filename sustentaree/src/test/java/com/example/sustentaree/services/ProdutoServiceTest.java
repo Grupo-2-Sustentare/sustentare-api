@@ -110,6 +110,6 @@ class ProdutoServiceTest {
         when(produtoRepository.findById(1)).thenReturn(Optional.of(produto));
         doNothing().when(produtoRepository).delete(produto);
 
-        assertDoesNotThrow(() -> produtoService.deletar(1, 100, true));
+        assertDoesNotThrow(() -> produtoService.deletar(1, 100));
     }
 }
