@@ -29,8 +29,12 @@ public class ItemService {
   @Autowired
   private UnidadeMedidaService unidadeMedidaService;
 
-  public ItemService(ItemRepository repository) {
+  @Autowired
+  private final AuditService auditService;
+
+  public ItemService(ItemRepository repository, AuditService auditService) {
     this.repository = repository;
+      this.auditService = auditService;
   }
 
   public List<ItemListagemDTO> listar() {
@@ -75,8 +79,9 @@ public class ItemService {
 
     novoItem.setUnidade_medida(unidadeMedida);
     novoItem.setCategoria(categoriaItem);
-
-    return this.repository.save(novoItem);
+    Item itemCriado = this.repository.save(novoItem);
+    auditService.logItemAudit("Produto Criado: " + itemCriado.getNome(), itemCriado.getId(), idResponsavel);
+    return itemCriado;
   }
 
   @Transactional
@@ -89,6 +94,7 @@ public class ItemService {
   ) {
     Item itemAtual = this.porId(id);
     item.setId(itemAtual.getId());
+    auditService.logItemAudit("Produto Atualizado: " + item.getNome(), item.getId(), idResponsavel);
     return this.criar(item, unidadeMedidaId, categoriaItemId, idResponsavel);
   }
 
@@ -96,6 +102,8 @@ public class ItemService {
   public void deletar(int id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
     this.repository.updateAtivoById(false, id);
+    // criar um listar item ativo false por id, para adicionar o nome do item deletado
+    auditService.logItemAudit("Item Deletado: " + "nome do produto", id, idResponsavel);
   }
 
   public Item itemParado(){
@@ -123,13 +131,9 @@ public class ItemService {
   }
   public List<Item> listByUnidadeMedida(int id) {
     UnidadeMedida unidadeMedida = this.unidadeMedidaService.porId(id);
-//    return this.repository.findByUnidade_medida(unidadeMedida);
     return repository.findActiveItemsByUnidade_medida(unidadeMedida);
   }
   public List<Item> listByCategoriaItem (int id){
-//    CategoriaItem categoriaItem = this.categoriaItemService.porId(id);
-//    return this.repository.findByCategoria(categoriaItem);
-    // Usa o ID diretamente para buscar itens ativos
     return repository.findActiveItemsByCategoriaId(id);
   }
 }

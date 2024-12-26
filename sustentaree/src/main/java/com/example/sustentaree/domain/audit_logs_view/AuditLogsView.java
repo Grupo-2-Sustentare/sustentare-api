@@ -19,7 +19,7 @@ public class AuditLogsView {
     private String tabela;
     private String descricao;
     @Column(name = "data_hora")
-        private LocalDateTime dataHora;
+    private LocalDateTime dataHora;
 
 
     public Integer getFkUsuario() {
