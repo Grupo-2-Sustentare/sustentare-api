@@ -31,9 +31,13 @@ public class InteracaoService {
   @Autowired
   private EmailService emailService;
 
-  public InteracaoService(InteracaoRepository repository, ProdutoService produtoService) {
+  @Autowired
+  private final AuditService auditService;
+
+  public InteracaoService(InteracaoRepository repository, ProdutoService produtoService, AuditService auditService) {
     this.repository = repository;
     this.produtoService = produtoService;
+      this.auditService = auditService;
   }
 
   public List<InteracaoEstoque> listar() {
@@ -46,6 +50,7 @@ public class InteracaoService {
     if (interacaoEstoqueOpt.isEmpty()) {
       throw new EntidadeNaoEncontradaException("Interação de Estoque");
     }
+
     return interacaoEstoqueOpt.get();
   }
 
@@ -57,6 +62,7 @@ public class InteracaoService {
       Integer idResponsavel
   ) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+    String descricaoAudit = "";
     Produto ultimoProduto = produtoService.getByItemIdAndAtivo(fkItem);
 //    Se tiver ultimo produto, calcula a quantidade total com base na categoria de interação
 //    ( Se for algum tipo de ENTRADA, SOMA, se for QUALQUER COISA SUBTRAI)
@@ -82,7 +88,10 @@ public class InteracaoService {
 //    Cria o produto e o adiciona a essa interação
     Produto produtoCriado = this.produtoService.criar(novoProduto, fkItem, idResponsavel);
     novaInteracao.setProduto(produtoCriado);
-    return this.repository.save(novaInteracao);
+    descricaoAudit = novaInteracao.getCategoriaInteracao();
+    InteracaoEstoque interacaoEstoqueSalva = this.repository.save(novaInteracao);
+    auditService.logInteracaoEstoqueAudit(descricaoAudit + " - qtd movimentada: " + novoProduto.getQtdProduto(), idResponsavel, interacaoEstoqueSalva.getId(), novoProduto.getId());
+    return interacaoEstoqueSalva;
   }
   public String gerarCsv() {
     List<InteracaoEstoque> interacaoes = this.listar();
