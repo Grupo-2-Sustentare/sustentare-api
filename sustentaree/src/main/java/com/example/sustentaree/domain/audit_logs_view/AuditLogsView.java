@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class AuditLogsView {
 
     @Id
+    private String id;
     @Column(name = "fk_usuario")
     private Integer fkUsuario;
     private String tabela;
@@ -21,6 +22,12 @@ public class AuditLogsView {
     @Column(name = "data_hora")
     private LocalDateTime dataHora;
 
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Integer getFkUsuario() {
         return fkUsuario;

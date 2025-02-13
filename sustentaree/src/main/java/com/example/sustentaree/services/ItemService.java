@@ -101,9 +101,10 @@ public class ItemService {
   @Transactional
   public void deletar(int id, int idResponsavel) {
     this.sessaoUsuarioService.setCurrentUserSession(idResponsavel);
+    Item itemDeletado = porId(id);
     this.repository.updateAtivoById(false, id);
     // criar um listar item ativo false por id, para adicionar o nome do item deletado
-    auditService.logItemAudit("Item Deletado: " + "nome do produto", id, idResponsavel);
+    auditService.logItemAudit("Item Deletado: " + itemDeletado.getNome(), id, idResponsavel);
   }
 
   public Item itemParado(){
