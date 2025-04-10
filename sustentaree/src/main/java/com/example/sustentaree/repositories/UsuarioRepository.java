@@ -25,6 +25,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
     List<Usuario> findByAtivoTrue();
 
+    @Query("SELECT u FROM Usuario u WHERE u.id = :id")
+    Optional<Usuario> findById(@Param("id") Integer id);
 
     @Modifying
     @Transactional
