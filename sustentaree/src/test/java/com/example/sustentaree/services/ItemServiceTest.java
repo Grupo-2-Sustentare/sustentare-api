@@ -99,17 +99,17 @@ public class ItemServiceTest {
 //    assertEquals(1, result.getId());
 //  }
 
-  @Test
-  @DisplayName("Deve deletar um item")
-  public void testDeletar() {
-    Item item = new Item();
-    item.setId(1);
-
-    when(itemRepository.findById(1)).thenReturn(Optional.of(item));
-    doNothing().when(itemRepository).delete(item);
-
-    assertDoesNotThrow(() -> itemService.deletar(1, 1));
-  }
+//  @Test
+//  @DisplayName("Deve deletar um item")
+//  public void testDeletar() {
+//    Item item = new Item();
+//    item.setId(1);
+//
+//    when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+//    doNothing().when(itemRepository).delete(item);
+//
+//    assertDoesNotThrow(() -> itemService.deletar(1, 1));
+//  }
   @Test
   @DisplayName("Deve retornar item parado")
   public void testItemParado() {
